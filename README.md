@@ -1,1 +1,1 @@
-# compilers_project
+# Simple compiler using lex and yacc
