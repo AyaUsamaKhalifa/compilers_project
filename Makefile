@@ -1,3 +1,5 @@
+.DEFAULT_GOAL := run_and_build
+
 build_flex:
 	flex scanner.l
 	gcc -o scanner lex.yy.c -lfl
