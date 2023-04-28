@@ -28,7 +28,7 @@
 
 "print"             {printf("print\n"); return PRINT;}
 
-[\+\-\*/=\>\<\(\)\{\}:;!,]   {printf("%c\n",*yytext); return *yytext;} 
+[\+\-\*/=\>\<\(\)\{\}:;!,\%]   {printf("%c\n",*yytext); return *yytext;} 
 
 "=="                {printf("%s \n",yytext); return EE;}
 "!="                {printf("%s \n",yytext); return NE;}
@@ -39,8 +39,8 @@
 "||"                {printf("%s \n",yytext); return OR;}
 
 
-0|[1-9][0-9]*                    {yylval.integer_val=atoi(yytext); printf("integer %d \n",yylval.integer_val); return INTEGER;}
-(0|[1-9][0-9]*)\.[0-9]*[1-9]   {yylval.float_val=strtof(yytext, NULL); printf("float %f \n",yylval.float_val); return FLOAT;}
+0|-?[1-9][0-9]*                    {yylval.integer_val=atoi(yytext); printf("integer %d \n",yylval.integer_val); return INTEGER;}
+-?(0|[1-9][0-9]*)\.[0-9]*[1-9]   {yylval.float_val=strtof(yytext, NULL); printf("float %f \n",yylval.float_val); return FLOAT;}
 
 "true"                           {yylval.integer_val=1; printf("%d \n",yylval.integer_val); return BOOL_TRUE;}
 "false"                          {yylval.integer_val=0; printf("%d \n",yylval.integer_val); return BOOL_FALSE;}
@@ -50,7 +50,7 @@
 [_a-zA-Z][_a-zA-Z0-9]*            {yylval.string_val=yytext; printf("variable %s \n",yylval.string_val); return VARIABLE;}
 
 
-[ \t\n]+                   printf("white space\n");              
+[ \t\n]+                   ;//printf("white space\n");              
 
 .                          yyerror("invalid character");
 %%

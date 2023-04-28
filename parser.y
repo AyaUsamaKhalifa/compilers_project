@@ -25,16 +25,19 @@
 %token <string_val> VARIABLE
 
 
+
 %%
-root: root statement | root functional_statement {printf("functions"); return 0;} | ;
+//TODO: [] mod operator [] -- and ++ []
+
+root: root statement | root functional_statement {printf("functions\n");} | ;
 
 statement:  conditional_statement 
-            { printf("conditional_statement"); return 0;} 
+            { printf("conditional_statement\n");} 
             |  
             loop_statement 
-            { printf("loop_statement"); return 0;} 
+            { printf("loop_statement\n");} 
             |  
-            assignment { printf("assignment"); return 0;} 
+            assignment ';' { printf("assignment\n");} 
             |
             ;
 
@@ -42,16 +45,17 @@ recursive_statement: recursive_statement statement | ;
             
 
 //---------conditional statement---------// 
-conditional_statement:  if_conditional_statement { printf("if statement");} 
-                        | 
-                        switch_conditional_statement { printf("switch statement");} 
-                        |; 
+conditional_statement:  switch_conditional_statement 
+                        |
+                        if_conditional_statement 
+                        |
+                        ; 
 
-if_conditional_statement: IF '(' comparator ')' '{'recursive_statement'}'  ELSE '{'recursive_statement'}' {} | IF '(' comparator ')' '{'recursive_statement'}' {}; 
+if_conditional_statement: IF '(' expressions ')' '{'recursive_statement'}'  ELSE '{'recursive_statement'}' {} | IF '(' expressions ')' '{'recursive_statement'}' {}; 
 
-switch_conditional_statement: SWITCH '('comparator')' '{' case_statement '}';
+switch_conditional_statement: SWITCH '('VARIABLE')' '{' case_statement '}';
 
-case_statement: case_statement CASE variable_value ':' recursive_statement BREAK; // hna lazem nzwd elvalues elly elmafrood treturn
+case_statement: case_statement CASE variable_value ':' recursive_statement BREAK | ; // hna lazem nzwd elvalues elly elmafrood treturn
 
 //---------loop statement---------// 
 loop_statement: for_loop_statement 
@@ -61,31 +65,49 @@ loop_statement: for_loop_statement
                 do_while_loop_statement 
                 | ;
 
-for_loop_statement: FOR '(' assignment comparator assignment')' '{' recursive_statement '}'; // hna lazem nzwd elvalues elly elmafrood treturn
+for_loop_statement: FOR '(' assignment ';' expressions ';' assignment')' '{' recursive_statement '}'; // hna lazem nzwd elvalues elly elmafrood treturn
 
-while_loop_statement: WHILE '(' comparator ')' '{' recursive_statement '}'; 
+while_loop_statement: WHILE '(' expressions ')' '{' recursive_statement '}'; 
 
-do_while_loop_statement: DO '{' recursive_statement '}' WHILE '(' comparator ')'; 
- 
+do_while_loop_statement: DO '{' recursive_statement '}' WHILE '(' expressions ')'; 
+
 //-------------assignments-------------//
-assignment: variable_Type VARIABLE '=' first_operation';'; // hna lazem nzwd elvalues elly elmafrood treturn
-first_operation: first_operation '+' second_operation | first_operation '-' second_operation | second_operation;
-second_operation: second_operation '*' third_operation | second_operation '/' third_operation | third_operation;
-third_operation: variable_value | VARIABLE | '('first_operation')';  
+assignment: variable_Type VARIABLE '=' expressions | VARIABLE '=' expressions | ENUM VARIABLE VARIABLE '=' expressions | expressions; // hna lazem nzwd elvalues elly elmafrood treturn
+//first_operation: first_operation '+' second_operation | first_operation '-' second_operation | second_operation;
+//second_operation: second_operation '*' third_operation | second_operation '/' third_operation | third_operation;
+//third_operation: variable_value | VARIABLE | '('first_operation')';
+
+//------------Expressions-------------//
+expressions: expressions OR first | first;
+first: first AND second | second;
+second: second EE third | second NE third | third;
+third: third '>' fourth | third '<' fourth | third GE fourth | third LE fourth | fourth ;
+fourth: fourth '+' fifth | fourth '-' fifth | fifth;
+fifth: fifth '*' sixth | fifth '/' sixth | fifth '%' sixth | sixth;
+sixth: '-' sixth | '!' sixth | seventh;
+seventh: '(' expressions ')' | variable_value | VARIABLE | function_call;
 
 //------------functions---------------//
+function_call: VARIABLE '(' function_parameters_calls ')';
 functional_statement: function | enum_statement ;
-function_statement_type: function_statement_type statement | ;
-function_statement_void: function_statement_void statement | ; 
-function_parameters: function_parameters variable_Type VARIABLE | ; // semi colon not added yet?
-function: variable_Type VARIABLE '(' function_parameters ')' '{' function_statement_type '}' RETURN return_types';' | VOID VARIABLE '(' function_parameters ')' '{' function_statement_void '}';
-return_types: comparator | first_operation ;
-enum_statement: ENUM '{'enum_variables'}';
-enum_variables =  enum_variables VARIABLE '=' first_operation | enum_variables VARIABLE;
+function_parameters: parameter | ; // semi colon not added yet?
+parameter: parameter ',' variable_Type VARIABLE | variable_Type VARIABLE;
+function_parameters_calls: parameter_calls | ;
+parameter_calls: parameter_calls ',' expressions | expressions ;
+function: variable_Type VARIABLE '(' function_parameters ')' '{' recursive_statement RETURN return_types';' '}' | VOID VARIABLE '(' function_parameters ')' '{' recursive_statement '}';
+return_types: expressions ;
+enum_statement: ENUM VARIABLE '{'enum_variables'}';
+enum_variables:  enum_variables ',' VARIABLE '=' expressions | enum_variables ',' VARIABLE | VARIABLE '=' expressions | VARIABLE;
 
 //-------------comparators------------//
-comparator: VARIABLE comparator_operator variable_value | VARIABLE comparator_operator VARIABLE | variable_value comparator_operator VARIABLE | variable_value comparator_operator variable_value | BOOL_FALSE | BOOL_TRUE ;//hna lessa mzwdnash eloperator
-comparator_operator: EE | NE | GE | LE | AND | OR;
+//comparator: VARIABLE comparator_operator variable_value | VARIABLE comparator_operator VARIABLE | variable_value comparator_operator VARIABLE | variable_value comparator_operator variable_value | BOOL_FALSE | BOOL_TRUE | VARIABLE;//hna lessa mzwdnash eloperator
+//comparator_operator: EE | NE | GE | LE | AND | OR | '>' | '<' ;
+//comparisons_list: first_comparator {printf("A list of comparisons detected: \n");} | ;
+//first_comparator: first_comparator OR second_comparator {printf("x || y: \n");}| second_comparator ;
+//second_comparator: second_comparator AND third_comparator {printf("x && y: \n");}| third_comparator ;
+//third_comparator: '!' third_comparator {printf("!x: \n");} | fourth_comparator ;
+//fourth_comparator: '(' comparisons_list ')' {printf("This is of higher priority \n");}| comparator ;
+
 
 //------------variables---------------//
 variable_Type: INT_TYPE | CHAR_TYPE | BOOL_TYPE | FLOAT_TYPE | STRING_TYPE; 
@@ -99,14 +121,14 @@ void yyerror(const char *str)
 {
     fprintf(stderr,"error: %s\n",str);
 }
- 
+
 int yywrap()
 {
     return 1;
 } 
-  
-// int main()
-// {
-//     yylex();
-//     return 0;
-// }
+
+int main()
+{
+    yyparse();
+    return 0;
+}

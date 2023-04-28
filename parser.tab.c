@@ -1,4 +1,4 @@
-/* A Bison parser, made by GNU Bison 3.7.5.  */
+/* A Bison parser, made by GNU Bison 3.8.2.  */
 
 /* Bison implementation for Yacc-like parsers in C
 
@@ -16,7 +16,7 @@
    GNU General Public License for more details.
 
    You should have received a copy of the GNU General Public License
-   along with this program.  If not, see <http://www.gnu.org/licenses/>.  */
+   along with this program.  If not, see <https://www.gnu.org/licenses/>.  */
 
 /* As a special exception, you may create a larger work that contains
    part or all of the Bison parser skeleton and distribute that work
@@ -46,10 +46,10 @@
    USER NAME SPACE" below.  */
 
 /* Identify Bison output, and Bison version.  */
-#define YYBISON 30705
+#define YYBISON 30802
 
 /* Bison version string.  */
-#define YYBISON_VERSION "3.7.5"
+#define YYBISON_VERSION "3.8.2"
 
 /* Skeleton name.  */
 #define YYSKELETON_NAME "yacc.c"
@@ -72,8 +72,9 @@
     /*Definition section */
     #include <stdio.h>
     void yyerror(const char *str);
+    //printing may be removed
 
-#line 77 "parser.tab.c"
+#line 78 "parser.tab.c"
 
 # ifndef YY_CAST
 #  ifdef __cplusplus
@@ -135,9 +136,55 @@ enum yysymbol_kind_t
   YYSYMBOL_CHAR = 31,                      /* CHAR  */
   YYSYMBOL_STRING = 32,                    /* STRING  */
   YYSYMBOL_VARIABLE = 33,                  /* VARIABLE  */
-  YYSYMBOL_YYACCEPT = 34,                  /* $accept  */
-  YYSYMBOL_root = 35,                      /* root  */
-  YYSYMBOL_expr = 36                       /* expr  */
+  YYSYMBOL_34_ = 34,                       /* ';'  */
+  YYSYMBOL_35_ = 35,                       /* '('  */
+  YYSYMBOL_36_ = 36,                       /* ')'  */
+  YYSYMBOL_37_ = 37,                       /* '{'  */
+  YYSYMBOL_38_ = 38,                       /* '}'  */
+  YYSYMBOL_39_ = 39,                       /* ':'  */
+  YYSYMBOL_40_ = 40,                       /* '='  */
+  YYSYMBOL_41_ = 41,                       /* '>'  */
+  YYSYMBOL_42_ = 42,                       /* '<'  */
+  YYSYMBOL_43_ = 43,                       /* '+'  */
+  YYSYMBOL_44_ = 44,                       /* '-'  */
+  YYSYMBOL_45_ = 45,                       /* '*'  */
+  YYSYMBOL_46_ = 46,                       /* '/'  */
+  YYSYMBOL_47_ = 47,                       /* '%'  */
+  YYSYMBOL_48_ = 48,                       /* '!'  */
+  YYSYMBOL_49_ = 49,                       /* ','  */
+  YYSYMBOL_YYACCEPT = 50,                  /* $accept  */
+  YYSYMBOL_root = 51,                      /* root  */
+  YYSYMBOL_statement = 52,                 /* statement  */
+  YYSYMBOL_recursive_statement = 53,       /* recursive_statement  */
+  YYSYMBOL_conditional_statement = 54,     /* conditional_statement  */
+  YYSYMBOL_if_conditional_statement = 55,  /* if_conditional_statement  */
+  YYSYMBOL_switch_conditional_statement = 56, /* switch_conditional_statement  */
+  YYSYMBOL_case_statement = 57,            /* case_statement  */
+  YYSYMBOL_loop_statement = 58,            /* loop_statement  */
+  YYSYMBOL_for_loop_statement = 59,        /* for_loop_statement  */
+  YYSYMBOL_while_loop_statement = 60,      /* while_loop_statement  */
+  YYSYMBOL_do_while_loop_statement = 61,   /* do_while_loop_statement  */
+  YYSYMBOL_assignment = 62,                /* assignment  */
+  YYSYMBOL_expressions = 63,               /* expressions  */
+  YYSYMBOL_first = 64,                     /* first  */
+  YYSYMBOL_second = 65,                    /* second  */
+  YYSYMBOL_third = 66,                     /* third  */
+  YYSYMBOL_fourth = 67,                    /* fourth  */
+  YYSYMBOL_fifth = 68,                     /* fifth  */
+  YYSYMBOL_sixth = 69,                     /* sixth  */
+  YYSYMBOL_seventh = 70,                   /* seventh  */
+  YYSYMBOL_function_call = 71,             /* function_call  */
+  YYSYMBOL_functional_statement = 72,      /* functional_statement  */
+  YYSYMBOL_function_parameters = 73,       /* function_parameters  */
+  YYSYMBOL_parameter = 74,                 /* parameter  */
+  YYSYMBOL_function_parameters_calls = 75, /* function_parameters_calls  */
+  YYSYMBOL_parameter_calls = 76,           /* parameter_calls  */
+  YYSYMBOL_function = 77,                  /* function  */
+  YYSYMBOL_return_types = 78,              /* return_types  */
+  YYSYMBOL_enum_statement = 79,            /* enum_statement  */
+  YYSYMBOL_enum_variables = 80,            /* enum_variables  */
+  YYSYMBOL_variable_Type = 81,             /* variable_Type  */
+  YYSYMBOL_variable_value = 82             /* variable_value  */
 };
 typedef enum yysymbol_kind_t yysymbol_kind_t;
 
@@ -254,7 +301,7 @@ typedef int yytype_uint16;
 
 
 /* Stored state numbers (used for stacks). */
-typedef yytype_int8 yy_state_t;
+typedef yytype_uint8 yy_state_t;
 
 /* State numbers in computations.  */
 typedef int yy_state_fast_t;
@@ -295,12 +342,18 @@ typedef int yy_state_fast_t;
 # define YY_USE(E) /* empty */
 #endif
 
-#if defined __GNUC__ && ! defined __ICC && 407 <= __GNUC__ * 100 + __GNUC_MINOR__
 /* Suppress an incorrect diagnostic about yylval being uninitialized.  */
-# define YY_IGNORE_MAYBE_UNINITIALIZED_BEGIN                            \
+#if defined __GNUC__ && ! defined __ICC && 406 <= __GNUC__ * 100 + __GNUC_MINOR__
+# if __GNUC__ * 100 + __GNUC_MINOR__ < 407
+#  define YY_IGNORE_MAYBE_UNINITIALIZED_BEGIN                           \
+    _Pragma ("GCC diagnostic push")                                     \
+    _Pragma ("GCC diagnostic ignored \"-Wuninitialized\"")
+# else
+#  define YY_IGNORE_MAYBE_UNINITIALIZED_BEGIN                           \
     _Pragma ("GCC diagnostic push")                                     \
     _Pragma ("GCC diagnostic ignored \"-Wuninitialized\"")              \
     _Pragma ("GCC diagnostic ignored \"-Wmaybe-uninitialized\"")
+# endif
 # define YY_IGNORE_MAYBE_UNINITIALIZED_END      \
     _Pragma ("GCC diagnostic pop")
 #else
@@ -457,18 +510,18 @@ union yyalloc
 #endif /* !YYCOPY_NEEDED */
 
 /* YYFINAL -- State number of the termination state.  */
-#define YYFINAL  4
+#define YYFINAL  2
 /* YYLAST -- Last index in YYTABLE.  */
-#define YYLAST   1
+#define YYLAST   466
 
 /* YYNTOKENS -- Number of terminals.  */
-#define YYNTOKENS  34
+#define YYNTOKENS  50
 /* YYNNTS -- Number of nonterminals.  */
-#define YYNNTS  3
+#define YYNNTS  33
 /* YYNRULES -- Number of rules.  */
-#define YYNRULES  3
+#define YYNRULES  85
 /* YYNSTATES -- Number of states.  */
-#define YYNSTATES  5
+#define YYNSTATES  178
 
 /* YYMAXUTOK -- Last valid token kind.  */
 #define YYMAXUTOK   288
@@ -488,16 +541,16 @@ static const yytype_int8 yytranslate[] =
        0,     2,     2,     2,     2,     2,     2,     2,     2,     2,
        2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
        2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
+       2,     2,     2,    48,     2,     2,     2,    47,     2,     2,
+      35,    36,    45,    43,    49,    44,     2,    46,     2,     2,
+       2,     2,     2,     2,     2,     2,     2,     2,    39,    34,
+      42,    40,    41,     2,     2,     2,     2,     2,     2,     2,
        2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
        2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
        2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
        2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
        2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
-       2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
-       2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
-       2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
-       2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
-       2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
+       2,     2,     2,    37,     2,    38,     2,     2,     2,     2,
        2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
        2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
        2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
@@ -517,10 +570,18 @@ static const yytype_int8 yytranslate[] =
 };
 
 #if YYDEBUG
-  /* YYRLINE[YYN] -- Source line where rule number YYN was defined.  */
+/* YYRLINE[YYN] -- Source line where rule number YYN was defined.  */
 static const yytype_int8 yyrline[] =
 {
-       0,    28,    28,    29
+       0,    32,    32,    32,    32,    34,    37,    40,    41,    44,
+      44,    48,    50,    51,    54,    54,    56,    58,    58,    61,
+      63,    65,    66,    68,    70,    72,    75,    75,    75,    75,
+      81,    81,    82,    82,    83,    83,    83,    84,    84,    84,
+      84,    84,    85,    85,    85,    86,    86,    86,    86,    87,
+      87,    87,    88,    88,    88,    88,    91,    92,    92,    93,
+      93,    94,    94,    95,    95,    96,    96,    97,    97,    98,
+      99,   100,   100,   100,   100,   113,   113,   113,   113,   113,
+     115,   115,   115,   115,   115,   115
 };
 #endif
 
@@ -540,8 +601,18 @@ static const char *const yytname[] =
   "WHILE", "DO", "SWITCH", "CASE", "BREAK", "RETURN", "ENUM", "VOID",
   "INT_TYPE", "CHAR_TYPE", "BOOL_TYPE", "FLOAT_TYPE", "STRING_TYPE",
   "CONST", "PRINT", "EE", "NE", "GE", "LE", "AND", "OR", "INTEGER",
-  "FLOAT", "BOOL_FALSE", "BOOL_TRUE", "CHAR", "STRING", "VARIABLE",
-  "$accept", "root", "expr", YY_NULLPTR
+  "FLOAT", "BOOL_FALSE", "BOOL_TRUE", "CHAR", "STRING", "VARIABLE", "';'",
+  "'('", "')'", "'{'", "'}'", "':'", "'='", "'>'", "'<'", "'+'", "'-'",
+  "'*'", "'/'", "'%'", "'!'", "','", "$accept", "root", "statement",
+  "recursive_statement", "conditional_statement",
+  "if_conditional_statement", "switch_conditional_statement",
+  "case_statement", "loop_statement", "for_loop_statement",
+  "while_loop_statement", "do_while_loop_statement", "assignment",
+  "expressions", "first", "second", "third", "fourth", "fifth", "sixth",
+  "seventh", "function_call", "functional_statement",
+  "function_parameters", "parameter", "function_parameters_calls",
+  "parameter_calls", "function", "return_types", "enum_statement",
+  "enum_variables", "variable_Type", "variable_value", YY_NULLPTR
 };
 
 static const char *
@@ -551,19 +622,7 @@ yysymbol_name (yysymbol_kind_t yysymbol)
 }
 #endif
 
-#ifdef YYPRINT
-/* YYTOKNUM[NUM] -- (External) token number corresponding to the
-   (internal) symbol number NUM (which must be that of a token).  */
-static const yytype_int16 yytoknum[] =
-{
-       0,   256,   257,   258,   259,   260,   261,   262,   263,   264,
-     265,   266,   267,   268,   269,   270,   271,   272,   273,   274,
-     275,   276,   277,   278,   279,   280,   281,   282,   283,   284,
-     285,   286,   287,   288
-};
-#endif
-
-#define YYPACT_NINF (-33)
+#define YYPACT_NINF (-52)
 
 #define yypact_value_is_default(Yyn) \
   ((Yyn) == YYPACT_NINF)
@@ -573,63 +632,228 @@ static const yytype_int16 yytoknum[] =
 #define yytable_value_is_error(Yyn) \
   0
 
-  /* YYPACT[STATE-NUM] -- Index in YYTABLE of the portion describing
-     STATE-NUM.  */
-static const yytype_int8 yypact[] =
+/* YYPACT[STATE-NUM] -- Index in YYTABLE of the portion describing
+   STATE-NUM.  */
+static const yytype_int16 yypact[] =
 {
-     -32,   -33,     1,   -33,   -33
+     -52,    32,   -52,   -16,    23,    34,    -1,    44,    51,    62,
+     -52,   -52,   -52,   -52,   -52,   -52,   -52,   -52,   -52,   -52,
+     -52,   -18,   -21,   -21,   -21,   -52,   -52,   -52,   -52,   -52,
+     -52,   -52,   -52,    43,    71,    92,    50,     1,   -28,   105,
+     -52,   -52,   -52,   -52,   -52,   -52,    85,   -52,   -21,   418,
+     -21,   -52,    87,    37,    86,   -21,   -21,    94,    -6,   -52,
+     -52,   -52,   -21,   -21,   -21,   -21,   -21,   -21,   -21,   -21,
+     -21,   -21,   -21,   -21,   -21,    17,    15,    98,   106,   108,
+      30,    95,   109,   114,   134,    73,    71,   130,   126,    71,
+     -52,    92,    50,     1,     1,   -28,   -28,   -28,   -28,   105,
+     105,   -52,   -52,   -52,    73,   -21,   140,   145,   -21,   142,
+     143,   175,   -52,   146,   -21,   144,   -20,   150,   138,   161,
+     -52,   -21,   159,    71,   -52,   -13,   -52,   163,   -52,    71,
+     -21,   -52,   171,   168,    73,   -52,    71,   169,   141,   418,
+     185,   -21,    -7,    71,   156,   -52,   174,   -52,   204,   173,
+     -52,    42,   133,   -52,   -21,   229,   -52,   273,   182,   184,
+     -52,   172,    71,   -52,   -21,   -52,   -52,   -52,    71,   176,
+     308,   352,   396,   186,   -52,   -52,   -52,   -52
 };
 
-  /* YYDEFACT[STATE-NUM] -- Default reduction number in state STATE-NUM.
-     Performed when YYTABLE does not specify something else to do.  Zero
-     means the default is an error.  */
+/* YYDEFACT[STATE-NUM] -- Default reduction number in state STATE-NUM.
+   Performed when YYTABLE does not specify something else to do.  Zero
+   means the default is an error.  */
 static const yytype_int8 yydefact[] =
 {
-       0,     3,     0,     2,     1
+       4,     0,     1,     0,     0,     0,     0,     0,     0,     0,
+      75,    76,    77,    78,    79,    80,    81,    82,    83,    84,
+      85,    54,     0,     0,     0,     2,     5,    12,    11,     6,
+      19,    20,    21,     0,    29,    31,    33,    36,    41,    44,
+      48,    51,    55,     3,    57,    58,     0,    53,     0,     0,
+       0,    10,     0,     0,     0,    64,     0,    54,     0,    49,
+      50,     7,     0,     0,     0,     0,     0,     0,     0,     0,
+       0,     0,     0,     0,     0,     0,     0,     0,     0,     0,
+       0,     0,     0,     0,     0,    60,    66,     0,    63,    27,
+      52,    30,    32,    34,    35,    39,    40,    37,    38,    42,
+      43,    45,    46,    47,    60,     0,     0,     0,     0,     0,
+       0,     0,     9,     0,     0,    74,     0,     0,    59,     0,
+      56,     0,     0,    26,    10,     0,    10,     0,    18,    28,
+       0,    70,     0,     0,     0,    62,    65,     0,     0,     0,
+       0,     0,     0,    73,    72,    10,     0,    10,    15,     0,
+      24,     0,     0,    16,     0,     0,    61,     0,     0,     0,
+      25,     0,    71,    68,     0,    10,    10,    10,    69,     0,
+       0,     0,     0,     0,    14,    23,    17,    67
 };
 
-  /* YYPGOTO[NTERM-NUM].  */
-static const yytype_int8 yypgoto[] =
+/* YYPGOTO[NTERM-NUM].  */
+static const yytype_int16 yypgoto[] =
 {
-     -33,   -33,   -33
+     -52,   -52,   221,   -51,   -52,   -52,   -52,   -52,   -52,   -52,
+     -52,   -52,   -46,   -22,   164,   162,    41,    69,    11,   -19,
+     -52,   -52,   -52,   123,   -52,   -52,   -52,   -52,   -52,   -52,
+     -52,     0,    76
 };
 
-  /* YYDEFGOTO[NTERM-NUM].  */
-static const yytype_int8 yydefgoto[] =
+/* YYDEFGOTO[NTERM-NUM].  */
+static const yytype_uint8 yydefgoto[] =
 {
-       0,     2,     3
+       0,     1,   112,    81,    26,    27,    28,   142,    29,    30,
+      31,    32,    33,    34,    35,    36,    37,    38,    39,    40,
+      41,    42,    43,   117,   118,    87,    88,    44,   169,    45,
+     116,    79,    47
 };
 
-  /* YYTABLE[YYPACT[STATE-NUM]] -- What to do in state STATE-NUM.  If
-     positive, shift that token.  If negative, reduce the rule whose
-     number is the opposite.  If YYTABLE_NINF, syntax error.  */
-static const yytype_int8 yytable[] =
+/* YYTABLE[YYPACT[STATE-NUM]] -- What to do in state STATE-NUM.  If
+   positive, shift that token.  If negative, reduce the rule whose
+   number is the opposite.  If YYTABLE_NINF, syntax error.  */
+static const yytype_uint8 yytable[] =
 {
-       1,     4
+      58,    46,   152,    78,    59,    60,    15,    16,    17,    18,
+      19,    20,    57,    62,    22,    70,    71,    55,   131,    48,
+      62,   139,    56,    23,    66,    67,    76,    24,    80,   132,
+      90,   153,     2,    86,    89,     3,    51,     4,     5,     6,
+       7,    62,    68,    69,     8,     9,    10,    11,    12,    13,
+      14,   106,   104,   101,   102,   103,    62,   105,    49,    15,
+      16,    17,    18,    19,    20,    21,   110,    22,    62,    50,
+      83,    64,    65,   138,    84,   140,    23,    61,   160,    52,
+      24,    99,   100,   123,    53,   119,   125,    10,    11,    12,
+      13,    14,   129,   149,   155,    54,   157,    62,     3,   136,
+       4,     5,     6,     7,   119,    93,    94,    77,   143,    10,
+      11,    12,    13,    14,   170,   171,   172,    63,    75,   151,
+      82,    85,    15,    16,    17,    18,    19,    20,    21,    55,
+      22,   107,   162,   111,   146,    95,    96,    97,    98,    23,
+     108,   109,   168,    24,     3,   113,     4,     5,     6,     7,
+      72,    73,    74,    77,   114,    10,    11,    12,    13,    14,
+      15,    16,    17,    18,    19,    20,   120,   115,    15,    16,
+      17,    18,    19,    20,    21,   121,    22,   124,    83,   148,
+     126,   127,   105,   128,   130,    23,   133,   134,     3,    24,
+       4,     5,     6,     7,   135,   137,   154,    77,   141,    10,
+      11,    12,    13,    14,   144,   145,   147,   156,   158,   159,
+     173,   167,    15,    16,    17,    18,    19,    20,    21,   165,
+      22,   166,    25,   150,   177,    92,    91,   122,   161,    23,
+       0,     0,     3,    24,     4,     5,     6,     7,     0,     0,
+       0,    77,     0,    10,    11,    12,    13,    14,     0,     0,
+       0,     0,     0,     0,     0,     0,    15,    16,    17,    18,
+      19,    20,    21,     0,    22,     0,     0,   163,     0,     0,
+       0,     0,     0,    23,     0,     0,     3,    24,     4,     5,
+       6,     7,     0,     0,   164,    77,     0,    10,    11,    12,
+      13,    14,     0,     0,     0,     0,     0,     0,     0,     0,
+      15,    16,    17,    18,    19,    20,    21,     0,    22,     0,
+       0,     3,     0,     4,     5,     6,     7,    23,     0,     0,
+      77,    24,    10,    11,    12,    13,    14,     0,     0,     0,
+       0,     0,     0,     0,     0,    15,    16,    17,    18,    19,
+      20,    21,     0,    22,     0,     0,   174,     0,     0,     0,
+       0,     0,    23,     0,     0,     3,    24,     4,     5,     6,
+       7,     0,     0,     0,    77,     0,    10,    11,    12,    13,
+      14,     0,     0,     0,     0,     0,     0,     0,     0,    15,
+      16,    17,    18,    19,    20,    21,     0,    22,     0,     0,
+     175,     0,     0,     0,     0,     0,    23,     0,     0,     3,
+      24,     4,     5,     6,     7,     0,   176,     0,    77,     0,
+      10,    11,    12,    13,    14,     0,     0,     0,     0,     0,
+       0,     0,     0,    15,    16,    17,    18,    19,    20,    21,
+      77,    22,    10,    11,    12,    13,    14,     0,     0,     0,
+      23,     0,     0,     0,    24,    15,    16,    17,    18,    19,
+      20,    21,     0,    22,     0,     0,     0,     0,     0,     0,
+       0,     0,    23,     0,     0,     0,    24
 };
 
-static const yytype_int8 yycheck[] =
+static const yytype_int16 yycheck[] =
 {
-      32,     0
+      22,     1,     9,    49,    23,    24,    27,    28,    29,    30,
+      31,    32,    33,    26,    35,    43,    44,    35,    38,    35,
+      26,    34,    40,    44,    23,    24,    48,    48,    50,    49,
+      36,    38,     0,    55,    56,     3,    37,     5,     6,     7,
+       8,    26,    41,    42,    12,    13,    14,    15,    16,    17,
+      18,    36,    35,    72,    73,    74,    26,    40,    35,    27,
+      28,    29,    30,    31,    32,    33,    36,    35,    26,    35,
+      33,    21,    22,   124,    37,   126,    44,    34,    36,    35,
+      48,    70,    71,   105,    33,    85,   108,    14,    15,    16,
+      17,    18,   114,   139,   145,    33,   147,    26,     3,   121,
+       5,     6,     7,     8,   104,    64,    65,    12,   130,    14,
+      15,    16,    17,    18,   165,   166,   167,    25,    33,   141,
+      33,    35,    27,    28,    29,    30,    31,    32,    33,    35,
+      35,    33,   154,    38,   134,    66,    67,    68,    69,    44,
+      34,    33,   164,    48,     3,    36,     5,     6,     7,     8,
+      45,    46,    47,    12,    40,    14,    15,    16,    17,    18,
+      27,    28,    29,    30,    31,    32,    36,    33,    27,    28,
+      29,    30,    31,    32,    33,    49,    35,    37,    33,    38,
+      37,     6,    40,    37,    40,    44,    36,    49,     3,    48,
+       5,     6,     7,     8,    33,    36,    40,    12,    35,    14,
+      15,    16,    17,    18,    33,    37,    37,    33,     4,    36,
+      34,    39,    27,    28,    29,    30,    31,    32,    33,    37,
+      35,    37,     1,    38,    38,    63,    62,   104,   152,    44,
+      -1,    -1,     3,    48,     5,     6,     7,     8,    -1,    -1,
+      -1,    12,    -1,    14,    15,    16,    17,    18,    -1,    -1,
+      -1,    -1,    -1,    -1,    -1,    -1,    27,    28,    29,    30,
+      31,    32,    33,    -1,    35,    -1,    -1,    38,    -1,    -1,
+      -1,    -1,    -1,    44,    -1,    -1,     3,    48,     5,     6,
+       7,     8,    -1,    -1,    11,    12,    -1,    14,    15,    16,
+      17,    18,    -1,    -1,    -1,    -1,    -1,    -1,    -1,    -1,
+      27,    28,    29,    30,    31,    32,    33,    -1,    35,    -1,
+      -1,     3,    -1,     5,     6,     7,     8,    44,    -1,    -1,
+      12,    48,    14,    15,    16,    17,    18,    -1,    -1,    -1,
+      -1,    -1,    -1,    -1,    -1,    27,    28,    29,    30,    31,
+      32,    33,    -1,    35,    -1,    -1,    38,    -1,    -1,    -1,
+      -1,    -1,    44,    -1,    -1,     3,    48,     5,     6,     7,
+       8,    -1,    -1,    -1,    12,    -1,    14,    15,    16,    17,
+      18,    -1,    -1,    -1,    -1,    -1,    -1,    -1,    -1,    27,
+      28,    29,    30,    31,    32,    33,    -1,    35,    -1,    -1,
+      38,    -1,    -1,    -1,    -1,    -1,    44,    -1,    -1,     3,
+      48,     5,     6,     7,     8,    -1,    10,    -1,    12,    -1,
+      14,    15,    16,    17,    18,    -1,    -1,    -1,    -1,    -1,
+      -1,    -1,    -1,    27,    28,    29,    30,    31,    32,    33,
+      12,    35,    14,    15,    16,    17,    18,    -1,    -1,    -1,
+      44,    -1,    -1,    -1,    48,    27,    28,    29,    30,    31,
+      32,    33,    -1,    35,    -1,    -1,    -1,    -1,    -1,    -1,
+      -1,    -1,    44,    -1,    -1,    -1,    48
 };
 
-  /* YYSTOS[STATE-NUM] -- The (internal number of the) accessing
-     symbol of state STATE-NUM.  */
+/* YYSTOS[STATE-NUM] -- The symbol kind of the accessing symbol of
+   state STATE-NUM.  */
 static const yytype_int8 yystos[] =
 {
-       0,    32,    35,    36,     0
+       0,    51,     0,     3,     5,     6,     7,     8,    12,    13,
+      14,    15,    16,    17,    18,    27,    28,    29,    30,    31,
+      32,    33,    35,    44,    48,    52,    54,    55,    56,    58,
+      59,    60,    61,    62,    63,    64,    65,    66,    67,    68,
+      69,    70,    71,    72,    77,    79,    81,    82,    35,    35,
+      35,    37,    35,    33,    33,    35,    40,    33,    63,    69,
+      69,    34,    26,    25,    21,    22,    23,    24,    41,    42,
+      43,    44,    45,    46,    47,    33,    63,    12,    62,    81,
+      63,    53,    33,    33,    37,    35,    63,    75,    76,    63,
+      36,    64,    65,    66,    66,    67,    67,    67,    67,    68,
+      68,    69,    69,    69,    35,    40,    36,    33,    34,    33,
+      36,    38,    52,    36,    40,    33,    80,    73,    74,    81,
+      36,    49,    73,    63,    37,    63,    37,     6,    37,    63,
+      40,    38,    49,    36,    49,    33,    63,    36,    53,    34,
+      53,    35,    57,    63,    33,    37,    81,    37,    38,    62,
+      38,    63,     9,    38,    40,    53,    33,    53,     4,    36,
+      36,    82,    63,    38,    11,    37,    37,    39,    63,    78,
+      53,    53,    53,    34,    38,    38,    10,    38
 };
 
-  /* YYR1[YYN] -- Symbol number of symbol that rule YYN derives.  */
+/* YYR1[RULE-NUM] -- Symbol kind of the left-hand side of rule RULE-NUM.  */
 static const yytype_int8 yyr1[] =
 {
-       0,    34,    35,    36
+       0,    50,    51,    51,    51,    52,    52,    52,    52,    53,
+      53,    54,    54,    54,    55,    55,    56,    57,    57,    58,
+      58,    58,    58,    59,    60,    61,    62,    62,    62,    62,
+      63,    63,    64,    64,    65,    65,    65,    66,    66,    66,
+      66,    66,    67,    67,    67,    68,    68,    68,    68,    69,
+      69,    69,    70,    70,    70,    70,    71,    72,    72,    73,
+      73,    74,    74,    75,    75,    76,    76,    77,    77,    78,
+      79,    80,    80,    80,    80,    81,    81,    81,    81,    81,
+      82,    82,    82,    82,    82,    82
 };
 
-  /* YYR2[YYN] -- Number of symbols on the right hand side of rule YYN.  */
+/* YYR2[RULE-NUM] -- Number of symbols on the right-hand side of rule RULE-NUM.  */
 static const yytype_int8 yyr2[] =
 {
-       0,     2,     1,     1
+       0,     2,     2,     2,     0,     1,     1,     2,     0,     2,
+       0,     1,     1,     0,    11,     7,     7,     6,     0,     1,
+       1,     1,     0,    11,     7,     8,     4,     3,     5,     1,
+       3,     1,     3,     1,     3,     3,     1,     3,     3,     3,
+       3,     1,     3,     3,     1,     3,     3,     3,     1,     2,
+       2,     1,     3,     1,     1,     1,     4,     1,     1,     1,
+       0,     4,     2,     1,     0,     3,     1,    11,     8,     1,
+       5,     5,     3,     3,     1,     1,     1,     1,     1,     1,
+       1,     1,     1,     1,     1,     1
 };
 
 
@@ -641,6 +865,7 @@ enum { YYENOMEM = -2 };
 #define YYACCEPT        goto yyacceptlab
 #define YYABORT         goto yyabortlab
 #define YYERROR         goto yyerrorlab
+#define YYNOMEM         goto yyexhaustedlab
 
 
 #define YYRECOVERING()  (!!yyerrstatus)
@@ -681,10 +906,7 @@ do {                                            \
     YYFPRINTF Args;                             \
 } while (0)
 
-/* This macro is provided for backward compatibility. */
-# ifndef YY_LOCATION_PRINT
-#  define YY_LOCATION_PRINT(File, Loc) ((void) 0)
-# endif
+
 
 
 # define YY_SYMBOL_PRINT(Title, Kind, Value, Location)                    \
@@ -711,10 +933,6 @@ yy_symbol_value_print (FILE *yyo,
   YY_USE (yyoutput);
   if (!yyvaluep)
     return;
-# ifdef YYPRINT
-  if (yykind < YYNTOKENS)
-    YYPRINT (yyo, yytoknum[yykind], *yyvaluep);
-# endif
   YY_IGNORE_MAYBE_UNINITIALIZED_BEGIN
   YY_USE (yykind);
   YY_IGNORE_MAYBE_UNINITIALIZED_END
@@ -899,6 +1117,7 @@ yyparse (void)
   YYDPRINTF ((stderr, "Starting parse\n"));
 
   yychar = YYEMPTY; /* Cause a token to be read.  */
+
   goto yysetstate;
 
 
@@ -924,7 +1143,7 @@ yysetstate:
 
   if (yyss + yystacksize - 1 <= yyssp)
 #if !defined yyoverflow && !defined YYSTACK_RELOCATE
-    goto yyexhaustedlab;
+    YYNOMEM;
 #else
     {
       /* Get the current used size of the three stacks, in elements.  */
@@ -952,7 +1171,7 @@ yysetstate:
 # else /* defined YYSTACK_RELOCATE */
       /* Extend the stack our own way.  */
       if (YYMAXDEPTH <= yystacksize)
-        goto yyexhaustedlab;
+        YYNOMEM;
       yystacksize *= 2;
       if (YYMAXDEPTH < yystacksize)
         yystacksize = YYMAXDEPTH;
@@ -963,7 +1182,7 @@ yysetstate:
           YY_CAST (union yyalloc *,
                    YYSTACK_ALLOC (YY_CAST (YYSIZE_T, YYSTACK_BYTES (yystacksize))));
         if (! yyptr)
-          goto yyexhaustedlab;
+          YYNOMEM;
         YYSTACK_RELOCATE (yyss_alloc, yyss);
         YYSTACK_RELOCATE (yyvs_alloc, yyvs);
 #  undef YYSTACK_RELOCATE
@@ -984,6 +1203,7 @@ yysetstate:
         YYABORT;
     }
 #endif /* !defined yyoverflow && !defined YYSTACK_RELOCATE */
+
 
   if (yystate == YYFINAL)
     YYACCEPT;
@@ -1096,14 +1316,44 @@ yyreduce:
   YY_REDUCE_PRINT (yyn);
   switch (yyn)
     {
-  case 2: /* root: expr  */
-#line 28 "parser.y"
-           { printf("result"); return 0;}
-#line 1103 "parser.tab.c"
+  case 3: /* root: root functional_statement  */
+#line 32 "parser.y"
+                                                 {printf("functions\n");}
+#line 1323 "parser.tab.c"
+    break;
+
+  case 5: /* statement: conditional_statement  */
+#line 35 "parser.y"
+            { printf("conditional_statement\n");}
+#line 1329 "parser.tab.c"
+    break;
+
+  case 6: /* statement: loop_statement  */
+#line 38 "parser.y"
+            { printf("loop_statement\n");}
+#line 1335 "parser.tab.c"
+    break;
+
+  case 7: /* statement: assignment ';'  */
+#line 40 "parser.y"
+                           { printf("assignment\n");}
+#line 1341 "parser.tab.c"
+    break;
+
+  case 14: /* if_conditional_statement: IF '(' expressions ')' '{' recursive_statement '}' ELSE '{' recursive_statement '}'  */
+#line 54 "parser.y"
+                                                                                                           {}
+#line 1347 "parser.tab.c"
+    break;
+
+  case 15: /* if_conditional_statement: IF '(' expressions ')' '{' recursive_statement '}'  */
+#line 54 "parser.y"
+                                                                                                                                                                 {}
+#line 1353 "parser.tab.c"
     break;
 
 
-#line 1107 "parser.tab.c"
+#line 1357 "parser.tab.c"
 
       default: break;
     }
@@ -1185,6 +1435,7 @@ yyerrorlab:
      label yyerrorlab therefore never appears in user code.  */
   if (0)
     YYERROR;
+  ++yynerrs;
 
   /* Do not reclaim the symbols of the rule whose action triggered
      this YYERROR.  */
@@ -1245,7 +1496,7 @@ yyerrlab1:
 `-------------------------------------*/
 yyacceptlab:
   yyresult = 0;
-  goto yyreturn;
+  goto yyreturnlab;
 
 
 /*-----------------------------------.
@@ -1253,24 +1504,22 @@ yyacceptlab:
 `-----------------------------------*/
 yyabortlab:
   yyresult = 1;
-  goto yyreturn;
+  goto yyreturnlab;
 
 
-#if !defined yyoverflow
-/*-------------------------------------------------.
-| yyexhaustedlab -- memory exhaustion comes here.  |
-`-------------------------------------------------*/
+/*-----------------------------------------------------------.
+| yyexhaustedlab -- YYNOMEM (memory exhaustion) comes here.  |
+`-----------------------------------------------------------*/
 yyexhaustedlab:
   yyerror (YY_("memory exhausted"));
   yyresult = 2;
-  goto yyreturn;
-#endif
+  goto yyreturnlab;
 
 
-/*-------------------------------------------------------.
-| yyreturn -- parsing is finished, clean up and return.  |
-`-------------------------------------------------------*/
-yyreturn:
+/*----------------------------------------------------------.
+| yyreturnlab -- parsing is finished, clean up and return.  |
+`----------------------------------------------------------*/
+yyreturnlab:
   if (yychar != YYEMPTY)
     {
       /* Make sure we have latest lookahead translation.  See comments at
@@ -1297,21 +1546,21 @@ yyreturn:
   return yyresult;
 }
 
-#line 30 "parser.y"
+#line 118 "parser.y"
 
 
 void yyerror(const char *str)
 {
     fprintf(stderr,"error: %s\n",str);
 }
- 
+
 int yywrap()
 {
     return 1;
 } 
-  
-// int main()
-// {
-//     yylex();
-//     return 0;
-// }
+
+int main()
+{
+    yyparse();
+    return 0;
+}
