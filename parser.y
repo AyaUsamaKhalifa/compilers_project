@@ -1,7 +1,10 @@
 %{
     /*Definition section */
     #include <stdio.h>
+    #include <stdlib.h>
+    extern FILE *yyin;
     void yyerror(const char *str);
+    void read_file(char *filename);
     //printing may be removed
 %}
 
@@ -73,9 +76,6 @@ do_while_loop_statement: DO '{' recursive_statement '}' WHILE '(' expressions ')
 
 //-------------assignments-------------//
 assignment: variable_Type VARIABLE '=' expressions | VARIABLE '=' expressions | ENUM VARIABLE VARIABLE '=' expressions | expressions; // hna lazem nzwd elvalues elly elmafrood treturn
-//first_operation: first_operation '+' second_operation | first_operation '-' second_operation | second_operation;
-//second_operation: second_operation '*' third_operation | second_operation '/' third_operation | third_operation;
-//third_operation: variable_value | VARIABLE | '('first_operation')';
 
 //------------Expressions-------------//
 expressions: expressions OR first | first;
@@ -99,16 +99,6 @@ return_types: expressions ;
 enum_statement: ENUM VARIABLE '{'enum_variables'}';
 enum_variables:  enum_variables ',' VARIABLE '=' expressions | enum_variables ',' VARIABLE | VARIABLE '=' expressions | VARIABLE;
 
-//-------------comparators------------//
-//comparator: VARIABLE comparator_operator variable_value | VARIABLE comparator_operator VARIABLE | variable_value comparator_operator VARIABLE | variable_value comparator_operator variable_value | BOOL_FALSE | BOOL_TRUE | VARIABLE;//hna lessa mzwdnash eloperator
-//comparator_operator: EE | NE | GE | LE | AND | OR | '>' | '<' ;
-//comparisons_list: first_comparator {printf("A list of comparisons detected: \n");} | ;
-//first_comparator: first_comparator OR second_comparator {printf("x || y: \n");}| second_comparator ;
-//second_comparator: second_comparator AND third_comparator {printf("x && y: \n");}| third_comparator ;
-//third_comparator: '!' third_comparator {printf("!x: \n");} | fourth_comparator ;
-//fourth_comparator: '(' comparisons_list ')' {printf("This is of higher priority \n");}| comparator ;
-
-
 //------------variables---------------//
 variable_Type: INT_TYPE | CHAR_TYPE | BOOL_TYPE | FLOAT_TYPE | STRING_TYPE; 
 
@@ -127,8 +117,32 @@ int yywrap()
     return 1;
 } 
 
-int main()
-{
+void read_file(char *filename) {
+    FILE *fp = fopen(filename, "r");
+    if (!fp) {
+        perror("Error opening file");
+        exit(1);
+    }
+
+    // Read input from file and process it as needed
+
+    fclose(fp);
+}
+
+int main(int argc, char **argv) {
+    FILE *fp = stdin;
+    if (argc > 1) {
+        fp = fopen(argv[1], "r");
+        if (!fp) {
+            perror("Error opening file");
+            return 1;
+        }
+    }
+
+    yyin = fp;
+
     yyparse();
+
+    fclose(fp);
     return 0;
 }

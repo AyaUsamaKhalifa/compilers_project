@@ -54,8 +54,3 @@
 
 .                          yyerror("invalid character");
 %%
-
-// int main(){
-//     yylex();
-//     return 0;
-// }

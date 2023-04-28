@@ -1980,8 +1980,3 @@ void yyfree (void * ptr )
 
 #line 56 "scanner.l"
 
-
-// int main(){
-//     yylex();
-//     return 0;
-// }

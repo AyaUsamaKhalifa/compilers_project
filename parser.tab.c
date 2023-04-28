@@ -71,10 +71,13 @@
 
     /*Definition section */
     #include <stdio.h>
+    #include <stdlib.h>
+    extern FILE *yyin;
     void yyerror(const char *str);
+    void read_file(char *filename);
     //printing may be removed
 
-#line 78 "parser.tab.c"
+#line 81 "parser.tab.c"
 
 # ifndef YY_CAST
 #  ifdef __cplusplus
@@ -573,15 +576,15 @@ static const yytype_int8 yytranslate[] =
 /* YYRLINE[YYN] -- Source line where rule number YYN was defined.  */
 static const yytype_int8 yyrline[] =
 {
-       0,    32,    32,    32,    32,    34,    37,    40,    41,    44,
-      44,    48,    50,    51,    54,    54,    56,    58,    58,    61,
-      63,    65,    66,    68,    70,    72,    75,    75,    75,    75,
+       0,    35,    35,    35,    35,    37,    40,    43,    44,    47,
+      47,    51,    53,    54,    57,    57,    59,    61,    61,    64,
+      66,    68,    69,    71,    73,    75,    78,    78,    78,    78,
       81,    81,    82,    82,    83,    83,    83,    84,    84,    84,
       84,    84,    85,    85,    85,    86,    86,    86,    86,    87,
       87,    87,    88,    88,    88,    88,    91,    92,    92,    93,
       93,    94,    94,    95,    95,    96,    96,    97,    97,    98,
-      99,   100,   100,   100,   100,   113,   113,   113,   113,   113,
-     115,   115,   115,   115,   115,   115
+      99,   100,   100,   100,   100,   103,   103,   103,   103,   103,
+     105,   105,   105,   105,   105,   105
 };
 #endif
 
@@ -1317,43 +1320,43 @@ yyreduce:
   switch (yyn)
     {
   case 3: /* root: root functional_statement  */
-#line 32 "parser.y"
+#line 35 "parser.y"
                                                  {printf("functions\n");}
-#line 1323 "parser.tab.c"
+#line 1326 "parser.tab.c"
     break;
 
   case 5: /* statement: conditional_statement  */
-#line 35 "parser.y"
+#line 38 "parser.y"
             { printf("conditional_statement\n");}
-#line 1329 "parser.tab.c"
+#line 1332 "parser.tab.c"
     break;
 
   case 6: /* statement: loop_statement  */
-#line 38 "parser.y"
+#line 41 "parser.y"
             { printf("loop_statement\n");}
-#line 1335 "parser.tab.c"
+#line 1338 "parser.tab.c"
     break;
 
   case 7: /* statement: assignment ';'  */
-#line 40 "parser.y"
+#line 43 "parser.y"
                            { printf("assignment\n");}
-#line 1341 "parser.tab.c"
+#line 1344 "parser.tab.c"
     break;
 
   case 14: /* if_conditional_statement: IF '(' expressions ')' '{' recursive_statement '}' ELSE '{' recursive_statement '}'  */
-#line 54 "parser.y"
+#line 57 "parser.y"
                                                                                                            {}
-#line 1347 "parser.tab.c"
+#line 1350 "parser.tab.c"
     break;
 
   case 15: /* if_conditional_statement: IF '(' expressions ')' '{' recursive_statement '}'  */
-#line 54 "parser.y"
+#line 57 "parser.y"
                                                                                                                                                                  {}
-#line 1353 "parser.tab.c"
+#line 1356 "parser.tab.c"
     break;
 
 
-#line 1357 "parser.tab.c"
+#line 1360 "parser.tab.c"
 
       default: break;
     }
@@ -1546,7 +1549,7 @@ yyreturnlab:
   return yyresult;
 }
 
-#line 118 "parser.y"
+#line 108 "parser.y"
 
 
 void yyerror(const char *str)
@@ -1559,8 +1562,32 @@ int yywrap()
     return 1;
 } 
 
-int main()
-{
+void read_file(char *filename) {
+    FILE *fp = fopen(filename, "r");
+    if (!fp) {
+        perror("Error opening file");
+        exit(1);
+    }
+
+    // Read input from file and process it as needed
+
+    fclose(fp);
+}
+
+int main(int argc, char **argv) {
+    FILE *fp = stdin;
+    if (argc > 1) {
+        fp = fopen(argv[1], "r");
+        if (!fp) {
+            perror("Error opening file");
+            return 1;
+        }
+    }
+
+    yyin = fp;
+
     yyparse();
+
+    fclose(fp);
     return 0;
 }
