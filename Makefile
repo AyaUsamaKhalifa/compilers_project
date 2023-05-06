@@ -18,5 +18,6 @@ run_all:
 run_and_build:
 	flex scanner.l 
 	bison -d parser.y
-	gcc -o parser parser.tab.c lex.yy.c -lfl
+	gcc -o parser common.c parser.tab.c lex.yy.c -lfl
 	./parser < input.txt
+
