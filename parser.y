@@ -90,7 +90,7 @@ loop_statement: for_loop_statement
                 // ;
 
 for_loop_statement: FOR '(' assignment ';' expressions ';' assignment')' '{' recursive_statement '}' 
-                    {printf("for_loop_statement: for(assignment; exp; assignment){recursive_statement}\n");} // hna lazem nzwd elvalues elly elmafrood treturn
+                    {printf("for_loop_statement:    for(assignment; exp; assignment){recursive_statement}\n");} // hna lazem nzwd elvalues elly elmafrood treturn
 
 while_loop_statement: WHILE '(' expressions ')' '{' recursive_statement '}'  
                     {printf("while_loop_statement: while(exp){recursive_statement}\n");} 
@@ -230,6 +230,8 @@ variable_Type:  INT_TYPE
                 {printf("variable_Type: float\n");} 
                 | STRING_TYPE 
                 {printf("variable_Type: strng\n");}  
+                | CONST
+                {printf("variable_Type: const\n");}
 
 variable_value: INTEGER  
                 {printf("variable_value: int value \n");} 
