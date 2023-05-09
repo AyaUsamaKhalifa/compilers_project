@@ -1,15 +1,36 @@
+int x= 5;
+char y= 'v';
+string name = "str";
+bool flag = true;
+
 if(i < length){
+    x = 1;
+    x = x - 1;
+}
+else {
     x = 1;
     x = x - 1;
 }
 
 for(int i = 0; i < n; i = i + 1){
     count = 5 + 1 * 8 / 2;
-}
-
 void func(int x)
-{
     char x = 'a';
 }
+
+int fun(int y){
+    x = y;
+    return x;
+}
+
+switch(x){
+    case 'a':
+        x= z;
+        break
+}
+
+do {x = x + 1;} while(x > 0)
+
+enum x {thursday = 1}
 
 string d = 'a';
