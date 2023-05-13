@@ -3,9 +3,12 @@
     #include "common.h"
     #include <stdio.h>
     #include <stdlib.h>
+    #include "symbolTable.h"
     extern FILE *yyin;
     void yyerror(const char *str);
     void read_file(char *filename);
+
+    Node *currentScope = new Node();
     //printing may be removed
     // extern char* last_token;
 %}
@@ -29,7 +32,7 @@
 %token <string_val> STRING 
 %token <string_val> VARIABLE
 
-
+%type <char*> variable_Type
 
 %%
 root:   root statement 
@@ -101,7 +104,8 @@ do_while_loop_statement: DO '{' recursive_statement '}' WHILE '(' expressions ')
 
 //-------------assignments-------------//
 assignment: variable_Type VARIABLE '=' expressions  
-            {printf("assignment: variable_Type VARIABLE = exp\n");} 
+            {printf("assignment: variable_Type VARIABLE = exp\n");
+            insert($2, "variable", $1, currentScope);} 
             | VARIABLE '=' expressions  
             {printf("assignment: VARIABLE = exp\n");}  
             | ENUM VARIABLE VARIABLE '=' expressions 
@@ -221,15 +225,20 @@ enum_variables:  enum_variables ',' VARIABLE '=' expressions
 
 //------------variables---------------//
 variable_Type:  INT_TYPE  
-                {printf("variable_Type: int\n");} 
+                {printf("variable_Type: int\n");
+                $$ = "int";} 
                 | CHAR_TYPE 
-                {printf("variable_Type: char\n");} 
+                {printf("variable_Type: char\n"
+                $$ = "char");} 
                 | BOOL_TYPE 
-                {printf("variable_Type: bool\n");} 
+                {printf("variable_Type: bool\n");
+                $$ = "bool";} 
                 | FLOAT_TYPE 
-                {printf("variable_Type: float\n");} 
+                {printf("variable_Type: float\n");
+                $$ = "float";} 
                 | STRING_TYPE 
-                {printf("variable_Type: strng\n");}  
+                {printf("variable_Type: strng\n");
+                $$ = "string";}  
 
 variable_value: INTEGER  
                 {printf("variable_value: int value \n");} 
@@ -278,6 +287,8 @@ int main(int argc, char **argv) {
             return 1;
         }
     }
+
+    print(currentScope);
 
     yyin = fp;
 
