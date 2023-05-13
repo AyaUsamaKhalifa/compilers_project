@@ -1,19 +1,15 @@
-#include <iostream>
 #include "symbolTable.h"
-Node *create(Node *parent)
+#include<string.h>
+Node *symbolTable::create(Node *parent)
 {
     Node *new_node = new Node;
     new_node->parent = parent;
     return new_node;
 }
 
-Node *get_parent(Node *curr_node)
+bool symbolTable::insert(string identifier, string kind, string type, Node *curr_node)
 {
-    return curr_node->parent;
-}
-
-bool insert(string identifier, string kind, string type, Node *curr_node)
-{
+    // current node does not exist return false
     vector<string> data(2);
     data[0] = kind;
     data[1] = type;
@@ -21,7 +17,7 @@ bool insert(string identifier, string kind, string type, Node *curr_node)
     return true;
 }
 
-bool lookup(string identifier, Node *curr_node)
+bool symbolTable::lookup(string identifier, Node *curr_node)
 {
     if(curr_node == nullptr)
     {
@@ -36,7 +32,7 @@ bool lookup(string identifier, Node *curr_node)
     return lookup(identifier, curr_node->parent);
 }
 
-void print(Node *curr_node)
+void symbolTable::print(Node *curr_node)
 {
     if(curr_node == nullptr)
     {
@@ -48,9 +44,6 @@ void print(Node *curr_node)
     print(curr_node->parent);
 }
 
-int main(){
-
-}
 
 // int main()
 // {

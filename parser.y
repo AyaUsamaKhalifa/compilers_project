@@ -3,8 +3,10 @@
     #include "common.h"
     #include <stdio.h>
     #include <stdlib.h>
+    #include<string.h>
     #include "symbolTable.h"
     extern FILE *yyin;
+    extern int yylex(void);
     void yyerror(const char *str);
     void read_file(char *filename);
 
@@ -105,7 +107,7 @@ do_while_loop_statement: DO '{' recursive_statement '}' WHILE '(' expressions ')
 //-------------assignments-------------//
 assignment: variable_Type VARIABLE '=' expressions  
             {printf("assignment: variable_Type VARIABLE = exp\n");
-            insert($2, "variable", $1, currentScope);} 
+            } 
             | VARIABLE '=' expressions  
             {printf("assignment: VARIABLE = exp\n");}  
             | ENUM VARIABLE VARIABLE '=' expressions 
@@ -154,7 +156,7 @@ fifth:  fifth '*' sixth
         | fifth '/' sixth 
         {printf("fifth: fifth / sixth\n");} 
         | fifth '%' sixth 
-        {printf("fifth: fifth % sixth\n");} 
+        {printf("fifth: fifth %% sixth\n");} 
         | sixth 
         {printf("fifth: sixth\n");} 
 
@@ -226,19 +228,19 @@ enum_variables:  enum_variables ',' VARIABLE '=' expressions
 //------------variables---------------//
 variable_Type:  INT_TYPE  
                 {printf("variable_Type: int\n");
-                $$ = "int";} 
+                } 
                 | CHAR_TYPE 
-                {printf("variable_Type: char\n"
-                $$ = "char");} 
+                {printf("variable_Type: char\n");
+                } 
                 | BOOL_TYPE 
                 {printf("variable_Type: bool\n");
-                $$ = "bool";} 
+                } 
                 | FLOAT_TYPE 
                 {printf("variable_Type: float\n");
-                $$ = "float";} 
+                } 
                 | STRING_TYPE 
                 {printf("variable_Type: strng\n");
-                $$ = "string";}  
+                }  
 
 variable_value: INTEGER  
                 {printf("variable_value: int value \n");} 
@@ -288,7 +290,6 @@ int main(int argc, char **argv) {
         }
     }
 
-    print(currentScope);
 
     yyin = fp;
 

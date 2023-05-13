@@ -73,8 +73,10 @@
     #include "common.h"
     #include <stdio.h>
     #include <stdlib.h>
+    #include<string.h>
     #include "symbolTable.h"
     extern FILE *yyin;
+    extern int yylex(void);
     void yyerror(const char *str);
     void read_file(char *filename);
 
@@ -82,7 +84,7 @@
     //printing may be removed
     // extern char* last_token;
 
-#line 86 "parser.tab.c"
+#line 88 "parser.tab.c"
 
 # ifndef YY_CAST
 #  ifdef __cplusplus
@@ -581,15 +583,15 @@ static const yytype_int8 yytranslate[] =
 /* YYRLINE[YYN] -- Source line where rule number YYN was defined.  */
 static const yytype_uint8 yyrline[] =
 {
-       0,    38,    38,    40,    41,    43,    46,    49,    54,    57,
-      60,    63,    69,    71,    74,    77,    80,    83,    86,    89,
-      95,    98,   102,   106,   109,   111,   113,   117,   119,   122,
-     124,   127,   129,   131,   134,   136,   138,   140,   142,   145,
-     147,   149,   152,   154,   156,   158,   161,   163,   165,   168,
-     170,   172,   174,   178,   181,   183,   186,   189,   191,   193,
-     196,   199,   201,   203,   206,   208,   211,   214,   217,   219,
-     221,   223,   227,   230,   233,   236,   239,   243,   245,   247,
-     249,   251,   253
+       0,    40,    40,    42,    43,    45,    48,    51,    56,    59,
+      62,    65,    71,    73,    76,    79,    82,    85,    88,    91,
+      97,   100,   104,   108,   111,   113,   115,   119,   121,   124,
+     126,   129,   131,   133,   136,   138,   140,   142,   144,   147,
+     149,   151,   154,   156,   158,   160,   163,   165,   167,   170,
+     172,   174,   176,   180,   183,   185,   188,   191,   193,   195,
+     198,   201,   203,   205,   208,   210,   213,   216,   219,   221,
+     223,   225,   229,   232,   235,   238,   241,   245,   247,   249,
+     251,   253,   255
 };
 #endif
 
@@ -1325,499 +1327,499 @@ yyreduce:
   switch (yyn)
     {
   case 2: /* root: root statement  */
-#line 39 "parser.y"
+#line 41 "parser.y"
         {printf("root: root statement\n"); printf("-------------------------------------\n");}
-#line 1331 "parser.tab.c"
+#line 1333 "parser.tab.c"
     break;
 
   case 3: /* root: root functional_statement  */
-#line 41 "parser.y"
+#line 43 "parser.y"
         {printf("root functional_statement\n"); printf("-------------------------------------\n");}
-#line 1337 "parser.tab.c"
+#line 1339 "parser.tab.c"
     break;
 
   case 4: /* root: %empty  */
-#line 41 "parser.y"
+#line 43 "parser.y"
                                                                                                       {printf("root: \n");}
-#line 1343 "parser.tab.c"
+#line 1345 "parser.tab.c"
     break;
 
   case 5: /* statement: conditional_statement  */
-#line 44 "parser.y"
+#line 46 "parser.y"
             { printf("statement: conditional_statement\n");}
-#line 1349 "parser.tab.c"
+#line 1351 "parser.tab.c"
     break;
 
   case 6: /* statement: loop_statement  */
-#line 47 "parser.y"
+#line 49 "parser.y"
             { printf("statement: loop_statement\n");}
-#line 1355 "parser.tab.c"
+#line 1357 "parser.tab.c"
     break;
 
   case 7: /* statement: assignment ';'  */
-#line 49 "parser.y"
+#line 51 "parser.y"
                            { printf("statement: assignment;\n");}
-#line 1361 "parser.tab.c"
+#line 1363 "parser.tab.c"
     break;
 
   case 8: /* recursive_statement: recursive_statement statement  */
-#line 55 "parser.y"
+#line 57 "parser.y"
                     {printf("recursive_statement: recursive_statement statement\n");}
-#line 1367 "parser.tab.c"
+#line 1369 "parser.tab.c"
     break;
 
   case 9: /* recursive_statement: %empty  */
-#line 57 "parser.y"
+#line 59 "parser.y"
                     {printf("recursive_statement: \n");}
-#line 1373 "parser.tab.c"
+#line 1375 "parser.tab.c"
     break;
 
   case 10: /* conditional_statement: switch_conditional_statement  */
-#line 61 "parser.y"
+#line 63 "parser.y"
                         {printf("conditional_statement: switch_conditional_statement\n");}
-#line 1379 "parser.tab.c"
+#line 1381 "parser.tab.c"
     break;
 
   case 11: /* conditional_statement: if_conditional_statement  */
-#line 64 "parser.y"
+#line 66 "parser.y"
                         {printf("conditional_statement: if_conditional_statement\n");}
-#line 1385 "parser.tab.c"
+#line 1387 "parser.tab.c"
     break;
 
   case 12: /* if_conditional_statement: IF '(' expressions ')' '{' recursive_statement '}' ELSE '{' recursive_statement '}'  */
-#line 70 "parser.y"
+#line 72 "parser.y"
                             {printf("if_conditional_statement: if(exp){recursive_statement} else{recursive_statement}\n");}
-#line 1391 "parser.tab.c"
+#line 1393 "parser.tab.c"
     break;
 
   case 13: /* if_conditional_statement: IF '(' expressions ')' '{' recursive_statement '}'  */
-#line 72 "parser.y"
+#line 74 "parser.y"
                             {printf("if_conditional_statement: if(exp){recursive_statement}\n");}
-#line 1397 "parser.tab.c"
+#line 1399 "parser.tab.c"
     break;
 
   case 14: /* switch_conditional_statement: SWITCH '(' VARIABLE ')' '{' case_statement '}'  */
-#line 75 "parser.y"
+#line 77 "parser.y"
                                 {printf("switch_conditional_statement: switch(VARIABLE){case_statement}\n");}
-#line 1403 "parser.tab.c"
+#line 1405 "parser.tab.c"
     break;
 
   case 15: /* case_statement: case_statement CASE variable_value ':' recursive_statement BREAK  */
-#line 78 "parser.y"
+#line 80 "parser.y"
                 {printf("case_statement: case_statement case variable_value: recursive_statement break\n");}
-#line 1409 "parser.tab.c"
+#line 1411 "parser.tab.c"
     break;
 
   case 16: /* case_statement: %empty  */
-#line 80 "parser.y"
+#line 82 "parser.y"
                 {printf("case_statement: \n");}
-#line 1415 "parser.tab.c"
+#line 1417 "parser.tab.c"
     break;
 
   case 17: /* loop_statement: for_loop_statement  */
-#line 84 "parser.y"
+#line 86 "parser.y"
                 {printf("loop_statement: for_loop_statement\n");}
-#line 1421 "parser.tab.c"
+#line 1423 "parser.tab.c"
     break;
 
   case 18: /* loop_statement: while_loop_statement  */
-#line 87 "parser.y"
+#line 89 "parser.y"
                 {printf("loop_statement: while_loop_statement\n");}
-#line 1427 "parser.tab.c"
+#line 1429 "parser.tab.c"
     break;
 
   case 19: /* loop_statement: do_while_loop_statement  */
-#line 90 "parser.y"
+#line 92 "parser.y"
                 {printf("loop_statement: do_while_loop_statement\n");}
-#line 1433 "parser.tab.c"
+#line 1435 "parser.tab.c"
     break;
 
   case 20: /* for_loop_statement: FOR '(' assignment ';' expressions ';' assignment ')' '{' recursive_statement '}'  */
-#line 96 "parser.y"
+#line 98 "parser.y"
                     {printf("for_loop_statement: for(assignment; exp; assignment){recursive_statement}\n");}
-#line 1439 "parser.tab.c"
+#line 1441 "parser.tab.c"
     break;
 
   case 21: /* while_loop_statement: WHILE '(' expressions ')' '{' recursive_statement '}'  */
-#line 99 "parser.y"
+#line 101 "parser.y"
                     {printf("while_loop_statement: while(exp){recursive_statement}\n");}
-#line 1445 "parser.tab.c"
+#line 1447 "parser.tab.c"
     break;
 
   case 22: /* do_while_loop_statement: DO '{' recursive_statement '}' WHILE '(' expressions ')'  */
-#line 103 "parser.y"
+#line 105 "parser.y"
                         {printf("do_while_loop_statement: do{recursive_statement} while{exp}\n");}
-#line 1451 "parser.tab.c"
+#line 1453 "parser.tab.c"
     break;
 
   case 23: /* assignment: variable_Type VARIABLE '=' expressions  */
-#line 107 "parser.y"
+#line 109 "parser.y"
             {printf("assignment: variable_Type VARIABLE = exp\n");
-            insert((yyvsp[-2].string_val), "variable", (yyvsp[-3].char*), currentScope);}
-#line 1458 "parser.tab.c"
+            }
+#line 1460 "parser.tab.c"
     break;
 
   case 24: /* assignment: VARIABLE '=' expressions  */
-#line 110 "parser.y"
+#line 112 "parser.y"
             {printf("assignment: VARIABLE = exp\n");}
-#line 1464 "parser.tab.c"
+#line 1466 "parser.tab.c"
     break;
 
   case 25: /* assignment: ENUM VARIABLE VARIABLE '=' expressions  */
-#line 112 "parser.y"
+#line 114 "parser.y"
             {printf("assignment: ENUM VARIABLE VARIABLE = exp\n");}
-#line 1470 "parser.tab.c"
+#line 1472 "parser.tab.c"
     break;
 
   case 26: /* assignment: expressions  */
-#line 114 "parser.y"
+#line 116 "parser.y"
             {printf("assignment: exp\n");}
-#line 1476 "parser.tab.c"
+#line 1478 "parser.tab.c"
     break;
 
   case 27: /* expressions: expressions OR first  */
-#line 118 "parser.y"
+#line 120 "parser.y"
             {printf("exp: exp || first \n");}
-#line 1482 "parser.tab.c"
+#line 1484 "parser.tab.c"
     break;
 
   case 28: /* expressions: first  */
-#line 120 "parser.y"
+#line 122 "parser.y"
             {printf("exp: first \n");}
-#line 1488 "parser.tab.c"
+#line 1490 "parser.tab.c"
     break;
 
   case 29: /* first: first AND second  */
-#line 123 "parser.y"
+#line 125 "parser.y"
         {printf("first: first && second\n");}
-#line 1494 "parser.tab.c"
+#line 1496 "parser.tab.c"
     break;
 
   case 30: /* first: second  */
-#line 125 "parser.y"
+#line 127 "parser.y"
         {printf("first: second\n");}
-#line 1500 "parser.tab.c"
+#line 1502 "parser.tab.c"
     break;
 
   case 31: /* second: second EE third  */
-#line 128 "parser.y"
+#line 130 "parser.y"
         {printf("second: second == third\n");}
-#line 1506 "parser.tab.c"
+#line 1508 "parser.tab.c"
     break;
 
   case 32: /* second: second NE third  */
-#line 130 "parser.y"
+#line 132 "parser.y"
         {printf("second: second != third\n");}
-#line 1512 "parser.tab.c"
+#line 1514 "parser.tab.c"
     break;
 
   case 33: /* second: third  */
-#line 132 "parser.y"
+#line 134 "parser.y"
         {printf("second: third\n");}
-#line 1518 "parser.tab.c"
+#line 1520 "parser.tab.c"
     break;
 
   case 34: /* third: third '>' fourth  */
-#line 135 "parser.y"
+#line 137 "parser.y"
         {printf("third: third > fourth\n");}
-#line 1524 "parser.tab.c"
+#line 1526 "parser.tab.c"
     break;
 
   case 35: /* third: third '<' fourth  */
-#line 137 "parser.y"
+#line 139 "parser.y"
         {printf("third: third < fourth\n");}
-#line 1530 "parser.tab.c"
+#line 1532 "parser.tab.c"
     break;
 
   case 36: /* third: third GE fourth  */
-#line 139 "parser.y"
+#line 141 "parser.y"
         {printf("third: third >= fourth\n");}
-#line 1536 "parser.tab.c"
+#line 1538 "parser.tab.c"
     break;
 
   case 37: /* third: third LE fourth  */
-#line 141 "parser.y"
+#line 143 "parser.y"
         {printf("third: third <= fourth\n");}
-#line 1542 "parser.tab.c"
+#line 1544 "parser.tab.c"
     break;
 
   case 38: /* third: fourth  */
-#line 143 "parser.y"
+#line 145 "parser.y"
         {printf("third: fourth\n");}
-#line 1548 "parser.tab.c"
+#line 1550 "parser.tab.c"
     break;
 
   case 39: /* fourth: fourth '+' fifth  */
-#line 146 "parser.y"
+#line 148 "parser.y"
         {printf("fourth: fourth + fifth\n");}
-#line 1554 "parser.tab.c"
+#line 1556 "parser.tab.c"
     break;
 
   case 40: /* fourth: fourth '-' fifth  */
-#line 148 "parser.y"
+#line 150 "parser.y"
         {printf("fourth: fourth - fifth\n");}
-#line 1560 "parser.tab.c"
+#line 1562 "parser.tab.c"
     break;
 
   case 41: /* fourth: fifth  */
-#line 150 "parser.y"
+#line 152 "parser.y"
         {printf("fourth: fifth\n");}
-#line 1566 "parser.tab.c"
+#line 1568 "parser.tab.c"
     break;
 
   case 42: /* fifth: fifth '*' sixth  */
-#line 153 "parser.y"
+#line 155 "parser.y"
         {printf("fifth: fifth * sixth\n");}
-#line 1572 "parser.tab.c"
+#line 1574 "parser.tab.c"
     break;
 
   case 43: /* fifth: fifth '/' sixth  */
-#line 155 "parser.y"
+#line 157 "parser.y"
         {printf("fifth: fifth / sixth\n");}
-#line 1578 "parser.tab.c"
+#line 1580 "parser.tab.c"
     break;
 
   case 44: /* fifth: fifth '%' sixth  */
-#line 157 "parser.y"
-        {printf("fifth: fifth % sixth\n");}
-#line 1584 "parser.tab.c"
+#line 159 "parser.y"
+        {printf("fifth: fifth %% sixth\n");}
+#line 1586 "parser.tab.c"
     break;
 
   case 45: /* fifth: sixth  */
-#line 159 "parser.y"
+#line 161 "parser.y"
         {printf("fifth: sixth\n");}
-#line 1590 "parser.tab.c"
+#line 1592 "parser.tab.c"
     break;
 
   case 46: /* sixth: '-' sixth  */
-#line 162 "parser.y"
+#line 164 "parser.y"
         {printf("sixth: - sixth\n");}
-#line 1596 "parser.tab.c"
+#line 1598 "parser.tab.c"
     break;
 
   case 47: /* sixth: '!' sixth  */
-#line 164 "parser.y"
+#line 166 "parser.y"
         {printf("sixth: ! sixth\n");}
-#line 1602 "parser.tab.c"
+#line 1604 "parser.tab.c"
     break;
 
   case 48: /* sixth: seventh  */
-#line 166 "parser.y"
+#line 168 "parser.y"
         {printf("sixth: seventh\n");}
-#line 1608 "parser.tab.c"
+#line 1610 "parser.tab.c"
     break;
 
   case 49: /* seventh: '(' expressions ')'  */
-#line 169 "parser.y"
+#line 171 "parser.y"
         {printf("seventh: (exp)\n");}
-#line 1614 "parser.tab.c"
+#line 1616 "parser.tab.c"
     break;
 
   case 50: /* seventh: variable_value  */
-#line 171 "parser.y"
+#line 173 "parser.y"
         {printf("seventh: variable_value\n");}
-#line 1620 "parser.tab.c"
+#line 1622 "parser.tab.c"
     break;
 
   case 51: /* seventh: VARIABLE  */
-#line 173 "parser.y"
+#line 175 "parser.y"
         {printf("seventh: VARIABLE\n");}
-#line 1626 "parser.tab.c"
+#line 1628 "parser.tab.c"
     break;
 
   case 52: /* seventh: function_call  */
-#line 175 "parser.y"
+#line 177 "parser.y"
         {printf("seventh: function_call\n");}
-#line 1632 "parser.tab.c"
+#line 1634 "parser.tab.c"
     break;
 
   case 53: /* function_call: VARIABLE '(' function_parameters_calls ')'  */
-#line 179 "parser.y"
+#line 181 "parser.y"
                 {printf("function_call: VARIABLE (function_parameters_calls)\n");}
-#line 1638 "parser.tab.c"
+#line 1640 "parser.tab.c"
     break;
 
   case 54: /* functional_statement: function  */
-#line 182 "parser.y"
+#line 184 "parser.y"
                     {printf("functional_statement: function\n");}
-#line 1644 "parser.tab.c"
+#line 1646 "parser.tab.c"
     break;
 
   case 55: /* functional_statement: enum_statement  */
-#line 184 "parser.y"
+#line 186 "parser.y"
                     {printf("functional_statement: enum_statement\n");}
-#line 1650 "parser.tab.c"
+#line 1652 "parser.tab.c"
     break;
 
   case 56: /* function_parameters: parameter  */
-#line 187 "parser.y"
+#line 189 "parser.y"
                     {printf("function_parameters: parameter\n");}
-#line 1656 "parser.tab.c"
+#line 1658 "parser.tab.c"
     break;
 
   case 57: /* function_parameters: %empty  */
-#line 189 "parser.y"
+#line 191 "parser.y"
                     {printf("function_parameters: \n");}
-#line 1662 "parser.tab.c"
+#line 1664 "parser.tab.c"
     break;
 
   case 58: /* parameter: parameter ',' variable_Type VARIABLE  */
-#line 192 "parser.y"
+#line 194 "parser.y"
             {printf("parameter: parameter, variable_Type VARIABLE\n");}
-#line 1668 "parser.tab.c"
+#line 1670 "parser.tab.c"
     break;
 
   case 59: /* parameter: variable_Type VARIABLE  */
-#line 194 "parser.y"
+#line 196 "parser.y"
             {printf("parameter: variable_Type VARIABLE\n");}
-#line 1674 "parser.tab.c"
+#line 1676 "parser.tab.c"
     break;
 
   case 60: /* function_parameters_calls: parameter_calls  */
-#line 197 "parser.y"
+#line 199 "parser.y"
                             {printf("function_parameters_calls: parameter_calls\n");}
-#line 1680 "parser.tab.c"
+#line 1682 "parser.tab.c"
     break;
 
   case 61: /* function_parameters_calls: %empty  */
-#line 199 "parser.y"
+#line 201 "parser.y"
                             {printf("function_parameters_calls: \n");}
-#line 1686 "parser.tab.c"
+#line 1688 "parser.tab.c"
     break;
 
   case 62: /* parameter_calls: parameter_calls ',' expressions  */
-#line 202 "parser.y"
+#line 204 "parser.y"
                 {printf("parameter_calls: parameter_calls, exp\n");}
-#line 1692 "parser.tab.c"
+#line 1694 "parser.tab.c"
     break;
 
   case 63: /* parameter_calls: expressions  */
-#line 204 "parser.y"
+#line 206 "parser.y"
                 {printf("parameter_calls: exp\n");}
-#line 1698 "parser.tab.c"
+#line 1700 "parser.tab.c"
     break;
 
   case 64: /* function: variable_Type VARIABLE '(' function_parameters ')' '{' recursive_statement RETURN return_types ';' '}'  */
-#line 207 "parser.y"
+#line 209 "parser.y"
         {printf("function: variable_Type  (function_parameters){recursive_statement RETURN return_types ;}\n");}
-#line 1704 "parser.tab.c"
+#line 1706 "parser.tab.c"
     break;
 
   case 65: /* function: VOID VARIABLE '(' function_parameters ')' '{' recursive_statement '}'  */
-#line 209 "parser.y"
+#line 211 "parser.y"
         {printf("function: void VARIABLE (function_parameters) {recursive_statement}\n");}
-#line 1710 "parser.tab.c"
+#line 1712 "parser.tab.c"
     break;
 
   case 66: /* return_types: expressions  */
-#line 212 "parser.y"
+#line 214 "parser.y"
                 {printf("return_types: expressions\n");}
-#line 1716 "parser.tab.c"
+#line 1718 "parser.tab.c"
     break;
 
   case 67: /* enum_statement: ENUM VARIABLE '{' enum_variables '}'  */
-#line 215 "parser.y"
+#line 217 "parser.y"
                 {printf("enum_statement: enum VARIABLE {enum_variables}\n");}
-#line 1722 "parser.tab.c"
+#line 1724 "parser.tab.c"
     break;
 
   case 68: /* enum_variables: enum_variables ',' VARIABLE '=' expressions  */
-#line 218 "parser.y"
+#line 220 "parser.y"
                 {printf("enum_variables: enum_variables, VARIABLE = exp\n");}
-#line 1728 "parser.tab.c"
+#line 1730 "parser.tab.c"
     break;
 
   case 69: /* enum_variables: enum_variables ',' VARIABLE  */
-#line 220 "parser.y"
+#line 222 "parser.y"
                 {printf("enum_variables: enum_variables, VARIABLE\n");}
-#line 1734 "parser.tab.c"
+#line 1736 "parser.tab.c"
     break;
 
   case 70: /* enum_variables: VARIABLE '=' expressions  */
-#line 222 "parser.y"
+#line 224 "parser.y"
                 {printf("enum_variables:VARIABLE = exp\n");}
-#line 1740 "parser.tab.c"
+#line 1742 "parser.tab.c"
     break;
 
   case 71: /* enum_variables: VARIABLE  */
-#line 224 "parser.y"
+#line 226 "parser.y"
                 {printf("enum_variables: VARIABLE\n");}
-#line 1746 "parser.tab.c"
+#line 1748 "parser.tab.c"
     break;
 
   case 72: /* variable_Type: INT_TYPE  */
-#line 228 "parser.y"
+#line 230 "parser.y"
                 {printf("variable_Type: int\n");
-                (yyval.char*) = "int";}
-#line 1753 "parser.tab.c"
+                }
+#line 1755 "parser.tab.c"
     break;
 
   case 73: /* variable_Type: CHAR_TYPE  */
-#line 231 "parser.y"
-                {printf("variable_Type: char\n"
-                (yyval.char*) = "char");}
-#line 1760 "parser.tab.c"
+#line 233 "parser.y"
+                {printf("variable_Type: char\n");
+                }
+#line 1762 "parser.tab.c"
     break;
 
   case 74: /* variable_Type: BOOL_TYPE  */
-#line 234 "parser.y"
+#line 236 "parser.y"
                 {printf("variable_Type: bool\n");
-                (yyval.char*) = "bool";}
-#line 1767 "parser.tab.c"
+                }
+#line 1769 "parser.tab.c"
     break;
 
   case 75: /* variable_Type: FLOAT_TYPE  */
-#line 237 "parser.y"
+#line 239 "parser.y"
                 {printf("variable_Type: float\n");
-                (yyval.char*) = "float";}
-#line 1774 "parser.tab.c"
+                }
+#line 1776 "parser.tab.c"
     break;
 
   case 76: /* variable_Type: STRING_TYPE  */
-#line 240 "parser.y"
+#line 242 "parser.y"
                 {printf("variable_Type: strng\n");
-                (yyval.char*) = "string";}
-#line 1781 "parser.tab.c"
+                }
+#line 1783 "parser.tab.c"
     break;
 
   case 77: /* variable_value: INTEGER  */
-#line 244 "parser.y"
+#line 246 "parser.y"
                 {printf("variable_value: int value \n");}
-#line 1787 "parser.tab.c"
+#line 1789 "parser.tab.c"
     break;
 
   case 78: /* variable_value: FLOAT  */
-#line 246 "parser.y"
+#line 248 "parser.y"
                 {printf("variable_value: float value \n");}
-#line 1793 "parser.tab.c"
+#line 1795 "parser.tab.c"
     break;
 
   case 79: /* variable_value: BOOL_FALSE  */
-#line 248 "parser.y"
+#line 250 "parser.y"
                 {printf("variable_value: false \n");}
-#line 1799 "parser.tab.c"
+#line 1801 "parser.tab.c"
     break;
 
   case 80: /* variable_value: BOOL_TRUE  */
-#line 250 "parser.y"
+#line 252 "parser.y"
                 {printf("variable_value: true \n");}
-#line 1805 "parser.tab.c"
+#line 1807 "parser.tab.c"
     break;
 
   case 81: /* variable_value: CHAR  */
-#line 252 "parser.y"
+#line 254 "parser.y"
                 {printf("variable_value: char value \n");}
-#line 1811 "parser.tab.c"
+#line 1813 "parser.tab.c"
     break;
 
   case 82: /* variable_value: STRING  */
-#line 254 "parser.y"
+#line 256 "parser.y"
                 {printf("variable_value: string value \n");}
-#line 1817 "parser.tab.c"
+#line 1819 "parser.tab.c"
     break;
 
 
-#line 1821 "parser.tab.c"
+#line 1823 "parser.tab.c"
 
       default: break;
     }
@@ -2010,7 +2012,7 @@ yyreturnlab:
   return yyresult;
 }
 
-#line 257 "parser.y"
+#line 259 "parser.y"
 
 
 void yyerror(const char *str)
@@ -2045,7 +2047,6 @@ int main(int argc, char **argv) {
         }
     }
 
-    print(currentScope);
 
     yyin = fp;
 

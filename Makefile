@@ -16,10 +16,12 @@ run_all:
 	./parser
 
 run_and_build:
-	flex scanner.l 
-	bison -d parser.y
-	g++ -c symbolTable.cpp
-	gcc -c parser common.c parser.tab.c lex.yy.c -lfl
-	g++ -o symbolTable.o lex.yy.o parser.tab.o common.o -lfl
+	bison -d -o parser.tab.c parser.y
+	flex -o lex.yy.c scanner.l
+	g++ -o parser parser.tab.c lex.yy.c common.c symbolTable.cpp 
 	./parser < input.txt
 
+clean:
+	rm -f *.o  
+	rm -f parser.tab.* scanner.tab.*
+	rm -f lex.yy.* parser.tab.*

@@ -8,51 +8,54 @@
     // extern char* last_token;
 
 %}
+
+%option noyywrap
+
 %%
-"if"                {/*printf("if\n");*/ last_token = "if"; return IF;}     
-"else"              {/*printf("else\n");*/ last_token = "else"; return ELSE;}
-"for"               {/*printf("for\n");*/ last_token = "for"; return FOR;}
-"while"             {/*printf("while\n");*/ last_token = "while"; return WHILE;}
-"do"                {/*printf("do\n");*/ last_token = "do"; return DO;}
-"switch"            {/*printf("switch\n");*/ last_token = "switch"; return SWITCH;}
-"case"              {/*printf("case\n");*/ last_token = "case"; return CASE;}
-"break"             {/*printf("break\n");*/ last_token = "break"; return BREAK;}
-"return"            {/*printf("return\n");*/ last_token = "return"; return RETURN;}
-"void"              {/*printf("void\n");*/ last_token = "void"; return VOID;}
-"enum"              {/*printf("enum\n");*/ last_token = "enum"; return ENUM;}
+"if"                { last_token = (char*) "if"; return IF;}     
+"else"              { last_token = (char*) "else"; return ELSE;}
+"for"               { last_token = (char*) "for"; return FOR;}
+"while"             { last_token = (char*) "while"; return WHILE;}
+"do"                {last_token = (char*) "do"; return DO;}
+"switch"            { last_token = (char*) "switch"; return SWITCH;}
+"case"              { last_token = (char*) "case"; return CASE;}
+"break"             { last_token = (char*) "break"; return BREAK;}
+"return"            { last_token = (char*) "return"; return RETURN;}
+"void"              { last_token = (char*) "void"; return VOID;}
+"enum"              { last_token = (char*) "enum"; return ENUM;}
 
-"int"               {/*printf("int\n");*/ last_token = "int"; return INT_TYPE;}
-"char"              {/*printf("char\n");*/ last_token = "char"; return CHAR_TYPE;}
-"bool"              {/*printf("bool\n");*/ last_token = "bool"; return BOOL_TYPE;}
-"float"             {/*printf("float\n");*/ last_token = "float"; return FLOAT_TYPE;}
-"string"            {/*printf("string\n");*/ last_token = "string"; return STRING_TYPE;}
-"const"             {/*printf("const\n");*/ last_token = "const"; return CONST;}
+"int"               { last_token = (char*) "int"; return INT_TYPE;}
+"char"              { last_token = (char*) "char"; return CHAR_TYPE;}
+"bool"              { last_token = (char*) "bool"; return BOOL_TYPE;}
+"float"             { last_token = (char*)"float"; return FLOAT_TYPE;}
+"string"            { last_token = (char*)"string"; return STRING_TYPE;}
+"const"             { last_token = (char*)"const"; return CONST;}
 
-"print"             {/*printf("print\n");*/ last_token = "print"; return PRINT;}
+"print"             { last_token = (char*)"print"; return PRINT;}
 
-[\+\-\*/=\>\<\(\)\{\}:;!,\%]   {/*printf("%c\n",*yytext);*/ last_token = yytext ;return *yytext;} 
+[\+\-\*/=\>\<\(\)\{\}:;!,\%]   { last_token = yytext ;return *yytext;} 
 
-"=="                {/*printf("%s \n",yytext);*/ last_token = "=="; return EE;}
-"!="                {/*printf("%s \n",yytext);*/ last_token = "!="; return NE;}
-">="                {/*printf("%s \n",yytext);*/ last_token = ">="; return GE;}
-"<="                {/*printf("%s \n",yytext);*/ last_token = "<="; return LE;}
+"=="                { last_token = (char*)"=="; return EE;}
+"!="                { last_token = (char*)"!="; return NE;}
+">="                { last_token = (char*)">="; return GE;}
+"<="                { last_token = (char*)"<="; return LE;}
 
-"&&"                {/*printf("%s \n",yytext);*/ last_token = "&&"; return AND;}
-"||"                {/*printf("%s \n",yytext);*/ last_token = "||"; return OR;}
-
-
-0|-?[1-9][0-9]*                    {yylval.integer_val=atoi(yytext); /*printf("integer %d \n",yylval.integer_val);*/ last_token = malloc(strlen(yytext) + 1); strcpy(last_token, yytext); return INTEGER;}
--?(0|[1-9][0-9]*)\.[0-9]*[1-9]   {yylval.float_val=strtof(yytext, NULL); /*printf("float %f \n",yylval.float_val);*/ last_token = malloc(strlen(yytext) + 1); strcpy(last_token, yytext); return FLOAT;}
-
-"true"                           {yylval.integer_val=1; /*printf("%d \n",yylval.integer_val);*/ last_token = "true"; return BOOL_TRUE;}
-"false"                          {yylval.integer_val=0; /*printf("%d \n",yylval.integer_val);*/ last_token = "false"; return BOOL_FALSE;}
-
-\'.\'                              {yylval.char_val=*(yytext+1); /*printf("char %c \n",yylval.char_val);*/last_token = malloc(2); last_token[0] = yylval.char_val; last_token[1] = '\0'; return CHAR;}
-\".*\"                             {yylval.string_val=strtok(yytext, "\""); /*printf("string %s \n",yylval.string_val);*/last_token = malloc(strlen(yylval.string_val) + 1); strcpy(last_token, yylval.string_val); return STRING;}
-[_a-zA-Z][_a-zA-Z0-9]*            {yylval.string_val=yytext; /*printf("variable %s \n",yylval.string_val);*/ last_token = malloc(strlen(yylval.string_val) + 1); strcpy(last_token, yylval.string_val); return VARIABLE;}
+"&&"                { last_token = (char*)"&&"; return AND;}
+"||"                { last_token = (char*)"||"; return OR;}
 
 
-[ \t\n\r]+                    ; //printf("white space\n");              
+0|-?[1-9][0-9]*                    {yylval.integer_val=atoi(yytext); last_token = (char*) malloc(strlen(yytext) + 1); strcpy(last_token, yytext); return INTEGER;}
+-?(0|[1-9][0-9]*)\.[0-9]*[1-9]   {yylval.float_val=strtof(yytext, NULL); last_token = (char*) malloc(strlen(yytext) + 1); strcpy(last_token, yytext); return FLOAT;}
 
-.                          {last_token = yytext; yyerror("invalid character");}
+"true"                           {yylval.integer_val=1; last_token = (char*)"true"; return BOOL_TRUE;}
+"false"                          {yylval.integer_val=0; last_token = (char*)"false"; return BOOL_FALSE;}
+
+\'.\'                              {yylval.char_val=*(yytext+1);last_token = (char*) malloc(2); last_token[0] = yylval.char_val; last_token[1] = '\0'; return CHAR;}
+\".*\"                             {yylval.string_val=strtok(yytext, "\""); last_token = (char*) malloc(strlen(yylval.string_val) + 1); strcpy(last_token, yylval.string_val); return STRING;}
+[_a-zA-Z][_a-zA-Z0-9]*            {yylval.string_val=yytext;  last_token = (char*) malloc(strlen(yylval.string_val) + 1); strcpy(last_token, yylval.string_val); return VARIABLE;}
+
+
+[ \t\n\r]+                    ;              
+
+.                          {last_token = yytext; YYerror;}
 %%

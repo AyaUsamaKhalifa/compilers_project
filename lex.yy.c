@@ -1,5 +1,6 @@
+#line 2 "lex.yy.c"
 
-#line 3 "lex.yy.c"
+#line 4 "lex.yy.c"
 
 #define  YY_INT_ALIGNED short int
 
@@ -322,6 +323,9 @@ void yyfree ( void *  );
 #define YY_AT_BOL() (YY_CURRENT_BUFFER_LVALUE->yy_at_bol)
 
 /* Begin user sect3 */
+
+#define yywrap() (/*CONSTCOND*/1)
+#define YY_SKIP_YYWRAP
 typedef flex_uint8_t YY_CHAR;
 
 FILE *yyin = NULL, *yyout = NULL;
@@ -523,8 +527,8 @@ char *yytext;
     #include "parser.tab.h"  // Here we include token definitions
     // extern char* last_token;
 
-#line 527 "lex.yy.c"
-#line 528 "lex.yy.c"
+#line 531 "lex.yy.c"
+#line 532 "lex.yy.c"
 
 #define INITIAL 0
 
@@ -741,9 +745,9 @@ YY_DECL
 		}
 
 	{
-#line 11 "scanner.l"
+#line 14 "scanner.l"
 
-#line 747 "lex.yy.c"
+#line 751 "lex.yy.c"
 
 	while ( /*CONSTCOND*/1 )		/* loops until end-of-file is reached */
 		{
@@ -802,181 +806,181 @@ do_action:	/* This label is used only to access EOF actions. */
 
 case 1:
 YY_RULE_SETUP
-#line 12 "scanner.l"
-{/*printf("if\n");*/ last_token = "if"; return IF;}     
+#line 15 "scanner.l"
+{ last_token = (char*) "if"; return IF;}     
 	YY_BREAK
 case 2:
 YY_RULE_SETUP
-#line 13 "scanner.l"
-{/*printf("else\n");*/ last_token = "else"; return ELSE;}
+#line 16 "scanner.l"
+{ last_token = (char*) "else"; return ELSE;}
 	YY_BREAK
 case 3:
 YY_RULE_SETUP
-#line 14 "scanner.l"
-{/*printf("for\n");*/ last_token = "for"; return FOR;}
+#line 17 "scanner.l"
+{ last_token = (char*) "for"; return FOR;}
 	YY_BREAK
 case 4:
 YY_RULE_SETUP
-#line 15 "scanner.l"
-{/*printf("while\n");*/ last_token = "while"; return WHILE;}
+#line 18 "scanner.l"
+{ last_token = (char*) "while"; return WHILE;}
 	YY_BREAK
 case 5:
 YY_RULE_SETUP
-#line 16 "scanner.l"
-{/*printf("do\n");*/ last_token = "do"; return DO;}
+#line 19 "scanner.l"
+{last_token = (char*) "do"; return DO;}
 	YY_BREAK
 case 6:
 YY_RULE_SETUP
-#line 17 "scanner.l"
-{/*printf("switch\n");*/ last_token = "switch"; return SWITCH;}
+#line 20 "scanner.l"
+{ last_token = (char*) "switch"; return SWITCH;}
 	YY_BREAK
 case 7:
 YY_RULE_SETUP
-#line 18 "scanner.l"
-{/*printf("case\n");*/ last_token = "case"; return CASE;}
+#line 21 "scanner.l"
+{ last_token = (char*) "case"; return CASE;}
 	YY_BREAK
 case 8:
 YY_RULE_SETUP
-#line 19 "scanner.l"
-{/*printf("break\n");*/ last_token = "break"; return BREAK;}
+#line 22 "scanner.l"
+{ last_token = (char*) "break"; return BREAK;}
 	YY_BREAK
 case 9:
 YY_RULE_SETUP
-#line 20 "scanner.l"
-{/*printf("return\n");*/ last_token = "return"; return RETURN;}
+#line 23 "scanner.l"
+{ last_token = (char*) "return"; return RETURN;}
 	YY_BREAK
 case 10:
 YY_RULE_SETUP
-#line 21 "scanner.l"
-{/*printf("void\n");*/ last_token = "void"; return VOID;}
+#line 24 "scanner.l"
+{ last_token = (char*) "void"; return VOID;}
 	YY_BREAK
 case 11:
 YY_RULE_SETUP
-#line 22 "scanner.l"
-{/*printf("enum\n");*/ last_token = "enum"; return ENUM;}
+#line 25 "scanner.l"
+{ last_token = (char*) "enum"; return ENUM;}
 	YY_BREAK
 case 12:
 YY_RULE_SETUP
-#line 24 "scanner.l"
-{/*printf("int\n");*/ last_token = "int"; return INT_TYPE;}
+#line 27 "scanner.l"
+{ last_token = (char*) "int"; return INT_TYPE;}
 	YY_BREAK
 case 13:
 YY_RULE_SETUP
-#line 25 "scanner.l"
-{/*printf("char\n");*/ last_token = "char"; return CHAR_TYPE;}
+#line 28 "scanner.l"
+{ last_token = (char*) "char"; return CHAR_TYPE;}
 	YY_BREAK
 case 14:
 YY_RULE_SETUP
-#line 26 "scanner.l"
-{/*printf("bool\n");*/ last_token = "bool"; return BOOL_TYPE;}
+#line 29 "scanner.l"
+{ last_token = (char*) "bool"; return BOOL_TYPE;}
 	YY_BREAK
 case 15:
 YY_RULE_SETUP
-#line 27 "scanner.l"
-{/*printf("float\n");*/ last_token = "float"; return FLOAT_TYPE;}
+#line 30 "scanner.l"
+{ last_token = (char*)"float"; return FLOAT_TYPE;}
 	YY_BREAK
 case 16:
 YY_RULE_SETUP
-#line 28 "scanner.l"
-{/*printf("string\n");*/ last_token = "string"; return STRING_TYPE;}
+#line 31 "scanner.l"
+{ last_token = (char*)"string"; return STRING_TYPE;}
 	YY_BREAK
 case 17:
 YY_RULE_SETUP
-#line 29 "scanner.l"
-{/*printf("const\n");*/ last_token = "const"; return CONST;}
+#line 32 "scanner.l"
+{ last_token = (char*)"const"; return CONST;}
 	YY_BREAK
 case 18:
 YY_RULE_SETUP
-#line 31 "scanner.l"
-{/*printf("print\n");*/ last_token = "print"; return PRINT;}
+#line 34 "scanner.l"
+{ last_token = (char*)"print"; return PRINT;}
 	YY_BREAK
 case 19:
 YY_RULE_SETUP
-#line 33 "scanner.l"
-{/*printf("%c\n",*yytext);*/ last_token = yytext ;return *yytext;} 
+#line 36 "scanner.l"
+{ last_token = yytext ;return *yytext;} 
 	YY_BREAK
 case 20:
 YY_RULE_SETUP
-#line 35 "scanner.l"
-{/*printf("%s \n",yytext);*/ last_token = "=="; return EE;}
+#line 38 "scanner.l"
+{ last_token = (char*)"=="; return EE;}
 	YY_BREAK
 case 21:
 YY_RULE_SETUP
-#line 36 "scanner.l"
-{/*printf("%s \n",yytext);*/ last_token = "!="; return NE;}
+#line 39 "scanner.l"
+{ last_token = (char*)"!="; return NE;}
 	YY_BREAK
 case 22:
 YY_RULE_SETUP
-#line 37 "scanner.l"
-{/*printf("%s \n",yytext);*/ last_token = ">="; return GE;}
+#line 40 "scanner.l"
+{ last_token = (char*)">="; return GE;}
 	YY_BREAK
 case 23:
 YY_RULE_SETUP
-#line 38 "scanner.l"
-{/*printf("%s \n",yytext);*/ last_token = "<="; return LE;}
+#line 41 "scanner.l"
+{ last_token = (char*)"<="; return LE;}
 	YY_BREAK
 case 24:
 YY_RULE_SETUP
-#line 40 "scanner.l"
-{/*printf("%s \n",yytext);*/ last_token = "&&"; return AND;}
+#line 43 "scanner.l"
+{ last_token = (char*)"&&"; return AND;}
 	YY_BREAK
 case 25:
 YY_RULE_SETUP
-#line 41 "scanner.l"
-{/*printf("%s \n",yytext);*/ last_token = "||"; return OR;}
+#line 44 "scanner.l"
+{ last_token = (char*)"||"; return OR;}
 	YY_BREAK
 case 26:
 YY_RULE_SETUP
-#line 44 "scanner.l"
-{yylval.integer_val=atoi(yytext); /*printf("integer %d \n",yylval.integer_val);*/ last_token = malloc(strlen(yytext) + 1); strcpy(last_token, yytext); return INTEGER;}
+#line 47 "scanner.l"
+{yylval.integer_val=atoi(yytext); last_token = (char*) malloc(strlen(yytext) + 1); strcpy(last_token, yytext); return INTEGER;}
 	YY_BREAK
 case 27:
 YY_RULE_SETUP
-#line 45 "scanner.l"
-{yylval.float_val=strtof(yytext, NULL); /*printf("float %f \n",yylval.float_val);*/ last_token = malloc(strlen(yytext) + 1); strcpy(last_token, yytext); return FLOAT;}
+#line 48 "scanner.l"
+{yylval.float_val=strtof(yytext, NULL); last_token = (char*) malloc(strlen(yytext) + 1); strcpy(last_token, yytext); return FLOAT;}
 	YY_BREAK
 case 28:
 YY_RULE_SETUP
-#line 47 "scanner.l"
-{yylval.integer_val=1; /*printf("%d \n",yylval.integer_val);*/ last_token = "true"; return BOOL_TRUE;}
+#line 50 "scanner.l"
+{yylval.integer_val=1; last_token = (char*)"true"; return BOOL_TRUE;}
 	YY_BREAK
 case 29:
 YY_RULE_SETUP
-#line 48 "scanner.l"
-{yylval.integer_val=0; /*printf("%d \n",yylval.integer_val);*/ last_token = "false"; return BOOL_FALSE;}
+#line 51 "scanner.l"
+{yylval.integer_val=0; last_token = (char*)"false"; return BOOL_FALSE;}
 	YY_BREAK
 case 30:
 YY_RULE_SETUP
-#line 50 "scanner.l"
-{yylval.char_val=*(yytext+1); /*printf("char %c \n",yylval.char_val);*/last_token = malloc(2); last_token[0] = yylval.char_val; last_token[1] = '\0'; return CHAR;}
+#line 53 "scanner.l"
+{yylval.char_val=*(yytext+1);last_token = (char*) malloc(2); last_token[0] = yylval.char_val; last_token[1] = '\0'; return CHAR;}
 	YY_BREAK
 case 31:
 YY_RULE_SETUP
-#line 51 "scanner.l"
-{yylval.string_val=strtok(yytext, "\""); /*printf("string %s \n",yylval.string_val);*/last_token = malloc(strlen(yylval.string_val) + 1); strcpy(last_token, yylval.string_val); return STRING;}
+#line 54 "scanner.l"
+{yylval.string_val=strtok(yytext, "\""); last_token = (char*) malloc(strlen(yylval.string_val) + 1); strcpy(last_token, yylval.string_val); return STRING;}
 	YY_BREAK
 case 32:
 YY_RULE_SETUP
-#line 52 "scanner.l"
-{yylval.string_val=yytext; /*printf("variable %s \n",yylval.string_val);*/ last_token = malloc(strlen(yylval.string_val) + 1); strcpy(last_token, yylval.string_val); return VARIABLE;}
+#line 55 "scanner.l"
+{yylval.string_val=yytext;  last_token = (char*) malloc(strlen(yylval.string_val) + 1); strcpy(last_token, yylval.string_val); return VARIABLE;}
 	YY_BREAK
 case 33:
 /* rule 33 can match eol */
 YY_RULE_SETUP
-#line 55 "scanner.l"
-; //printf("white space\n");              
+#line 58 "scanner.l"
+;              
 	YY_BREAK
 case 34:
 YY_RULE_SETUP
-#line 57 "scanner.l"
-{last_token = yytext; yyerror("invalid character");}
+#line 60 "scanner.l"
+{last_token = yytext; YYerror;}
 	YY_BREAK
 case 35:
 YY_RULE_SETUP
-#line 58 "scanner.l"
+#line 61 "scanner.l"
 ECHO;
 	YY_BREAK
-#line 980 "lex.yy.c"
+#line 984 "lex.yy.c"
 case YY_STATE_EOF(INITIAL):
 	yyterminate();
 
@@ -1981,6 +1985,5 @@ void yyfree (void * ptr )
 
 #define YYTABLES_NAME "yytables"
 
-#line 58 "scanner.l"
-
+#line 61 "scanner.l"
 
