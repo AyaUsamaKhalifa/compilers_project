@@ -1,13 +1,29 @@
+
 %{
     /*Definition section */
+    #include "parser.h"
     #include "common.h"
     #include <stdio.h>
     #include <stdlib.h>
+<<<<<<< Updated upstream
+=======
+    #include <stdarg.h>
+    #include<string.h>
+>>>>>>> Stashed changes
     #include "symbolTable.h"
     extern FILE *yyin;
     void yyerror(const char *str);
     void read_file(char *filename);
 
+<<<<<<< Updated upstream
+=======
+    nodeType *opration(int oper, int nops, ...);
+    nodeType *identifier(char *name);
+    nodeType *constant(int value);
+    void freeNode(nodeType *p);
+
+    symbolTable* st = new symbolTable();
+>>>>>>> Stashed changes
     Node *currentScope = new Node();
     //printing may be removed
     // extern char* last_token;
@@ -19,6 +35,11 @@
     char* string_val;
     float float_val;
     char char_val;
+<<<<<<< Updated upstream
+=======
+    bool bool_val;
+    nodeType* node;
+>>>>>>> Stashed changes
 }
 
 %token IF ELSE FOR WHILE DO SWITCH CASE BREAK RETURN ENUM VOID 
@@ -32,7 +53,18 @@
 %token <string_val> STRING 
 %token <string_val> VARIABLE
 
+<<<<<<< Updated upstream
 %type <char*> variable_Type
+=======
+%type <node> statement recursive_statement conditional_statement
+                if_conditional_statement switch_conditional_statement
+                case_statement loop_statement for_loop_statement
+                while_loop_statement do_while_loop_statement assignment
+                expressions first second third fourth fifth sixth seventh
+                function_call functional_statement function_parameters parameter
+                function_parameters_calls parameter_calls function return_types
+                enum_statement enum_variables variable_Type variable_value
+>>>>>>> Stashed changes
 
 %%
 root:   root statement 
@@ -105,7 +137,12 @@ do_while_loop_statement: DO '{' recursive_statement '}' WHILE '(' expressions ')
 //-------------assignments-------------//
 assignment: variable_Type VARIABLE '=' expressions  
             {printf("assignment: variable_Type VARIABLE = exp\n");
+<<<<<<< Updated upstream
             insert($2, "variable", $1, currentScope);} 
+=======
+            //st->insert($2, "Variable", $1, currentScope);
+            } 
+>>>>>>> Stashed changes
             | VARIABLE '=' expressions  
             {printf("assignment: VARIABLE = exp\n");}  
             | ENUM VARIABLE VARIABLE '=' expressions 
@@ -226,6 +263,7 @@ enum_variables:  enum_variables ',' VARIABLE '=' expressions
 //------------variables---------------//
 variable_Type:  INT_TYPE  
                 {printf("variable_Type: int\n");
+<<<<<<< Updated upstream
                 $$ = "int";} 
                 | CHAR_TYPE 
                 {printf("variable_Type: char\n"
@@ -242,6 +280,31 @@ variable_Type:  INT_TYPE
 
 variable_value: INTEGER  
                 {printf("variable_value: int value \n");} 
+=======
+                //$$ = (char*)"int";
+                } 
+                | CHAR_TYPE 
+                {printf("variable_Type: char\n");
+                //$$ = (char*)"char";
+                } 
+                | BOOL_TYPE 
+                {printf("variable_Type: bool\n");
+                //$$ = (char*)"bool";
+                } 
+                | FLOAT_TYPE 
+                {printf("variable_Type: float\n");
+                //$$ = (char*)"float";
+                } 
+                | STRING_TYPE 
+                {printf("variable_Type: string\n");
+                //$$ = (char*)"string";
+                }  
+
+variable_value: INTEGER  
+                {printf("variable_value: int value \n");
+                $$ = constant($1);
+                } 
+>>>>>>> Stashed changes
                 | FLOAT 
                 {printf("variable_value: float value \n");} 
                 | BOOL_FALSE 
@@ -255,6 +318,54 @@ variable_value: INTEGER
 
 
 %%
+
+#define SIZEOF_NODETYPE ((char*)&p->constant - (char*)p)
+
+nodeType *constant(int value) {
+    nodeType *p;
+    if ((p = (nodeType* )malloc(sizeof(nodeType))) == NULL)
+        yyerror("out of memory");
+    p->type = Constant_Node;
+    p->constant.value = value;
+    return p;
+}
+
+nodeType *variable(char* i) {
+    nodeType *p;
+    if ((p = (nodeType *)malloc(sizeof(nodeType))) == NULL)
+        yyerror("out of memory");
+    p->type = Identifier_Node;
+    p->identifier.name = i;
+    return p;
+}
+
+nodeType *opration(int oper, int nops, ...) {
+    va_list ap;
+    nodeType *p;
+    int i;
+
+    if ((p = (nodeType* )malloc(sizeof(nodeType) + (nops - 1)*sizeof(nodeType*))) == NULL)
+        yyerror("out of memory");
+    p->type = Operator_Node;
+    p->oper.oper = oper;
+    p->oper.nops = nops;
+    va_start(ap, nops);
+    for (i = 0; i < nops; i++)
+        p->oper.op[i] = va_arg(ap, nodeType*);
+    va_end(ap);
+    return p;
+}
+
+void freeNode(nodeType *p) {
+    int i;
+
+    if (!p) return;
+    if (p->type == Operator_Node) {
+        for (i = 0; i < p->oper.nops; i++)
+            freeNode(p->oper.op[i]);
+    }
+    free(p);
+}
 
 void yyerror(const char *str)
 {

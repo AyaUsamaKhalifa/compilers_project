@@ -93,12 +93,21 @@ extern int yydebug;
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
 union YYSTYPE
 {
+<<<<<<< Updated upstream
 #line 17 "parser.y"
+=======
+#line 28 "parser.y"
+>>>>>>> Stashed changes
 
     int integer_val;
     char* string_val;
     float float_val;
     char char_val;
+<<<<<<< Updated upstream
+=======
+    bool bool_val;
+    nodeType* node;
+>>>>>>> Stashed changes
 
 #line 104 "parser.tab.h"
 
