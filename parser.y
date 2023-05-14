@@ -10,6 +10,8 @@
     void yyerror(const char *str);
     void read_file(char *filename);
 
+    symbolTable* st = new symbolTable();
+
     Node *currentScope = new Node();
     //printing may be removed
     // extern char* last_token;
@@ -21,6 +23,8 @@
     char* string_val;
     float float_val;
     char char_val;
+    bool bool_val;
+    
 }
 
 %token IF ELSE FOR WHILE DO SWITCH CASE BREAK RETURN ENUM VOID 
@@ -34,7 +38,7 @@
 %token <string_val> STRING 
 %token <string_val> VARIABLE
 
-%type <char*> variable_Type
+%type <string_val> variable_Type expressions
 
 %%
 root:   root statement 
@@ -107,6 +111,7 @@ do_while_loop_statement: DO '{' recursive_statement '}' WHILE '(' expressions ')
 //-------------assignments-------------//
 assignment: variable_Type VARIABLE '=' expressions  
             {printf("assignment: variable_Type VARIABLE = exp\n");
+            st->insert($2, "Variable", $1, currentScope);
             } 
             | VARIABLE '=' expressions  
             {printf("assignment: VARIABLE = exp\n");}  
@@ -228,24 +233,31 @@ enum_variables:  enum_variables ',' VARIABLE '=' expressions
 //------------variables---------------//
 variable_Type:  INT_TYPE  
                 {printf("variable_Type: int\n");
+                $$ = (char*)"int";
                 } 
                 | CHAR_TYPE 
                 {printf("variable_Type: char\n");
+                $$ = (char*)"char";
                 } 
                 | BOOL_TYPE 
                 {printf("variable_Type: bool\n");
+                $$ = (char*)"bool";
                 } 
                 | FLOAT_TYPE 
                 {printf("variable_Type: float\n");
+                $$ = (char*)"float";
                 } 
                 | STRING_TYPE 
-                {printf("variable_Type: strng\n");
+                {printf("variable_Type: string\n");
+                $$ = (char*)"string";
                 }  
 
 variable_value: INTEGER  
-                {printf("variable_value: int value \n");} 
+                {printf("variable_value: int value \n");
+                } 
                 | FLOAT 
-                {printf("variable_value: float value \n");} 
+                {printf("variable_value: float value \n");
+                } 
                 | BOOL_FALSE 
                 {printf("variable_value: false \n");} 
                 | BOOL_TRUE 
@@ -296,6 +308,8 @@ int main(int argc, char **argv) {
     yyparse();
 
     fclose(fp);
+
+    st->print(currentScope);
+
     return 0;
 }
-
