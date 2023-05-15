@@ -100,7 +100,9 @@ recursive_statement: recursive_statement statement
                     $$=operation(';',2,$1,$2);
                     } 
                     | 
-                    {printf("recursive_statement: \n");}
+                    {printf("recursive_statement: \n");
+                    $$=NULL;
+                    }
             
 //---------conditional statement---------// 
 conditional_statement:  switch_conditional_statement 
@@ -135,7 +137,9 @@ case_statement: case_statement CASE variable_value ':' recursive_statement BREAK
                 $$=operation(CASE,3,$1,$3,$5);
                 } 
                 |  
-                {printf("case_statement: \n");} ; //? hna lazem nzwd elvalues elly elmafrood treturn
+                {printf("case_statement: \n");
+                $$=NULL;
+                } ; //? hna lazem nzwd elvalues elly elmafrood treturn
 
 //---------loop statement---------// 
 loop_statement: for_loop_statement  
@@ -323,7 +327,9 @@ function_parameters: parameter
                     $$=$1;
                     } 
                     | 
-                    {printf("function_parameters: \n");}  //? semi colon not added yet?
+                    {printf("function_parameters: \n");
+                    $$=NULL;
+                    }  //? semi colon not added yet?
 
 parameter:  parameter ',' variable_Type VARIABLE  
             {printf("parameter: parameter, variable_Type VARIABLE\n");
@@ -339,7 +345,9 @@ function_parameters_calls:  parameter_calls
                             $$=$1;
                             } 
                             | 
-                            {printf("function_parameters_calls: \n");} 
+                            {printf("function_parameters_calls: \n");
+                            $$=NULL;
+                            } 
 
 parameter_calls: parameter_calls ',' expressions 
                 {printf("parameter_calls: parameter_calls, exp\n");
@@ -352,11 +360,11 @@ parameter_calls: parameter_calls ',' expressions
 
 function: variable_Type VARIABLE '(' function_parameters ')' '{' recursive_statement RETURN return_types';' '}'  
         {printf("function: variable_Type  (function_parameters){recursive_statement RETURN return_types ;}\n");
-        
+        $$=operation('d',5,$1,identifier($2),$4,$7,$9);
         } 
         | VOID VARIABLE '(' function_parameters ')' '{' recursive_statement '}' 
         {printf("function: void VARIABLE (function_parameters) {recursive_statement}\n");
-        
+        $$=operation('d',5,defineType(VoidType),identifier($2),$4,$7,$9);
         } 
 
 return_types:   expressions  
