@@ -4,3 +4,4 @@ int fun(string y){
     x = y;
     return x;
 }
+int x=10;

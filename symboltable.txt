@@ -1,0 +1,8 @@
+id		kind			type
+x		variable		integer
+d		variable		string
+========================================================================
+d		variable		string
+y		parameter		string
+fun		function		integer
+========================================================================

@@ -69,14 +69,44 @@ bool symbolTable::lookup(string identifier, Node *curr_node)
 
 void symbolTable::print(Node *curr_node)
 {
+    ofstream myfile;
+    myfile.open ("symboltable.txt");
+    myfile<<"id\t\tkind\t\t\ttype\n";
+    cout<<"id\t\tkind\t\t\ttype\n";
+
+    print_recursive(curr_node, myfile);
+    printcout(curr_node);
+
+    myfile.close();
+}
+
+void symbolTable::printcout(Node *curr_node)
+{
     if(curr_node == nullptr)
     {
         return;
     }
     for (auto it = curr_node->node_data.begin(); it != curr_node->node_data.end(); ++it) {
-        std::cout << it->first << " " << it->second[0] << " " << it->second[1] << std::endl;
+        cout << it->first << "\t\t" << it->second[0] << "\t\t" << it->second[1] << endl;
     }
-    print(curr_node->parent);
+    cout<<"========================================================================\n";
+    for(int i=0;i<curr_node->children.size();i++){
+        printcout(curr_node->children[i]);
+    }
+}
+
+void symbolTable::print_recursive(Node* curr_node, ofstream& myfile){
+    if(curr_node == nullptr)
+    {
+        return;
+    }
+    for (auto it = curr_node->node_data.begin(); it != curr_node->node_data.end(); ++it) {
+        myfile << it->first << "\t\t" << it->second[0] << "\t\t" << it->second[1] << endl;
+    }
+    myfile<<"========================================================================\n";
+    for(int i=0;i<curr_node->children.size();i++){
+        print_recursive(curr_node->children[i],myfile);
+    }
 }
 
 

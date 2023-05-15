@@ -12,6 +12,7 @@
     extern int yylex(void);
     void yyerror(const char *str);
     void read_file(char *filename);
+    FILE* errorsFile;
 
     nodeType *operation(int oper, int nops, ...);
     nodeType *identifier(char *name);
@@ -27,6 +28,7 @@
 
     symbolTable* st = new symbolTable();
     Node *currentScope = new Node();
+    Node *rootScope = currentScope;
     //printing may be removed
     // extern char* last_token;
 %}
@@ -602,6 +604,7 @@ int execute(nodeType *p){
                     //switch scope
                     Node* newNode = new Node();
                     newNode->parent = currentScope;
+                    currentScope->children.push_back(newNode);
                     currentScope = newNode;
                     //call exec on operands
                     switch(p->oper.nops){
@@ -617,6 +620,8 @@ int execute(nodeType *p){
                             break;
                         }
                     }
+                    //switching the scope back 
+                    currentScope = currentScope->parent;
                     break;
                 }
                 case FOR:
@@ -624,11 +629,14 @@ int execute(nodeType *p){
                     //switch scope
                     Node* newNode = new Node();
                     newNode->parent = currentScope;
+                    currentScope->children.push_back(newNode);
                     currentScope = newNode;
                     execute(p->oper.op[0]);
                     execute(p->oper.op[1]);
                     execute(p->oper.op[2]);
                     execute(p->oper.op[3]);
+                    //switching the scope back 
+                    currentScope = currentScope->parent;
                     break;
                 }
                 case WHILE:
@@ -636,9 +644,12 @@ int execute(nodeType *p){
                     //switch scope
                     Node* newNode = new Node();
                     newNode->parent = currentScope;
+                    currentScope->children.push_back(newNode);
                     currentScope = newNode;
                     execute(p->oper.op[0]);
                     execute(p->oper.op[1]);
+                    //switching the scope back 
+                    currentScope = currentScope->parent;
                     break;
                 }
                 case DO:
@@ -646,9 +657,12 @@ int execute(nodeType *p){
                     //switch scope
                     Node* newNode = new Node();
                     newNode->parent = currentScope;
+                    currentScope->children.push_back(newNode);
                     currentScope = newNode;
                     execute(p->oper.op[0]);
                     execute(p->oper.op[1]);
+                    //switching the scope back 
+                    currentScope = currentScope->parent;
                     break;
                 }
                 case SWITCH:
@@ -662,10 +676,13 @@ int execute(nodeType *p){
                     //switch scopes
                     Node* newNode = new Node();
                     newNode->parent = currentScope;
+                    currentScope->children.push_back(newNode);
                     currentScope = newNode;
                     execute(p->oper.op[0]);
                     execute(p->oper.op[1]);
                     execute(p->oper.op[2]);
+                    //switching the scope back 
+                    currentScope = currentScope->parent;
                     break;
                 }
                 case AND:
@@ -709,7 +726,12 @@ int execute(nodeType *p){
                     //switch scope
                     Node* newNode = new Node();
                     newNode->parent = currentScope;
+                    currentScope->children.push_back(newNode);
                     currentScope = newNode;
+                    execute(p->oper.op[0]);
+                    execute(p->oper.op[1]);
+                    //switching the scope back 
+                    currentScope = currentScope->parent;
                     break;
                 }
                 case ';':
@@ -792,9 +814,11 @@ int execute(nodeType *p){
                     break;
                 }
                 case 'd': //function definition
-                {//switch scope
+                {
+                    //switch scope
                     Node* newNode = new Node();
                     newNode->parent = currentScope;
+                    currentScope->children.push_back(newNode);
                     currentScope = newNode;
                     //insert in the symbol table
                     bool isInserted = st->insert(p->oper.op[1]->identifier.name,"function",p->oper.op[0]->defineType.type,currentScope);
@@ -808,6 +832,8 @@ int execute(nodeType *p){
                     execute(p->oper.op[3]);
                     execute(p->oper.op[4]);
                     //st->print(currentScope);
+                    //switching the scope back 
+                    currentScope = currentScope->parent;
                     break;
                 }
                 case 'c': //parameters call => fun(x, y,  z) parameters are x, y and z
@@ -857,6 +883,7 @@ int execute(nodeType *p){
 void yyerror(const char *str)
 {
     fprintf(stderr,"error: %s, Last token:\n%s \n",str, last_token);
+    fprintf(errorsFile,"error: %s\n",str);
 }
 
 int yywrap()
@@ -886,12 +913,14 @@ int main(int argc, char **argv) {
         }
     }
 
+    errorsFile = fopen("errors.txt", "w");
 
     yyin = fp;
 
     yyparse();
 
     fclose(fp);
+    fclose(errorsFile);
 
     st->print(currentScope);
 
