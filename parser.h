@@ -14,7 +14,8 @@ typedef enum {
     StringType,
     BoolType,
     VoidType,
-    CharType
+    CharType,
+    EnumType,
 } typeEnum;
 
 typedef struct {
