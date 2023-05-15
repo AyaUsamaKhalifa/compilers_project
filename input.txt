@@ -35,4 +35,4 @@ do {x = x + 1;} while(x > 0)
 
 enum x {thursday = 1}
 
-string d = 'a';
+string d = "a";
