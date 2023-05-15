@@ -9,6 +9,17 @@ Node *symbolTable::create(Node *parent)
 
 bool symbolTable::insert(string identifier, string kind, int type, Node *curr_node)
 {
+    //if the identifier already exists in current scope
+    bool exists = false;
+    for (auto it = curr_node->node_data.begin(); it != curr_node->node_data.end(); ++it) {
+        if( it->first == identifier)
+        {
+            exists = true;
+        }
+    }
+    if(exists){
+        return false;
+    }
     string typeString;
     switch(type){
         case 0: //integer
@@ -58,7 +69,6 @@ bool symbolTable::lookup(string identifier, Node *curr_node)
 
 void symbolTable::print(Node *curr_node)
 {
-    std::cout<<"PRINTING SYMBOL TABLE:::::"<<endl;
     if(curr_node == nullptr)
     {
         return;

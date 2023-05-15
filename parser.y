@@ -418,11 +418,11 @@ enum_variables:  enum_variables ',' VARIABLE '=' expressions
                 } 
                 | enum_variables ',' VARIABLE 
                 {printf("enum_variables: enum_variables, VARIABLE\n");
-                $$=operation(',',2,$1,$3);
+                $$=operation(',',2,$1,identifier($3));
                 } 
                 | VARIABLE '=' expressions 
                 {printf("enum_variables:VARIABLE = exp\n");
-                $$=operation('=',2,$1,$3);
+                $$=operation('=',2,identifier($1),$3);
                 } 
                 | VARIABLE 
                 {printf("enum_variables: VARIABLE\n");
@@ -598,82 +598,257 @@ int execute(nodeType *p){
 
         case Operator_Node:
             switch(p->oper.oper){
-                case IF:
+                case IF: {
+                    //switch scope
+                    Node* newNode = new Node();
+                    newNode->parent = currentScope;
+                    currentScope = newNode;
+                    //call exec on operands
+                    switch(p->oper.nops){
+                        case 2:{
+                            execute(p->oper.op[0]);
+                            execute(p->oper.op[1]);
+                            break;
+                        }
+                        case 3:{
+                            execute(p->oper.op[0]);
+                            execute(p->oper.op[1]);
+                            execute(p->oper.op[2]);
+                            break;
+                        }
+                    }
                     break;
+                }
                 case FOR:
+                {
+                    //switch scope
+                    Node* newNode = new Node();
+                    newNode->parent = currentScope;
+                    currentScope = newNode;
+                    execute(p->oper.op[0]);
+                    execute(p->oper.op[1]);
+                    execute(p->oper.op[2]);
+                    execute(p->oper.op[3]);
                     break;
+                }
                 case WHILE:
+                { 
+                    //switch scope
+                    Node* newNode = new Node();
+                    newNode->parent = currentScope;
+                    currentScope = newNode;
+                    execute(p->oper.op[0]);
+                    execute(p->oper.op[1]);
                     break;
+                }
                 case DO:
+                {
+                    //switch scope
+                    Node* newNode = new Node();
+                    newNode->parent = currentScope;
+                    currentScope = newNode;
+                    execute(p->oper.op[0]);
+                    execute(p->oper.op[1]);
                     break;
+                }
                 case SWITCH:
+                {
+                    execute(p->oper.op[0]);
+                    execute(p->oper.op[1]);
                     break;
+                }
                 case CASE:
+                {
+                    //switch scopes
+                    Node* newNode = new Node();
+                    newNode->parent = currentScope;
+                    currentScope = newNode;
+                    execute(p->oper.op[0]);
+                    execute(p->oper.op[1]);
+                    execute(p->oper.op[2]);
                     break;
+                }
                 case AND:
+                {
+                    execute(p->oper.op[0]);
+                    execute(p->oper.op[1]);
                     break;
+                }
                 case OR:
+                {
+                    execute(p->oper.op[0]);
+                    execute(p->oper.op[1]);
                     break;
+                }
                 case EE:
+                {
+                    execute(p->oper.op[0]);
+                    execute(p->oper.op[1]);
                     break;
+                }
                 case NE:
+                {
+                    execute(p->oper.op[0]);
+                    execute(p->oper.op[1]);
                     break;
+                }
                 case GE:
+                {
+                    execute(p->oper.op[0]);
+                    execute(p->oper.op[1]);
                     break;
+                }
                 case LE:
+                {
+                    execute(p->oper.op[0]);
+                    execute(p->oper.op[1]);
                     break;
+                }
                 case ENUM:
+                {
+                    //switch scope
+                    Node* newNode = new Node();
+                    newNode->parent = currentScope;
+                    currentScope = newNode;
                     break;
+                }
                 case ';':
+                {
+                    execute(p->oper.op[0]);
+                    execute(p->oper.op[1]);
                     break;
+                }
                 case '=':
+                {
                     switch(p->oper.nops){
                         case 2:
                             break;
-                        case 3: //insert in symbol table
-                            st->insert(p->oper.op[1]->identifier.name,"variable",p->oper.op[0]->defineType.type,currentScope);
-                            st->print(currentScope);
+                        case 3:{
+                            //insert in symbol table
+                            bool isInserted = st->insert(p->oper.op[1]->identifier.name,"variable",p->oper.op[0]->defineType.type,currentScope);
+                            printf("!!!!!!!!!!!!!!!!!trying to insert symbol: %s, isInserted: %d\n",p->oper.op[1]->identifier.name,isInserted);
+                            if(!isInserted){
+                                yyerror("ERROR: variable already exists in the current scope");
+                            }
+                            //st->print(currentScope);
                             break;
+                        } 
                         case 4:
                             break;
                     }
                     break;
+                }
                 case '>':
+                {
+                    execute(p->oper.op[0]);
+                    execute(p->oper.op[1]);
                     break;
+                }
                 case '<':
+                {
+                    execute(p->oper.op[0]);
+                    execute(p->oper.op[1]);
                     break;
+                }
                 case '!':
+                {
+                    execute(p->oper.op[0]);
                     break;
+                }
                 case '*':
+                {
+                    execute(p->oper.op[0]);
+                    execute(p->oper.op[1]);
                     break;
+                }
                 case '/':
+                {
+                    execute(p->oper.op[0]);
+                    execute(p->oper.op[1]);
                     break;
+                }
                 case '+':
+                {
+                    execute(p->oper.op[0]);
+                    execute(p->oper.op[1]);
                     break;
+                }
                 case '-':
+                {
+                    execute(p->oper.op[0]);
+                    execute(p->oper.op[1]);
                     break;
+                }
                 case '%':
+                {
+                    execute(p->oper.op[0]);
+                    execute(p->oper.op[1]);
                     break;
+                }
                 case ',':
+                {
+                    execute(p->oper.op[0]);
+                    execute(p->oper.op[1]);
                     break;
+                }
                 case 'd': //function definition
+                {//switch scope
+                    Node* newNode = new Node();
+                    newNode->parent = currentScope;
+                    currentScope = newNode;
                     //insert in the symbol table
-                    st->insert(p->oper.op[1]->identifier.name,"function",p->oper.op[0]->defineType.type,currentScope);
-                    st->print(currentScope);
+                    bool isInserted = st->insert(p->oper.op[1]->identifier.name,"function",p->oper.op[0]->defineType.type,currentScope);
+                    printf("!!!!!!!!!!!!!!!!!trying to insert symbol: %s, isInserted: %d\n",p->oper.op[1]->identifier.name,isInserted);
+                    if(!isInserted){
+                        yyerror("ERROR: function already exists in the current scope");
+                    }
+                    execute(p->oper.op[0]);
+                    execute(p->oper.op[1]);
+                    execute(p->oper.op[2]);
+                    execute(p->oper.op[3]);
+                    execute(p->oper.op[4]);
+                    //st->print(currentScope);
                     break;
-                case 'c':
+                }
+                case 'c': //parameters call => fun(x, y,  z) parameters are x, y and z
+                {
+                    execute(p->oper.op[0]);
+                    execute(p->oper.op[1]);
                     break;
-                case 'f':
+                }
+                case 'f': //function call 
+                {
+                    execute(p->oper.op[0]);
+                    execute(p->oper.op[1]);
                     break;
+                }
                 case 'p': //parameter list in function definition
-                    //insert in symbol table
-                    st->insert(p->oper.op[1]->identifier.name,"parameter",p->oper.op[0]->defineType.type,currentScope);
-                    st->print(currentScope);
+                {//insert in symbol table
+                    bool isInserted = st->insert(p->oper.op[1]->identifier.name,"parameter",p->oper.op[0]->defineType.type,currentScope);
+                    printf("!!!!!!!!!!!!!!!!!trying to insert symbol: %s, isInserted: %d\n",p->oper.op[1]->identifier.name,isInserted);
+                    if(!isInserted){
+                        yyerror("ERROR: parameter already exists in the current scope");
+                    }
+                    //st->print(currentScope);
+                    switch(p->oper.nops){
+                        case 2:
+                        {
+                            execute(p->oper.op[0]);
+                            execute(p->oper.op[1]);
+                            break;
+                        }
+                        case 3:
+                        {
+                            execute(p->oper.op[0]);
+                            execute(p->oper.op[1]);
+                            execute(p->oper.op[2]);
+                            break;
+                        }
+                    }
                     break;
+                }
             }
             break;
-
-
     }
     return 0;
 
@@ -718,7 +893,7 @@ int main(int argc, char **argv) {
 
     fclose(fp);
 
-    //st->print(currentScope);
+    st->print(currentScope);
 
     return 0;
 }
