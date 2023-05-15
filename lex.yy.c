@@ -962,7 +962,7 @@ YY_RULE_SETUP
 case 32:
 YY_RULE_SETUP
 #line 55 "scanner.l"
-{yylval.string_val=yytext;  last_token = (char*) malloc(strlen(yylval.string_val) + 1); strcpy(last_token, yylval.string_val); return VARIABLE;}
+{yylval.string_val= strdup(yytext);  last_token = (char*) malloc(strlen(yylval.string_val) + 1); strcpy(last_token, yylval.string_val); return VARIABLE;}
 	YY_BREAK
 case 33:
 /* rule 33 can match eol */

@@ -52,7 +52,7 @@
 
 \'.\'                              {yylval.char_val=*(yytext+1);last_token = (char*) malloc(2); last_token[0] = yylval.char_val; last_token[1] = '\0'; return CHAR;}
 \".*\"                             {yylval.string_val=strtok(yytext, "\""); last_token = (char*) malloc(strlen(yylval.string_val) + 1); strcpy(last_token, yylval.string_val); return STRING;}
-[_a-zA-Z][_a-zA-Z0-9]*            {yylval.string_val=yytext;  last_token = (char*) malloc(strlen(yylval.string_val) + 1); strcpy(last_token, yylval.string_val); return VARIABLE;}
+[_a-zA-Z][_a-zA-Z0-9]*            {yylval.string_val= strdup(yytext);  last_token = (char*) malloc(strlen(yylval.string_val) + 1); strcpy(last_token, yylval.string_val); return VARIABLE;}
 
 
 [ \t\n\r]+                    ;              

@@ -66,6 +66,11 @@
                 enum_statement enum_variables variable_Type variable_value
 
 %%
+
+program: root {printf("end of program\n");}
+         ;
+
+
 root:   root statement 
         {printf("root: root statement\n"); printf("-------------------------------------\n");
         execute($2);
@@ -76,6 +81,7 @@ root:   root statement
         } 
         | 
         {printf("root: \n");}
+        ;
 
 statement:  conditional_statement 
             { printf("statement: conditional_statement\n");
@@ -91,6 +97,7 @@ statement:  conditional_statement
             { printf("statement: assignment;\n");
             $$=$1;
             } 
+            ;
 //! rule useless 
             // |
             // ;
@@ -103,6 +110,7 @@ recursive_statement: recursive_statement statement
                     {printf("recursive_statement: \n");
                     $$=NULL;
                     }
+                    ;
             
 //---------conditional statement---------// 
 conditional_statement:  switch_conditional_statement 
@@ -114,6 +122,7 @@ conditional_statement:  switch_conditional_statement
                         {printf("conditional_statement: if_conditional_statement\n");
                         $$=$1;
                         } 
+                        ;
 //! rule useless
                         // |
                         // ;
@@ -125,12 +134,14 @@ if_conditional_statement:   IF '(' expressions ')' '{'recursive_statement'}'  EL
                             | IF '(' expressions ')' '{'recursive_statement'}' 
                             {printf("if_conditional_statement: if(exp){recursive_statement}\n");
                             $$=operation(IF,2,$3,$6);
-                            }; 
+                            }
+                            ; 
 
 switch_conditional_statement:   SWITCH '('VARIABLE')' '{' case_statement '}' 
                                 {printf("switch_conditional_statement: switch(VARIABLE){case_statement}\n");
                                 $$=operation(SWITCH,2,$3,$6);
                                 } 
+                                ;
 
 case_statement: case_statement CASE variable_value ':' recursive_statement BREAK  
                 {printf("case_statement: case_statement case variable_value: recursive_statement break\n");
@@ -139,7 +150,8 @@ case_statement: case_statement CASE variable_value ':' recursive_statement BREAK
                 |  
                 {printf("case_statement: \n");
                 $$=NULL;
-                } ; //? hna lazem nzwd elvalues elly elmafrood treturn
+                } 
+                ; //? hna lazem nzwd elvalues elly elmafrood treturn
 
 //---------loop statement---------// 
 loop_statement: for_loop_statement  
@@ -156,6 +168,7 @@ loop_statement: for_loop_statement
                 {printf("loop_statement: do_while_loop_statement\n");
                 $$=$1;
                 } 
+                ;
 //! rule useless                
                 // | 
                 // ;
@@ -164,21 +177,25 @@ for_loop_statement: FOR '(' assignment ';' expressions ';' assignment')' '{' rec
                     {printf("for_loop_statement: for(assignment; exp; assignment){recursive_statement}\n");
                     $$=operation(FOR,4,$3,$5,$7,$10);
                     } // hna lazem nzwd elvalues elly elmafrood treturn
+                    ;
 
 while_loop_statement: WHILE '(' expressions ')' '{' recursive_statement '}'  
                     {printf("while_loop_statement: while(exp){recursive_statement}\n");
                     $$=operation(WHILE,2,$3,$6);
                     } 
+                    ;
 
 
 do_while_loop_statement: DO '{' recursive_statement '}' WHILE '(' expressions ')'  
                         {printf("do_while_loop_statement: do{recursive_statement} while{exp}\n");
                         $$=operation(DO,2,$3,$7);
                         }
+                        ;
 
 //-------------assignments-------------//
 assignment: variable_Type VARIABLE '=' expressions  
-            {printf("assignment: variable_Type VARIABLE = exp\n");
+            {
+            printf("assignment: variable_Type VARIABLE = exp\n");
             $$=operation('=',3,$1,identifier($2),$4);
             } 
             | VARIABLE '=' expressions  
@@ -192,7 +209,8 @@ assignment: variable_Type VARIABLE '=' expressions
             | expressions  
             {printf("assignment: exp\n");
             $$ = $1;
-            }  //? hna lazem nzwd elvalues elly elmafrood treturn
+            }
+            ;  //? hna lazem nzwd elvalues elly elmafrood treturn
 
 //------------Expressions-------------//
 expressions: expressions OR first 
@@ -203,6 +221,7 @@ expressions: expressions OR first
             {printf("exp: first \n");
             $$=$1;
             }
+            ;
 
 first: first AND second 
         {printf("first: first && second\n");
@@ -211,7 +230,8 @@ first: first AND second
         | second 
         {printf("first: second\n");
         $$=$1;
-        } 
+        }
+        ; 
 
 second: second EE third 
         {printf("second: second == third\n");
@@ -225,6 +245,7 @@ second: second EE third
         {printf("second: third\n");
         $$=$1;
         } 
+        ;
 
 third:  third '>' fourth 
         {printf("third: third > fourth\n");
@@ -246,6 +267,7 @@ third:  third '>' fourth
         {printf("third: fourth\n");
         $$=$1;
         }
+        ;
 
 fourth: fourth '+' fifth 
         {printf("fourth: fourth + fifth\n");
@@ -259,6 +281,7 @@ fourth: fourth '+' fifth
         {printf("fourth: fifth\n");
         $$=$1;
         } 
+        ;
 
 fifth:  fifth '*' sixth 
         {printf("fifth: fifth * sixth\n");
@@ -275,7 +298,8 @@ fifth:  fifth '*' sixth
         | sixth 
         {printf("fifth: sixth\n");
         $$=$1;
-        } 
+        }
+        ; 
 
 sixth:  '-' sixth  
         {printf("sixth: - sixth\n");
@@ -289,6 +313,7 @@ sixth:  '-' sixth
         {printf("sixth: seventh\n");
         $$=$1;
         } 
+        ;
 
 seventh: '(' expressions ')' 
         {printf("seventh: (exp)\n");
@@ -305,13 +330,15 @@ seventh: '(' expressions ')'
         | function_call 
         {printf("seventh: function_call\n");
         $$=$1;
-        } 
+        }
+        ; 
 
 //------------functions---------------//
 function_call:  VARIABLE '(' function_parameters_calls ')' 
                 {printf("function_call: VARIABLE (function_parameters_calls)\n");
                 $$=operation('f',2,identifier($1),$3);
                 }
+                ;
 
 functional_statement: function 
                     {printf("functional_statement: function\n");
@@ -321,6 +348,7 @@ functional_statement: function
                     {printf("functional_statement: enum_statement\n");
                     $$=$1;
                     }
+                    ;
 
 function_parameters: parameter 
                     {printf("function_parameters: parameter\n");
@@ -329,7 +357,8 @@ function_parameters: parameter
                     | 
                     {printf("function_parameters: \n");
                     $$=NULL;
-                    }  //? semi colon not added yet?
+                    }
+                    ;  //? semi colon not added yet?
 
 parameter:  parameter ',' variable_Type VARIABLE  
             {printf("parameter: parameter, variable_Type VARIABLE\n");
@@ -339,6 +368,7 @@ parameter:  parameter ',' variable_Type VARIABLE
             {printf("parameter: variable_Type VARIABLE\n");
             $$=operation('p',2,$1,identifier($2));
             } 
+            ;
 
 function_parameters_calls:  parameter_calls 
                             {printf("function_parameters_calls: parameter_calls\n");
@@ -347,7 +377,8 @@ function_parameters_calls:  parameter_calls
                             | 
                             {printf("function_parameters_calls: \n");
                             $$=NULL;
-                            } 
+                            }
+                            ; 
 
 parameter_calls: parameter_calls ',' expressions 
                 {printf("parameter_calls: parameter_calls, exp\n");
@@ -357,6 +388,7 @@ parameter_calls: parameter_calls ',' expressions
                 {printf("parameter_calls: exp\n");
                 $$=$1;
                 } 
+                ;
 
 function: variable_Type VARIABLE '(' function_parameters ')' '{' recursive_statement RETURN return_types';' '}'  
         {printf("function: variable_Type  (function_parameters){recursive_statement RETURN return_types ;}\n");
@@ -366,16 +398,19 @@ function: variable_Type VARIABLE '(' function_parameters ')' '{' recursive_state
         {printf("function: void VARIABLE (function_parameters) {recursive_statement}\n");
         $$=operation('d',5,defineType(VoidType),identifier($2),$4,$7);
         } 
+        ;
 
 return_types:   expressions  
                 {printf("return_types: expressions\n");
                 $$=$1;
                 }
+                ;
 
 enum_statement: ENUM VARIABLE '{'enum_variables'}' 
                 {printf("enum_statement: enum VARIABLE {enum_variables}\n");
                 $$=operation(ENUM,2,identifier($2),$4);
-                } 
+                }
+                ; 
 
 enum_variables:  enum_variables ',' VARIABLE '=' expressions 
                 {printf("enum_variables: enum_variables, VARIABLE = exp\n");
@@ -392,7 +427,8 @@ enum_variables:  enum_variables ',' VARIABLE '=' expressions
                 | VARIABLE 
                 {printf("enum_variables: VARIABLE\n");
                 $$=identifier($1);
-                } ;
+                } 
+                ;
 
 //------------variables---------------//
 variable_Type:  INT_TYPE  
@@ -414,7 +450,8 @@ variable_Type:  INT_TYPE
                 | STRING_TYPE 
                 {printf("variable_Type: string\n");
                 $$ = defineType(StringType);
-                }  
+                }
+                ;  
 
 variable_value: INTEGER  
                 {printf("variable_value: int value \n");
@@ -439,7 +476,8 @@ variable_value: INTEGER
                 | STRING
                 {printf("variable_value: string value \n");
                 $$ = constantString($1);
-                } //? hna lazem nzwd elvalues elly elmafrood treturn
+                } 
+                ;//? hna lazem nzwd elvalues elly elmafrood treturn
 
 
 %%
@@ -502,7 +540,6 @@ nodeType *defineType(typeEnum type) {
         yyerror("out of memory");
     p->type = Type_Node;
     p->defineType.type = type;
-    printf("type: %d\n", type);
     return p;
 }
 
@@ -512,7 +549,6 @@ nodeType *identifier(char* i) {
         yyerror("out of memory");
     p->type = Identifier_Node;
     p->identifier.name = i;
-    printf("variable: %s\n", i);
     return p;
 }
 
@@ -682,7 +718,7 @@ int main(int argc, char **argv) {
 
     fclose(fp);
 
-    st->print(currentScope);
+    //st->print(currentScope);
 
     return 0;
 }
