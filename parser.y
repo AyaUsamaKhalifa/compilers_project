@@ -333,7 +333,7 @@ function_parameters: parameter
 
 parameter:  parameter ',' variable_Type VARIABLE  
             {printf("parameter: parameter, variable_Type VARIABLE\n");
-            $$=operation('p',3,$1,$3,identifier($4));
+            $$=operation('p',3,$3,identifier($4),$1);
             } 
             | variable_Type VARIABLE 
             {printf("parameter: variable_Type VARIABLE\n");
@@ -364,7 +364,7 @@ function: variable_Type VARIABLE '(' function_parameters ')' '{' recursive_state
         } 
         | VOID VARIABLE '(' function_parameters ')' '{' recursive_statement '}' 
         {printf("function: void VARIABLE (function_parameters) {recursive_statement}\n");
-        $$=operation('d',5,defineType(VoidType),identifier($2),$4,$7,$9);
+        $$=operation('d',5,defineType(VoidType),identifier($2),$4,$7);
         } 
 
 return_types:   expressions  
@@ -546,7 +546,100 @@ void freeNode(nodeType *p) {
 
 int execute(nodeType *p){
 
-return 0;
+    if(p == NULL) return 0;
+    switch(p->type)
+    {
+        case Constant_Node:
+            break;
+
+        case Identifier_Node:
+
+            break;
+
+        case Type_Node:
+
+            break;
+
+        case Operator_Node:
+            switch(p->oper.oper){
+                case IF:
+                    break;
+                case FOR:
+                    break;
+                case WHILE:
+                    break;
+                case DO:
+                    break;
+                case SWITCH:
+                    break;
+                case CASE:
+                    break;
+                case AND:
+                    break;
+                case OR:
+                    break;
+                case EE:
+                    break;
+                case NE:
+                    break;
+                case GE:
+                    break;
+                case LE:
+                    break;
+                case ENUM:
+                    break;
+                case ';':
+                    break;
+                case '=':
+                    switch(p->oper.nops){
+                        case 2:
+                            break;
+                        case 3: //insert in symbol table
+                            st->insert(p->oper.op[1]->identifier.name,"variable",p->oper.op[0]->defineType.type,currentScope);
+                            st->print(currentScope);
+                            break;
+                        case 4:
+                            break;
+                    }
+                    break;
+                case '>':
+                    break;
+                case '<':
+                    break;
+                case '!':
+                    break;
+                case '*':
+                    break;
+                case '/':
+                    break;
+                case '+':
+                    break;
+                case '-':
+                    break;
+                case '%':
+                    break;
+                case ',':
+                    break;
+                case 'd': //function definition
+                    //insert in the symbol table
+                    st->insert(p->oper.op[1]->identifier.name,"function",p->oper.op[0]->defineType.type,currentScope);
+                    st->print(currentScope);
+                    break;
+                case 'c':
+                    break;
+                case 'f':
+                    break;
+                case 'p': //parameter list in function definition
+                    //insert in symbol table
+                    st->insert(p->oper.op[1]->identifier.name,"parameter",p->oper.op[0]->defineType.type,currentScope);
+                    st->print(currentScope);
+                    break;
+            }
+            break;
+
+
+    }
+    return 0;
 
 }
 

@@ -7,12 +7,36 @@ Node *symbolTable::create(Node *parent)
     return new_node;
 }
 
-bool symbolTable::insert(string identifier, string kind, string type, Node *curr_node)
+bool symbolTable::insert(string identifier, string kind, int type, Node *curr_node)
 {
+    string typeString;
+    switch(type){
+        case 0: //integer
+            typeString="integer";
+            break;
+        case 1: //float
+            typeString="float";
+            break;
+        case 2: //string
+            typeString="string";
+            break;
+        case 3: //bool
+            typeString="boolean";
+            break;
+        case 4: //void
+            typeString="void";
+            break;
+        case 5: //char
+            typeString="char";
+            break;
+        case 6: //enum
+            typeString="enum";
+            break;
+    }
     // current node does not exist return false
     vector<string> data(2);
     data[0] = kind;
-    data[1] = type;
+    data[1] = typeString;
     curr_node->node_data[identifier] = data;
     return true;
 }
@@ -34,6 +58,7 @@ bool symbolTable::lookup(string identifier, Node *curr_node)
 
 void symbolTable::print(Node *curr_node)
 {
+    std::cout<<"PRINTING SYMBOL TABLE:::::"<<endl;
     if(curr_node == nullptr)
     {
         return;
