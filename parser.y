@@ -416,7 +416,7 @@ enum_statement: ENUM VARIABLE '{'enum_variables'}'
 
 enum_variables:  enum_variables ',' VARIABLE '=' expressions 
                 {printf("enum_variables: enum_variables, VARIABLE = exp\n");
-                $$=operation(',',2,$1,operation('=',2,identifier($3),$5));
+                $$=operation(',',3,$1,identifier($3),$5);
                 } 
                 | enum_variables ',' VARIABLE 
                 {printf("enum_variables: enum_variables, VARIABLE\n");
@@ -424,11 +424,11 @@ enum_variables:  enum_variables ',' VARIABLE '=' expressions
                 } 
                 | VARIABLE '=' expressions 
                 {printf("enum_variables:VARIABLE = exp\n");
-                $$=operation('=',2,identifier($1),$3);
+                $$=operation(',',2,identifier($1),$3);
                 } 
                 | VARIABLE 
                 {printf("enum_variables: VARIABLE\n");
-                $$=identifier($1);
+                $$=operation(',',1,identifier($1));
                 } 
                 ;
 
@@ -789,10 +789,58 @@ int execute(nodeType *p){
                     execute(p->oper.op[1]);
                     break;
                 }
-                case ',':
+                case ',': //enum variables in enum definition => enum x {variable1 = variablevalue1, variable2}
                 {
-                    execute(p->oper.op[0]);
-                    execute(p->oper.op[1]);
+                    switch(p->oper.nops){
+                        case 1: //enum x{variable1}
+                        {
+                            //insert in the symbol table
+                            bool isInserted = st->insert(p->oper.op[0]->identifier.name,"enum",6,currentScope);
+                            printf("!!!!!!!!!!!!!!!!!trying to insert symbol: %s, isInserted: %d\n",p->oper.op[0]->identifier.name,isInserted);
+                            if(!isInserted){
+                                 yyerror("ERROR: enum variable already exists in the current scope");
+                            }
+                            execute(p->oper.op[0]);
+                            break;
+                        }
+                        case 2:
+                        {
+                            if(p->oper.op[0]->type==Identifier_Node){
+                                //insert in the symbol table
+                                bool isInserted = st->insert(p->oper.op[0]->identifier.name,"enum",6,currentScope);
+                                printf("!!!!!!!!!!!!!!!!!trying to insert symbol: %s, isInserted: %d\n",p->oper.op[0]->identifier.name,isInserted);
+                                if(!isInserted){
+                                     yyerror("ERROR: enum variable already exists in the current scope");
+                                }
+                            }
+                            else 
+                            {
+                                //insert in the symbol table
+                                bool isInserted = st->insert(p->oper.op[1]->identifier.name,"enum",6,currentScope);
+                                printf("!!!!!!!!!!!!!!!!!trying to insert symbol: %s, isInserted: %d\n",p->oper.op[1]->identifier.name,isInserted);
+                                if(!isInserted){
+                                     yyerror("ERROR: enum variable already exists in the current scope");
+                                }
+
+                            }
+                            execute(p->oper.op[0]);
+                            execute(p->oper.op[1]);
+                            break;
+                        }
+                        case 3:
+                        {
+                            execute(p->oper.op[0]); //enum variables
+                            //insert in the symbol table
+                            bool isInserted = st->insert(p->oper.op[1]->identifier.name,"enum",6,currentScope);
+                            printf("!!!!!!!!!!!!!!!!!trying to insert symbol: %s, isInserted: %d\n",p->oper.op[1]->identifier.name,isInserted);
+                            if(!isInserted){
+                                 yyerror("ERROR: enum variable already exists in the current scope");
+                            }
+                            execute(p->oper.op[1]);
+                            execute(p->oper.op[2]);
+                            break;
+                        }
+                    }
                     break;
                 }
                 case 'd': //function definition

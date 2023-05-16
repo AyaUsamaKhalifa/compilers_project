@@ -21,18 +21,18 @@ void func(int x){
 }
 
 int fun(int y){
-    x = y;
+    int x = y;
     return x;
 }
 
 switch(x){
     case 'a':
-        x= z;
+        int x= z;
         break
 }
 
-do {x = x + 1;} while(x > 0)
+do {int x = x + 1;} while(x > 0)
 
-enum x {thursday = 1}
+enum x {thursday = 10, monday = 11}
 
 string d = "a";
