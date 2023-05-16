@@ -398,7 +398,7 @@ function: variable_Type VARIABLE '(' function_parameters ')' '{' recursive_state
         } 
         | VOID VARIABLE '(' function_parameters ')' '{' recursive_statement '}' 
         {printf("function: void VARIABLE (function_parameters) {recursive_statement}\n");
-        $$=operation('d',5,defineType(VoidType),identifier($2),$4,$7);
+        $$=operation('d',4,defineType(VoidType),identifier($2),$4,$7);
         } 
         ;
 
@@ -602,10 +602,7 @@ int execute(nodeType *p){
             switch(p->oper.oper){
                 case IF: {
                     //switch scope
-                    Node* newNode = new Node();
-                    newNode->parent = currentScope;
-                    currentScope->children.push_back(newNode);
-                    currentScope = newNode;
+                    currentScope=st->switchScope(currentScope);
                     //call exec on operands
                     switch(p->oper.nops){
                         case 2:{
@@ -621,48 +618,39 @@ int execute(nodeType *p){
                         }
                     }
                     //switching the scope back 
-                    currentScope = currentScope->parent;
+                    currentScope = st->switchBack(currentScope);
                     break;
                 }
                 case FOR:
                 {
                     //switch scope
-                    Node* newNode = new Node();
-                    newNode->parent = currentScope;
-                    currentScope->children.push_back(newNode);
-                    currentScope = newNode;
+                    currentScope=st->switchScope(currentScope);
                     execute(p->oper.op[0]);
                     execute(p->oper.op[1]);
                     execute(p->oper.op[2]);
                     execute(p->oper.op[3]);
                     //switching the scope back 
-                    currentScope = currentScope->parent;
+                    currentScope = st->switchBack(currentScope);
                     break;
                 }
                 case WHILE:
                 { 
                     //switch scope
-                    Node* newNode = new Node();
-                    newNode->parent = currentScope;
-                    currentScope->children.push_back(newNode);
-                    currentScope = newNode;
+                    currentScope=st->switchScope(currentScope);
                     execute(p->oper.op[0]);
                     execute(p->oper.op[1]);
                     //switching the scope back 
-                    currentScope = currentScope->parent;
+                    currentScope = st->switchBack(currentScope);
                     break;
                 }
                 case DO:
                 {
                     //switch scope
-                    Node* newNode = new Node();
-                    newNode->parent = currentScope;
-                    currentScope->children.push_back(newNode);
-                    currentScope = newNode;
+                    currentScope=st->switchScope(currentScope);
                     execute(p->oper.op[0]);
                     execute(p->oper.op[1]);
                     //switching the scope back 
-                    currentScope = currentScope->parent;
+                    currentScope = st->switchBack(currentScope);
                     break;
                 }
                 case SWITCH:
@@ -674,15 +662,12 @@ int execute(nodeType *p){
                 case CASE:
                 {
                     //switch scopes
-                    Node* newNode = new Node();
-                    newNode->parent = currentScope;
-                    currentScope->children.push_back(newNode);
-                    currentScope = newNode;
+                    currentScope=st->switchScope(currentScope);
                     execute(p->oper.op[0]);
                     execute(p->oper.op[1]);
                     execute(p->oper.op[2]);
                     //switching the scope back 
-                    currentScope = currentScope->parent;
+                    currentScope = st->switchBack(currentScope);
                     break;
                 }
                 case AND:
@@ -724,14 +709,11 @@ int execute(nodeType *p){
                 case ENUM:
                 {
                     //switch scope
-                    Node* newNode = new Node();
-                    newNode->parent = currentScope;
-                    currentScope->children.push_back(newNode);
-                    currentScope = newNode;
+                    currentScope=st->switchScope(currentScope);
                     execute(p->oper.op[0]);
                     execute(p->oper.op[1]);
                     //switching the scope back 
-                    currentScope = currentScope->parent;
+                    currentScope = st->switchBack(currentScope);
                     break;
                 }
                 case ';':
@@ -815,25 +797,34 @@ int execute(nodeType *p){
                 }
                 case 'd': //function definition
                 {
-                    //switch scope
-                    Node* newNode = new Node();
-                    newNode->parent = currentScope;
-                    currentScope->children.push_back(newNode);
-                    currentScope = newNode;
                     //insert in the symbol table
                     bool isInserted = st->insert(p->oper.op[1]->identifier.name,"function",p->oper.op[0]->defineType.type,currentScope);
                     printf("!!!!!!!!!!!!!!!!!trying to insert symbol: %s, isInserted: %d\n",p->oper.op[1]->identifier.name,isInserted);
                     if(!isInserted){
                         yyerror("ERROR: function already exists in the current scope");
                     }
-                    execute(p->oper.op[0]);
-                    execute(p->oper.op[1]);
-                    execute(p->oper.op[2]);
-                    execute(p->oper.op[3]);
-                    execute(p->oper.op[4]);
-                    //st->print(currentScope);
+                    
+                    //switch scope
+                    currentScope=st->switchScope(currentScope);
+                    switch(p->oper.nops){
+                        case 4:{
+                            execute(p->oper.op[0]);
+                            execute(p->oper.op[1]);
+                            execute(p->oper.op[2]);
+                            execute(p->oper.op[3]);
+                            break;
+                        }
+                        case 5:{
+                            execute(p->oper.op[0]);
+                            execute(p->oper.op[1]);
+                            execute(p->oper.op[2]);
+                            execute(p->oper.op[3]);
+                            execute(p->oper.op[4]);
+                            break;
+                        }
+                    }
                     //switching the scope back 
-                    currentScope = currentScope->parent;
+                    currentScope = st->switchBack(currentScope);
                     break;
                 }
                 case 'c': //parameters call => fun(x, y,  z) parameters are x, y and z

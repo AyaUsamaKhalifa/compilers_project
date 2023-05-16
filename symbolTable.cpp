@@ -67,6 +67,18 @@ bool symbolTable::lookup(string identifier, Node *curr_node)
     return lookup(identifier, curr_node->parent);
 }
 
+Node * symbolTable::switchScope(Node* currentScope){
+    Node* newNode = new Node();
+    newNode->parent = currentScope;
+    currentScope->children.push_back(newNode);
+    currentScope = newNode;
+    return currentScope;
+}
+
+Node* symbolTable::switchBack(Node* currentScope){
+    return currentScope->parent;
+}
+
 void symbolTable::print(Node *curr_node)
 {
     ofstream myfile;
