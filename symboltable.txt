@@ -1,8 +1,11 @@
 id		kind			type
+o		constant		integer
 d		variable		string
+day		enum		enum
 fun		function		integer
 func		function		void
 name		variable		string
+today		variable		enum
 y		variable		char
 flag		variable		boolean
 x		variable		integer
@@ -14,12 +17,12 @@ c		variable		char
 x		parameter		integer
 ========================================================================
 x		variable		integer
-y		parameter		integer
+y		parameter		char
 ========================================================================
 x		variable		integer
 ========================================================================
 x		variable		integer
 ========================================================================
-monday		enum		enum
-thursday		enum		enum
+monday		enum constant		integer
+thursday		enum constant		integer
 ========================================================================

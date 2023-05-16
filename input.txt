@@ -20,7 +20,7 @@ void func(int x){
     char c = 'a';
 }
 
-int fun(int y){
+int fun(int y, char y){
     int x = y;
     return x;
 }
@@ -33,6 +33,9 @@ switch(x){
 
 do {int x = x + 1;} while(x > 0)
 
-enum x {thursday = 10, monday = 11}
+enum day {thursday = 10, monday = 11}
 
 string d = "a";
+
+enum day today = thursday;
+const int o = 10;

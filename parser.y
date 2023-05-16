@@ -208,6 +208,11 @@ assignment: variable_Type VARIABLE '=' expressions
             {printf("assignment: ENUM VARIABLE VARIABLE = exp\n");
             $$=operation('=',4,defineType(EnumType),identifier($2),identifier($3),$5);
             } 
+            | CONST variable_Type VARIABLE '=' expressions
+            {
+            printf("assignment: CONST variable_Type VARIABLE = exp\n");
+            $$=operation('=',4,defineType(ConstType),$2,identifier($3),$5);
+            }
             | expressions  
             {printf("assignment: exp\n");
             $$ = $1;
@@ -708,6 +713,12 @@ int execute(nodeType *p){
                 }
                 case ENUM:
                 {
+                    //insert in symbol table
+                    bool isInserted = st->insert(p->oper.op[0]->identifier.name,"enum",6,currentScope);
+                    printf("!!!!!!!!!!!!!!!!!trying to insert symbol: %s, isInserted: %d\n",p->oper.op[0]->identifier.name,isInserted);
+                    if(!isInserted){
+                        yyerror("ERROR: variable already exists in the current scope");
+                    }
                     //switch scope
                     currentScope=st->switchScope(currentScope);
                     execute(p->oper.op[0]);
@@ -726,6 +737,8 @@ int execute(nodeType *p){
                 {
                     switch(p->oper.nops){
                         case 2:
+                            execute(p->oper.op[0]);
+                            execute(p->oper.op[1]);
                             break;
                         case 3:{
                             //insert in symbol table
@@ -734,10 +747,36 @@ int execute(nodeType *p){
                             if(!isInserted){
                                 yyerror("ERROR: variable already exists in the current scope");
                             }
+                            execute(p->oper.op[0]);
+                            execute(p->oper.op[1]);
+                            execute(p->oper.op[2]);
                             //st->print(currentScope);
                             break;
                         } 
-                        case 4:
+                        case 4: //enum => enum enum_name variable_name = expression OR const => const type var_name = expression
+                        {
+                            if(p->oper.op[0]->defineType.type==ConstType){
+                                //insert in symbol table
+                                bool isInserted = st->insert(p->oper.op[2]->identifier.name,"constant",p->oper.op[1]->defineType.type,currentScope);
+                                printf("!!!!!!!!!!!!!!!!!trying to insert symbol: %s, isInserted: %d\n",p->oper.op[2]->identifier.name,isInserted);
+                                if(!isInserted){
+                                    yyerror("ERROR: variable already exists in the current scope");
+                                }
+                            }
+                            else if(p->oper.op[0]->defineType.type==EnumType)
+                            {
+                                //insert in symbol table
+                                bool isInserted = st->insert(p->oper.op[2]->identifier.name,"variable",6,currentScope);
+                                printf("!!!!!!!!!!!!!!!!!trying to insert symbol: %s, isInserted: %d\n",p->oper.op[2]->identifier.name,isInserted);
+                                if(!isInserted){
+                                    yyerror("ERROR: variable already exists in the current scope");
+                                }
+                            }
+                            execute(p->oper.op[0]);
+                            execute(p->oper.op[1]);
+                            execute(p->oper.op[2]);
+                            execute(p->oper.op[3]);
+                        }
                             break;
                     }
                     break;
@@ -795,7 +834,7 @@ int execute(nodeType *p){
                         case 1: //enum x{variable1}
                         {
                             //insert in the symbol table
-                            bool isInserted = st->insert(p->oper.op[0]->identifier.name,"enum",6,currentScope);
+                            bool isInserted = st->insert(p->oper.op[0]->identifier.name,"enum constant",0,currentScope);
                             printf("!!!!!!!!!!!!!!!!!trying to insert symbol: %s, isInserted: %d\n",p->oper.op[0]->identifier.name,isInserted);
                             if(!isInserted){
                                  yyerror("ERROR: enum variable already exists in the current scope");
@@ -807,7 +846,7 @@ int execute(nodeType *p){
                         {
                             if(p->oper.op[0]->type==Identifier_Node){
                                 //insert in the symbol table
-                                bool isInserted = st->insert(p->oper.op[0]->identifier.name,"enum",6,currentScope);
+                                bool isInserted = st->insert(p->oper.op[0]->identifier.name,"enum constant",0,currentScope);
                                 printf("!!!!!!!!!!!!!!!!!trying to insert symbol: %s, isInserted: %d\n",p->oper.op[0]->identifier.name,isInserted);
                                 if(!isInserted){
                                      yyerror("ERROR: enum variable already exists in the current scope");
@@ -816,7 +855,7 @@ int execute(nodeType *p){
                             else 
                             {
                                 //insert in the symbol table
-                                bool isInserted = st->insert(p->oper.op[1]->identifier.name,"enum",6,currentScope);
+                                bool isInserted = st->insert(p->oper.op[1]->identifier.name,"enum constant",0,currentScope);
                                 printf("!!!!!!!!!!!!!!!!!trying to insert symbol: %s, isInserted: %d\n",p->oper.op[1]->identifier.name,isInserted);
                                 if(!isInserted){
                                      yyerror("ERROR: enum variable already exists in the current scope");
@@ -831,7 +870,7 @@ int execute(nodeType *p){
                         {
                             execute(p->oper.op[0]); //enum variables
                             //insert in the symbol table
-                            bool isInserted = st->insert(p->oper.op[1]->identifier.name,"enum",6,currentScope);
+                            bool isInserted = st->insert(p->oper.op[1]->identifier.name,"enum constant",0,currentScope);
                             printf("!!!!!!!!!!!!!!!!!trying to insert symbol: %s, isInserted: %d\n",p->oper.op[1]->identifier.name,isInserted);
                             if(!isInserted){
                                  yyerror("ERROR: enum variable already exists in the current scope");
@@ -875,7 +914,7 @@ int execute(nodeType *p){
                     currentScope = st->switchBack(currentScope);
                     break;
                 }
-                case 'c': //parameters call => fun(x, y,  z) parameters are x, y and z
+                case 'c': //parameters call => fun(x, y, z) parameters are x, y and z
                 {
                     execute(p->oper.op[0]);
                     execute(p->oper.op[1]);

@@ -43,6 +43,9 @@ bool symbolTable::insert(string identifier, string kind, int type, Node *curr_no
         case 6: //enum
             typeString="enum";
             break;
+        case 7:
+            typeString="const";
+            break;
     }
     // current node does not exist return false
     vector<string> data(2);

@@ -16,6 +16,7 @@ typedef enum {
     VoidType,
     CharType,
     EnumType,
+    ConstType,
 } typeEnum;
 
 typedef struct {
