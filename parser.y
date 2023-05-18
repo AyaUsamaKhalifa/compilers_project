@@ -892,7 +892,12 @@ int execute(nodeType *p){
                     }
                     
                     //switch scope
-                    currentScope=st->switchScope(currentScope);
+                    Node * tempNode = new Node();
+                    tempNode = currentScope;
+                    //will make the function the root scope because the definitions inside of it 
+                    //shouldnt have the global scope as their parent scope
+                    currentScope=st->functionScope(currentScope);
+                
                     switch(p->oper.nops){
                         case 4:{
                             execute(p->oper.op[0]);
@@ -911,6 +916,7 @@ int execute(nodeType *p){
                         }
                     }
                     //switching the scope back 
+                    currentScope->parent=tempNode;
                     currentScope = st->switchBack(currentScope);
                     break;
                 }

@@ -1,41 +1,12 @@
 int x = 5;
-char y = 'v';
+char c = 'v';
 string name = "str";
 bool flag = true;
-
-if(i < length){
-    x = 1;
-    x = x - 1;
-}
-else {
-    x = 1;
-    x = x - 1;
-}
-
-for(int i = 0; i < n; i = i + 1){
-    count = 5 + 1 * 8 / 2;
-}
 
 void func(int x){
     char c = 'a';
 }
 
-int fun(int y, char y){
-    int x = y;
-    return x;
+if(x>y){
+    char c='c';
 }
-
-switch(x){
-    case 'a':
-        int x= z;
-        break
-}
-
-do {int x = x + 1;} while(x > 0)
-
-enum day {thursday = 10, monday = 11}
-
-string d = "a";
-
-enum day today = thursday;
-const int o = 10;

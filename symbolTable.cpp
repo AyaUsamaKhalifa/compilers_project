@@ -78,6 +78,13 @@ Node * symbolTable::switchScope(Node* currentScope){
     return currentScope;
 }
 
+Node * symbolTable::functionScope(Node* currentScope){
+    Node* newNode = new Node();
+    currentScope->children.push_back(newNode);
+    currentScope = newNode;
+    return currentScope;
+}
+
 Node* symbolTable::switchBack(Node* currentScope){
     return currentScope->parent;
 }

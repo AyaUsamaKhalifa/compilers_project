@@ -21,6 +21,7 @@ struct symbolTable{
     void printcout(Node *curr_node);
     void print_recursive(Node* curr_node, ofstream& myfile);
     Node *switchScope(Node* currentScope);
+    Node *functionScope(Node* currentScope);
     Node* switchBack(Node* currentScope);
 };
 

@@ -1,28 +1,12 @@
 id		kind			type
-o		constant		integer
-d		variable		string
-day		enum		enum
-fun		function		integer
 func		function		void
 name		variable		string
-today		variable		enum
-y		variable		char
+c		variable		char
 flag		variable		boolean
 x		variable		integer
-========================================================================
-========================================================================
-i		variable		integer
 ========================================================================
 c		variable		char
 x		parameter		integer
 ========================================================================
-x		variable		integer
-y		parameter		char
-========================================================================
-x		variable		integer
-========================================================================
-x		variable		integer
-========================================================================
-monday		enum constant		integer
-thursday		enum constant		integer
+c		variable		char
 ========================================================================
