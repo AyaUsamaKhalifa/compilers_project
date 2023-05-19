@@ -1,2 +1,28 @@
-float y = 5.8;
-int x = 5 % y;
+int x = -5;
+float f = 5.3 * x;
+
+char c = 'c';
+string s = "String value";
+bool b = true;
+bool b2 = false;
+
+int x2 = 5 * 1 + 9 /8 - x;
+int y = x % 2;
+bool B1 = x <= y;
+B1 = b && b2;  
+B1 =  B1 || b2;    
+B1 = !b2;
+B1 = x == y;
+B1 = x != y;
+B1 = x >= y;
+B1 = x <= y;
+B1 = x > y;
+B1 = x < y;
+y = 554;
+
+enum MyEnum
+{
+    monday,
+    tuesday,
+    sunday
+}

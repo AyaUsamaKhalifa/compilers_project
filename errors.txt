@@ -1,1 +1,0 @@
-error: mod operator only accepts integer operands

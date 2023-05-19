@@ -24,6 +24,7 @@
     nodeType *defineType(typeEnum type);
     typeEnum checkCompatibility(typeEnum type1, typeEnum type2);
     typeEnum execute(nodeType *p);
+    typeEnum getIdentifierType(char* identifierName);
 
     void freeNode(nodeType *p);
 
@@ -600,7 +601,6 @@ typeEnum execute(nodeType *p){
     {
         case Constant_Node:
         {
-           
             //printf("Inside execute function check value!!!!!!!!: %d \n", p->constant.constType);
             return p->constant.constType;
             break;
@@ -747,14 +747,24 @@ typeEnum execute(nodeType *p){
                 }
                 case AND:
                 {
-                    execute(p->oper.op[0]);
-                    execute(p->oper.op[1]);
+                    typeEnum typeOP1 = execute(p->oper.op[0]);
+                    typeEnum typeOP2 = execute(p->oper.op[1]);
+                    if(typeOP1 != BoolType || typeOP2 != BoolType){
+                        yyerror("This type of operands are not supported in this operation");
+                        return Error;
+                    }
+                    return BoolType;
                     break;
                 }
                 case OR:
                 {
-                    execute(p->oper.op[0]);
-                    execute(p->oper.op[1]);
+                    typeEnum typeOP1 = execute(p->oper.op[0]);
+                    typeEnum typeOP2 = execute(p->oper.op[1]);
+                    if(typeOP1 != BoolType || typeOP2 != BoolType){
+                        yyerror("This type of operands are not supported in this operation");
+                        return Error;
+                    }
+                    return BoolType;
                     break;
                 }
                 case EE:
@@ -897,14 +907,31 @@ typeEnum execute(nodeType *p){
                 }
                 case '-':
                 {
-                    typeEnum typeOP1 = execute(p->oper.op[0]);
-                    typeEnum typeOP2 = execute(p->oper.op[1]);
-                    typeEnum finalType = checkCompatibility(typeOP1,typeOP2);
-                    if(finalType == Error)
-                    {
-                        yyerror("types are not compatible");
+                    switch (p->oper.nops){
+                        case 1:
+                        {
+                            typeEnum typeOP = execute(p->oper.op[0]);
+                            if(typeOP != FloatType && typeOP != IntType){
+                                yyerror("This operator doesn't support this type of operand");
+                                return Error;
+                            }
+                            return typeOP;
+                            break;
+                        }
+                        case 2:
+                        {
+                            typeEnum typeOP1 = execute(p->oper.op[0]);
+                            typeEnum typeOP2 = execute(p->oper.op[1]);
+                            typeEnum finalType = checkCompatibility(typeOP1,typeOP2);
+                            if(finalType == Error)
+                            {
+                                yyerror("types are not compatible");
+                            }
+                            return finalType;
+                            break;
+                        }
                     }
-                    return finalType;
+
                     break;
                 }
                 case '%':
@@ -953,11 +980,11 @@ typeEnum execute(nodeType *p){
                                 return EnumType;
                             }
                             //check type mismatch
-                            typeEnum varType = execute(p->oper.op[0]);
+                            typeEnum varType = getIdentifierType(p->oper.op[0]->identifier.name);
                             typeEnum exprType = execute(p->oper.op[1]);
                             typeEnum finalType = checkCompatibility(varType, exprType);
                             if(finalType==Error){
-                                yyerror("Type mismatch");
+                                yyerror("Type mismatch in 2 operands");
                                 return Error;
                             }
                             return varType;
@@ -970,7 +997,7 @@ typeEnum execute(nodeType *p){
                             typeEnum finalType = checkCompatibility(varType, exprType);
                             if(finalType==Error)
                             {
-                                yyerror("Type mismatch");
+                                yyerror("Type mismatch in 3 operands");
                                 return Error;
                             }
                             //insert in symbol table
@@ -992,7 +1019,7 @@ typeEnum execute(nodeType *p){
                                 typeEnum finalType = checkCompatibility(varType, exprType);
                                 if(finalType==Error)
                                 {
-                                    yyerror("Type mismatch");
+                                    yyerror("Type mismatch in 4 operands");
                                     return Error;
                                 }
                                 //insert in symbol table
@@ -1044,9 +1071,8 @@ typeEnum execute(nodeType *p){
                             bool isInserted = st->insert(p->oper.op[0]->identifier.name,"enum constant",0,currentScope);
                             printf("!!!!!!!!!!!!!!!!!trying to insert symbol: %s, isInserted: %d\n",p->oper.op[0]->identifier.name,isInserted);
                             if(!isInserted){
-                                 yyerror("enum variable already exists in the current scope");
+                                yyerror("enum variable already exists in the current scope");
                             }
-                            execute(p->oper.op[0]);
                             break;
                         }
                         case 2:
@@ -1056,8 +1082,9 @@ typeEnum execute(nodeType *p){
                                 bool isInserted = st->insert(p->oper.op[0]->identifier.name,"enum constant",0,currentScope);
                                 printf("!!!!!!!!!!!!!!!!!trying to insert symbol: %s, isInserted: %d\n",p->oper.op[0]->identifier.name,isInserted);
                                 if(!isInserted){
-                                     yyerror("enum variable already exists in the current scope");
+                                    yyerror("enum variable already exists in the current scope");
                                 }
+                                execute(p->oper.op[1]);
                             }
                             else 
                             {
@@ -1065,12 +1092,10 @@ typeEnum execute(nodeType *p){
                                 bool isInserted = st->insert(p->oper.op[1]->identifier.name,"enum constant",0,currentScope);
                                 printf("!!!!!!!!!!!!!!!!!trying to insert symbol: %s, isInserted: %d\n",p->oper.op[1]->identifier.name,isInserted);
                                 if(!isInserted){
-                                     yyerror("enum variable already exists in the current scope");
+                                    yyerror("enum variable already exists in the current scope");
                                 }
-
+                                execute(p->oper.op[0]);
                             }
-                            execute(p->oper.op[0]);
-                            execute(p->oper.op[1]);
                             break;
                         }
                         case 3:
@@ -1080,9 +1105,8 @@ typeEnum execute(nodeType *p){
                             bool isInserted = st->insert(p->oper.op[1]->identifier.name,"enum constant",0,currentScope);
                             printf("!!!!!!!!!!!!!!!!!trying to insert symbol: %s, isInserted: %d\n",p->oper.op[1]->identifier.name,isInserted);
                             if(!isInserted){
-                                 yyerror("enum variable already exists in the current scope");
+                                yyerror("enum variable already exists in the current scope");
                             }
-                            execute(p->oper.op[1]);
                             execute(p->oper.op[2]);
                             break;
                         }
@@ -1169,6 +1193,48 @@ typeEnum execute(nodeType *p){
     }
     return Error;
 
+}
+
+typeEnum getIdentifierType(char* identifierName) 
+{
+    string typeIdentifier = st->checkType(identifierName, currentScope);
+    if(typeIdentifier == "integer")
+    {
+        return IntType;
+    }
+    else if(typeIdentifier == "float")
+    {
+        return FloatType;
+    }
+    else if(typeIdentifier == "string")
+    {
+        return StringType;
+    }
+    else if(typeIdentifier == "boolean")
+    {
+        return BoolType;
+    }
+    else if(typeIdentifier == "void")
+    {
+        return VoidType;
+    }
+    else if(typeIdentifier == "char")
+    {
+        return CharType;
+    }
+    else if(typeIdentifier == "enum")
+    {
+        return EnumType;
+    }
+    else if(typeIdentifier == "const")
+    {
+        return ConstType;
+    }
+    else
+    {
+        yyerror("variable was not declared in this scope");
+        return Error;
+    }
 }
 
 typeEnum checkCompatibility(typeEnum typeOP1, typeEnum typeOP2)

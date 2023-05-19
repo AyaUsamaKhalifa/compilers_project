@@ -1,4 +1,16 @@
 id		kind			type
+B1		variable		boolean
+MyEnum		enum		enum
+x2		variable		integer
+b2		variable		boolean
+b		variable		boolean
+y		variable		integer
+s		variable		string
+c		variable		char
+f		variable		float
 x		variable		integer
-y		variable		float
+========================================================================
+monday		enum constant		integer
+tuesday		enum constant		integer
+sunday		enum constant		integer
 ========================================================================
