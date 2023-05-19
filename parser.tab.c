@@ -3033,6 +3033,17 @@ typeEnum execute(nodeType *p){
                             execute(p->oper.op[0]);
                             // execute(p->oper.op[1]);
                             //execute(p->oper.op[2]); //parameters
+                            //insert parameters in symbol table
+                            if(p->oper.op[2] != NULL){
+                                for(int i=0; i < p->oper.op[2]->argumentType.arguments.size(); i++){
+                                    bool isInserted = st->insert(p->oper.op[2]->argumentType.argumentsNames[i],"parameter",p->oper.op[2]->argumentType.arguments[i],currentScope);
+                                    printf("!!!!!!!!!!!!!!!!!trying to insert symbol: %s, isInserted: %d\n",p->oper.op[1]->identifier.name,isInserted);
+                                    if(!isInserted){
+                                        yyerror("parameter already exists in the current scope");
+                                    }
+                                    fprintf(OutputQuadraplesFile, "POP %s\n", p->oper.op[2]->argumentType.argumentsNames[i]);
+                                }
+                            }
                             execute(p->oper.op[3]);
                             break;
                         }
@@ -3043,20 +3054,20 @@ typeEnum execute(nodeType *p){
                             execute(p->oper.op[0]);
                             // execute(p->oper.op[1]);
                             //execute(p->oper.op[2]); //parameters
+                            //insert parameters in symbol table
+                            if(p->oper.op[2] != NULL){
+                                for(int i=0; i < p->oper.op[2]->argumentType.arguments.size(); i++){
+                                    bool isInserted = st->insert(p->oper.op[2]->argumentType.argumentsNames[i],"parameter",p->oper.op[2]->argumentType.arguments[i],currentScope);
+                                    printf("!!!!!!!!!!!!!!!!!trying to insert symbol: %s, isInserted: %d\n",p->oper.op[1]->identifier.name,isInserted);
+                                    if(!isInserted){
+                                        yyerror("parameter already exists in the current scope");
+                                    }
+                                    fprintf(OutputQuadraplesFile, "POP %s\n", p->oper.op[2]->argumentType.argumentsNames[i]);
+                                }
+                            }
                             execute(p->oper.op[3]);
                             execute(p->oper.op[4]);
                             break;
-                        }
-                    }
-
-                    //insert parameters in the symbol table
-                    if(p->oper.op[2] != NULL){
-                        for(int i=0; i < p->oper.op[2]->argumentType.arguments.size(); i++){
-                            bool isInserted = st->insert(p->oper.op[2]->argumentType.argumentsNames[i],"parameter",p->oper.op[2]->argumentType.arguments[i],currentScope);
-                            printf("!!!!!!!!!!!!!!!!!trying to insert symbol: %s, isInserted: %d\n",p->oper.op[1]->identifier.name,isInserted);
-                            if(!isInserted){
-                                yyerror("parameter already exists in the current scope");
-                            }
                         }
                     }
 
@@ -3079,33 +3090,6 @@ typeEnum execute(nodeType *p){
                     printf("function call\n");
                     execute(p->oper.op[1]);
                     fprintf(OutputQuadraplesFile, "CALL %s\n", p->oper.op[0]->identifier.name);
-                    break;
-                }
-                case 'p': //parameter list in function definition
-                {//insert in symbol table
-                    bool isInserted = st->insert(p->oper.op[1]->identifier.name,"parameter",p->oper.op[0]->defineType.type,currentScope);
-                    printf("!!!!!!!!!!!!!!!!!trying to insert symbol: %s, isInserted: %d\n",p->oper.op[1]->identifier.name,isInserted);
-                    if(!isInserted){
-                        yyerror("parameter already exists in the current scope");
-                    }
-                    //st->print(currentScope);
-                    switch(p->oper.nops){
-                        case 2:
-                        {
-                            execute(p->oper.op[0]);
-                            // execute(p->oper.op[1]);
-                            fprintf(OutputQuadraplesFile, "POP %s\n", p->oper.op[1]->identifier.name);
-                            break;
-                        }
-                        case 3:
-                        {
-                            execute(p->oper.op[0]);
-                            // execute(p->oper.op[1]);
-                            fprintf(OutputQuadraplesFile, "POP %s\n", p->oper.op[1]->identifier.name);
-                            execute(p->oper.op[2]);
-                            break;
-                        }
-                    }
                     break;
                 }
             }

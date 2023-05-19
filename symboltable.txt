@@ -4,7 +4,7 @@ func		function		integer
 ========================================================================
 hello		variable		integer
 ========================================================================
+hello		variable		integer
 y		parameter		integer
 x		parameter		integer
-hello		variable		integer
 ========================================================================

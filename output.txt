@@ -4,6 +4,8 @@ POP hello
 PUSH 5
 END_FUNC
 func2: 
+POP x
+POP y
 PUSH 1
 POP hello
 PUSH 7
