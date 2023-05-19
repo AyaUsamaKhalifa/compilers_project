@@ -22,7 +22,8 @@
     nodeType *constantChar(char value);
     nodeType *constantString(char *value);
     nodeType *defineType(typeEnum type);
-    int execute(nodeType *p);
+    typeEnum checkCompatibility(typeEnum type1, typeEnum type2);
+    typeEnum execute(nodeType *p);
 
     void freeNode(nodeType *p);
 
@@ -497,6 +498,7 @@ nodeType *constantInteger(int value) {
         yyerror("out of memory");
     p->type = Constant_Node;
     p->constant.intVal = value;
+    p->constant.constType = IntType;
     printf("constant integer: %d\n", value);
     return p;
 }
@@ -507,6 +509,7 @@ nodeType *constantFloat(float value) {
         yyerror("out of memory");
     p->type = Constant_Node;
     p->constant.floatVal = value;
+    p->constant.constType = FloatType;
     printf("constant float: %f\n", value);
     return p;
 }
@@ -517,6 +520,7 @@ nodeType *constantBool(bool value) {
         yyerror("out of memory");
     p->type = Constant_Node;
     p->constant.boolVal = value;
+    p->constant.constType = BoolType;
     printf("constant boolean: %d\n", value);
     return p;
 }
@@ -527,6 +531,7 @@ nodeType *constantChar(char value) {
         yyerror("out of memory");
     p->type = Constant_Node;
     p->constant.charVal = value;
+    p->constant.constType = CharType;
     printf("constant char: %c\n", value);
     return p;
 }
@@ -537,6 +542,7 @@ nodeType *constantString(char* value) {
         yyerror("out of memory");
     p->type = Constant_Node;
     p->constant.stringVal = value;
+    p->constant.constType = StringType;
     printf("constant string: %s\n", value);
     return p;
 }
@@ -587,21 +593,62 @@ void freeNode(nodeType *p) {
     free(p);
 }
 
-int execute(nodeType *p){
+typeEnum execute(nodeType *p){
 
-    if(p == NULL) return 0;
+    if(p == NULL) return Error;
     switch(p->type)
     {
         case Constant_Node:
+        {
+           
+            //printf("Inside execute function check value!!!!!!!!: %d \n", p->constant.constType);
+            return p->constant.constType;
             break;
+        }
 
         case Identifier_Node:
-
+        {
+            string typeIdentifier = st->checkType(p->identifier.name, currentScope);
+            if(typeIdentifier == "integer")
+            {
+                return IntType;
+            }
+            else if(typeIdentifier == "float")
+            {
+                return FloatType;
+            }
+            else if(typeIdentifier == "string")
+            {
+                return StringType;
+            }
+            else if(typeIdentifier == "boolean")
+            {
+                return BoolType;
+            }
+            else if(typeIdentifier == "void")
+            {
+                return VoidType;
+            }
+            else if(typeIdentifier == "char")
+            {
+                return CharType;
+            }
+            else if(typeIdentifier == "enum")
+            {
+                return EnumType;
+            }
+            else if(typeIdentifier == "const")
+            {
+                return ConstType;
+            }
             break;
+        }
 
         case Type_Node:
-
+        {
+            return p->defineType.type;
             break;
+        }
 
         case Operator_Node:
             switch(p->oper.oper){
@@ -675,42 +722,6 @@ int execute(nodeType *p){
                     currentScope = st->switchBack(currentScope);
                     break;
                 }
-                case AND:
-                {
-                    execute(p->oper.op[0]);
-                    execute(p->oper.op[1]);
-                    break;
-                }
-                case OR:
-                {
-                    execute(p->oper.op[0]);
-                    execute(p->oper.op[1]);
-                    break;
-                }
-                case EE:
-                {
-                    execute(p->oper.op[0]);
-                    execute(p->oper.op[1]);
-                    break;
-                }
-                case NE:
-                {
-                    execute(p->oper.op[0]);
-                    execute(p->oper.op[1]);
-                    break;
-                }
-                case GE:
-                {
-                    execute(p->oper.op[0]);
-                    execute(p->oper.op[1]);
-                    break;
-                }
-                case LE:
-                {
-                    execute(p->oper.op[0]);
-                    execute(p->oper.op[1]);
-                    break;
-                }
                 case ENUM:
                 {
                     //insert in symbol table
@@ -727,10 +738,174 @@ int execute(nodeType *p){
                     currentScope = st->switchBack(currentScope);
                     break;
                 }
-                case ';':
+                case AND:
                 {
                     execute(p->oper.op[0]);
                     execute(p->oper.op[1]);
+                    break;
+                }
+                case OR:
+                {
+                    execute(p->oper.op[0]);
+                    execute(p->oper.op[1]);
+                    break;
+                }
+                case EE:
+                {
+                    //if operand is of type operation, call function on it
+                    //else, check type compatability
+                    typeEnum typeOP1 = execute(p->oper.op[0]);
+                    typeEnum typeOP2 = execute(p->oper.op[1]);
+                    typeEnum finalType = checkCompatibility(typeOP1,typeOP2);
+                    if(finalType == Error)
+                    {
+                        yyerror("ERROR: types are not compatible");
+                    }
+                    return BoolType;
+                    break;
+                }
+                case NE:
+                {
+                    //if operand is of type operation, call function on it
+                    //else, check type compatability
+                    typeEnum typeOP1 = execute(p->oper.op[0]);
+                    typeEnum typeOP2 = execute(p->oper.op[1]);
+                    typeEnum finalType = checkCompatibility(typeOP1,typeOP2);
+                    if(finalType == Error)
+                    {
+                        yyerror("ERROR: types are not compatible");
+                    }
+                    return BoolType;
+                    break;
+                }
+                case GE:
+                {
+                    //if operand is of type operation, call function on it
+                    //else, check type compatability
+                    typeEnum typeOP1 = execute(p->oper.op[0]);
+                    typeEnum typeOP2 = execute(p->oper.op[1]);
+                    typeEnum finalType = checkCompatibility(typeOP1,typeOP2);
+                    if(finalType == Error)
+                    {
+                        yyerror("ERROR: types are not compatible");
+                    }
+                    return BoolType;
+                    break;
+                }
+                case LE:
+                {
+                    //if operand is of type operation, call function on it
+                    //else, check type compatability
+                    typeEnum typeOP1 = execute(p->oper.op[0]);
+                    typeEnum typeOP2 = execute(p->oper.op[1]);
+                    typeEnum finalType = checkCompatibility(typeOP1,typeOP2);
+                    if(finalType == Error)
+                    {
+                        yyerror("ERROR: types are not compatible");
+                    }
+                    return BoolType;
+                    break;
+                }
+                case '>':
+                {
+                    //if operand is of type operation, call function on it
+                    //else, check type compatability
+                    typeEnum typeOP1 = execute(p->oper.op[0]);
+                    typeEnum typeOP2 = execute(p->oper.op[1]);
+                    typeEnum finalType = checkCompatibility(typeOP1,typeOP2);
+                    if(finalType == Error)
+                    {
+                        yyerror("ERROR: types are not compatible");
+                    }
+                    return BoolType;
+                    break;
+                }
+                case '<':
+                {
+                    //if operand is of type operation, call function on it
+                    //else, check type compatability
+                    typeEnum typeOP1 = execute(p->oper.op[0]);
+                    typeEnum typeOP2 = execute(p->oper.op[1]);
+                    typeEnum finalType = checkCompatibility(typeOP1,typeOP2);
+                    if(finalType == Error)
+                    {
+                        yyerror("ERROR: types are not compatible");
+                    }
+                    return BoolType;
+                    break;
+                }
+                case '!':
+                {
+                    execute(p->oper.op[0]);
+                    break;
+                }
+                case '*':
+                {
+                    typeEnum typeOP1 = execute(p->oper.op[0]);
+                    typeEnum typeOP2 = execute(p->oper.op[1]);
+                    typeEnum finalType = checkCompatibility(typeOP1,typeOP2);
+                    if(finalType == Error)
+                    {
+                        yyerror("ERROR: types are not compatible");
+                    }
+                    return finalType;
+                    break;
+                }
+                case '/':
+                {
+                    typeEnum typeOP1 = execute(p->oper.op[0]);
+                    typeEnum typeOP2 = execute(p->oper.op[1]);
+                    typeEnum finalType = checkCompatibility(typeOP1,typeOP2);
+                    if(finalType == Error)
+                    {
+                        yyerror("ERROR: types are not compatible");
+                    }
+                    return finalType;
+                    break;
+                }
+                case '+':
+                {
+                    //if operand is of type operation, call function on it
+                    //else, check type compatability
+                    typeEnum typeOP1 = execute(p->oper.op[0]);
+                    typeEnum typeOP2 = execute(p->oper.op[1]);
+                    typeEnum finalType = checkCompatibility(typeOP1,typeOP2);
+                    printf("first operand type: %d, second operand type: %d, result type: %d\n",typeOP1,typeOP2,finalType);
+                    if(finalType == Error)
+                    {
+                        yyerror("ERROR: types are not compatible");
+                    }
+                    return finalType;
+                    break;
+                }
+                case '-':
+                {
+                    typeEnum typeOP1 = execute(p->oper.op[0]);
+                    typeEnum typeOP2 = execute(p->oper.op[1]);
+                    typeEnum finalType = checkCompatibility(typeOP1,typeOP2);
+                    if(finalType == Error)
+                    {
+                        yyerror("ERROR: types are not compatible");
+                    }
+                    return finalType;
+                    break;
+                }
+                case '%':
+                {
+                    typeEnum typeOP1 = execute(p->oper.op[0]);
+                    typeEnum typeOP2 = execute(p->oper.op[1]);
+                    
+                    if(typeOP1 == IntType && typeOP2 == IntType)
+                    {
+                        printf("here\n");
+                        return IntType;
+                    }
+                    else
+                    {
+                        yyerror("mod operator only accepts integer operands");
+                        return Error;
+                    }
+                    
                     break;
                 }
                 case '=':
@@ -781,48 +956,7 @@ int execute(nodeType *p){
                     }
                     break;
                 }
-                case '>':
-                {
-                    execute(p->oper.op[0]);
-                    execute(p->oper.op[1]);
-                    break;
-                }
-                case '<':
-                {
-                    execute(p->oper.op[0]);
-                    execute(p->oper.op[1]);
-                    break;
-                }
-                case '!':
-                {
-                    execute(p->oper.op[0]);
-                    break;
-                }
-                case '*':
-                {
-                    execute(p->oper.op[0]);
-                    execute(p->oper.op[1]);
-                    break;
-                }
-                case '/':
-                {
-                    execute(p->oper.op[0]);
-                    execute(p->oper.op[1]);
-                    break;
-                }
-                case '+':
-                {
-                    execute(p->oper.op[0]);
-                    execute(p->oper.op[1]);
-                    break;
-                }
-                case '-':
-                {
-                    execute(p->oper.op[0]);
-                    execute(p->oper.op[1]);
-                    break;
-                }
-                case '%':
+                case ';':
                 {
                     execute(p->oper.op[0]);
                     execute(p->oper.op[1]);
@@ -960,9 +1094,36 @@ int execute(nodeType *p){
             }
             break;
     }
-    return 0;
+    return Error;
 
 }
+
+typeEnum checkCompatibility(typeEnum typeOP1, typeEnum typeOP2)
+{
+    if(typeOP1 == typeOP2)
+    {
+        return typeOP1;
+    }
+    
+    //int and float are compatible
+    if(typeOP1 == IntType && typeOP2 == FloatType || typeOP1 == FloatType && typeOP2 == IntType)
+    {
+        return FloatType;
+    }
+
+    //int and char are compatible
+    if(typeOP1 == IntType && typeOP2 == CharType || typeOP1 == CharType && typeOP2 == IntType){
+        return IntType;
+    }
+
+    //float and char are compatible
+    if(typeOP1 == FloatType && typeOP2 == CharType || typeOP1 == CharType && typeOP2 == FloatType){
+        return FloatType;
+    }
+
+    return Error;
+}
+
 
 void yyerror(const char *str)
 {

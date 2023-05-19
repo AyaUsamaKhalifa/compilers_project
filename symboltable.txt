@@ -1,12 +1,4 @@
 id		kind			type
-func		function		void
-name		variable		string
-c		variable		char
-flag		variable		boolean
 x		variable		integer
-========================================================================
-c		variable		char
-x		parameter		integer
-========================================================================
-c		variable		char
+y		variable		float
 ========================================================================

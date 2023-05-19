@@ -17,6 +17,7 @@ typedef enum {
     CharType,
     EnumType,
     ConstType,
+    Error,
 } typeEnum;
 
 typedef struct {
@@ -24,6 +25,7 @@ typedef struct {
 } IdentifierNodeType;
 
 typedef struct {
+    typeEnum constType;
     union
     {
         int intVal;

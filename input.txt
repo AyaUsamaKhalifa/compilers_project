@@ -1,12 +1,2 @@
-int x = 5;
-char c = 'v';
-string name = "str";
-bool flag = true;
-
-void func(int x){
-    char c = 'a';
-}
-
-if(x>y){
-    char c='c';
-}
+float y = 5.8;
+int x = 5 % y;

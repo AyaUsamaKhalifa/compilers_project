@@ -69,7 +69,20 @@ bool symbolTable::lookup(string identifier, Node *curr_node)
     }
     return lookup(identifier, curr_node->parent);
 }
-
+string symbolTable::checkType(string identifier, Node *curr_node)
+{
+    if(curr_node == nullptr)
+    {
+        return "Error";
+    }
+    for (auto it = curr_node->node_data.begin(); it != curr_node->node_data.end(); ++it) {
+        if( it->first == identifier)
+        {
+            return it->second[1];
+        }
+    }
+    return checkType(identifier, curr_node->parent);
+}
 Node * symbolTable::switchScope(Node* currentScope){
     Node* newNode = new Node();
     newNode->parent = currentScope;
