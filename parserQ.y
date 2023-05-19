@@ -647,7 +647,7 @@ typeEnum execute(nodeType *p){
             break;
         }
 
-         //TODO: enums 
+         //TODO: check if enums are ok, void func ?   
         case Identifier_Node:   
         {
             string typeIdentifier = st->checkType(p->identifier.name, currentScope);
@@ -1210,6 +1210,7 @@ typeEnum execute(nodeType *p){
                     }
                     break;
                 }
+                //TODO: Done?
                 case 'd': //function definition
                 {
                     //insert in the symbol table
@@ -1248,13 +1249,15 @@ typeEnum execute(nodeType *p){
                     currentScope = st->switchBack(currentScope);
                     fprintf(OutputQuadraplesFile, "END_FUNC\n");
                     break;
-                }                
+                }
+                //TODO: Done
                 case 'c': //parameters call => fun(x, y, z) parameters are x, y and z
                 {
                     execute(p->oper.op[0]);
                     execute(p->oper.op[1]);
                     break;
                 }
+                //TODO: Done
                 case 'f': //function call 
                 {
                     // execute(p->oper.op[0]);
@@ -1262,6 +1265,7 @@ typeEnum execute(nodeType *p){
                     fprintf(OutputQuadraplesFile, "CALL %s\n", p->oper.op[0]->identifier.name);
                     break;
                 }
+                //TODO: Done
                 case 'p': //parameter list in function definition
                 {//insert in symbol table
                     bool isInserted = st->insert(p->oper.op[1]->identifier.name,"parameter",p->oper.op[0]->defineType.type,currentScope);

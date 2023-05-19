@@ -9,7 +9,7 @@ bool b2 = false;
 int x2 = 5 * 1 + 9 /8 - x;
 int y = x % 2;
 bool B1 = x <= y;
-B1 = f && b2;  
+B1 = b && b2;  
 B1 =  B1 || b2;    
 B1 = !b2;
 B1 = x == y;
@@ -22,11 +22,21 @@ y = -x;
 
 const int ciccc = 5;
 
-enum MyEnum1
+enum MyEnum3
 {
-    sunday1= 10,
-    monday1 = 1 
+    monday3 = 10,
+    tuesday3 = 2,
+    sunday3 
 }
+
+enum MyEnum4
+{
+    monday4 = 10,
+    tuesday4 = 2,
+    sunday4, 
+    fridat4
+}
+
 
 enum MyEnum2
 {
@@ -35,13 +45,38 @@ enum MyEnum2
     sunday2
 }
 
-enum MyEnum4
+enum MyEnum1
 {
-    monday4 = 10,
-    tuesday4 = 2,
-    sunday4,
-    friday4
+    sunday1= 10,
+    monday1 = 1 
 }
+
+
+enum MyEnum1 var = sunday1;
+
+int func()
+{
+    int hello = 1;
+    return 5;
+}
+
+int var1 = func();
+
+int func2(int x)
+{
+    int hello = 1;
+    return 7;
+}
+
+int var2 = func2(8);
+
+int func3(int x, char z, string strss)
+{
+    int hello = 1;
+    return 9;
+}
+
+int var3 = func3(10, 'c', "sadasdads");
 
 switch(x){
     case 10:

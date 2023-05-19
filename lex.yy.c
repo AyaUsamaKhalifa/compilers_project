@@ -973,7 +973,7 @@ YY_RULE_SETUP
 case 34:
 YY_RULE_SETUP
 #line 60 "scanner.l"
-{last_token = yytext; YYerror;}
+{last_token = yytext; perror;}
 	YY_BREAK
 case 35:
 YY_RULE_SETUP

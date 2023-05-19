@@ -1,2 +1,3 @@
-error: This type of operands are not supported in this operation
-error: Type mismatch in 2 operands
+error: Type mismatch in 3 operands
+error: Type mismatch in 3 operands
+error: Type mismatch in 3 operands

@@ -57,5 +57,5 @@
 
 [ \t\n\r]+                    ;              
 
-.                          {last_token = yytext; YYerror;}
+.                          {last_token = yytext; perror;}
 %%
