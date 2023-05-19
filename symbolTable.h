@@ -25,9 +25,11 @@ struct symbolTable{
     void printcout(Node *curr_node);
     void print_recursive(Node* curr_node, ofstream& myfile);
     void updateEnumMap(Node* curr_node, string identifier);
+    void updateFunctionMap(Node* curr_node, string identifier);
     Node *switchScope(Node* currentScope);
     Node *functionScope(Node* currentScope);
     Node* switchBack(Node* currentScope);
     unordered_map<string, Node*> enumMap;
+    unordered_map<string, Node*> functionMap;
 };
 

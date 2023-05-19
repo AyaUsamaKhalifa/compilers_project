@@ -1227,17 +1227,23 @@ typeEnum execute(nodeType *p){
                     currentScope=st->functionScope(currentScope);
                     fprintf(OutputQuadraplesFile, "%s: \n", p->oper.op[1]->identifier.name);
                     switch(p->oper.nops){
-                        case 4:{
+                        case 4:
+                        {
+                            //update the function map in the symbol table
+                            st->updateFunctionMap(currentScope,p->oper.op[1]->identifier.name);
                             execute(p->oper.op[0]);
                             // execute(p->oper.op[1]);
-                            execute(p->oper.op[2]);
+                            execute(p->oper.op[2]); //parameters
                             execute(p->oper.op[3]);
                             break;
                         }
-                        case 5:{
+                        case 5:
+                        {
+                            //update the function map in the symbol table
+                            st->updateFunctionMap(currentScope,p->oper.op[1]->identifier.name);
                             execute(p->oper.op[0]);
                             // execute(p->oper.op[1]);
-                            execute(p->oper.op[2]);
+                            execute(p->oper.op[2]); //parameters
                             execute(p->oper.op[3]);
                             execute(p->oper.op[4]);
                             break;
@@ -1258,6 +1264,8 @@ typeEnum execute(nodeType *p){
                 case 'f': //function call 
                 {
                     // execute(p->oper.op[0]);
+                    typeEnum funcType = getIdentifierType(p->oper.op[0]->identifier.name);
+                    printf("function call\n");
                     execute(p->oper.op[1]);
                     fprintf(OutputQuadraplesFile, "CALL %s\n", p->oper.op[0]->identifier.name);
                     break;
