@@ -1,47 +1,10 @@
 id		kind			type
 func2		function		integer
 func		function		integer
-MyEnum1		enum		enum
-x		variable		integer
-MyEnum4		enum		enum
-f		variable		float
-c		variable		char
-s		variable		string
-y		variable		integer
-var		enum variable		MyEnum1
-b		variable		boolean
-func3		function		integer
-MyEnum2		enum		enum
-b2		variable		boolean
-x2		variable		integer
-B1		variable		boolean
-ciccc		constant		integer
-MyEnum3		enum		enum
-========================================================================
-monday3		enum constant		integer
-tuesday3		enum constant		integer
-sunday3		enum constant		integer
-========================================================================
-tuesday4		enum constant		integer
-monday4		enum constant		integer
-sunday4		enum constant		integer
-fridat4		enum constant		integer
-========================================================================
-monday2		enum constant		integer
-tuesday2		enum constant		integer
-sunday2		enum constant		integer
-========================================================================
-monday1		enum constant		integer
-sunday1		enum constant		integer
 ========================================================================
 hello		variable		integer
 ========================================================================
-hello		variable		integer
+y		parameter		integer
 x		parameter		integer
-========================================================================
 hello		variable		integer
-x		parameter		integer
-z		parameter		char
-strss		parameter		string
-========================================================================
 ========================================================================

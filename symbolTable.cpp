@@ -83,9 +83,15 @@ void symbolTable::updateEnumMap(Node* curr_node, string identifier){
     enumMap[identifier] = curr_node;
 }
 
-void symbolTable::updateFunctionMap(Node* curr_node, string identifier){
+void symbolTable::updateFunctionMap(string identifier, nodeType* arguments){
     cout<<"function added :"<<identifier<<endl;
-    functionMap[identifier] = curr_node;
+    if(arguments){
+        functionMap[identifier] = arguments->argumentType.arguments;
+    }
+    else{
+        vector<typeEnum> empty;
+        functionMap[identifier] = empty;
+    }
 }
 
 bool symbolTable::lookup(string identifier, Node *curr_node)

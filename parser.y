@@ -32,6 +32,8 @@
     typeEnum checkCompatibility(typeEnum type1, typeEnum type2);
     typeEnum execute(nodeType *p);
     typeEnum getIdentifierType(char* identifierName);
+    nodeType *createParameterList(nodeType * node, nodeType * identifier);
+    nodeType *addToParameterList(nodeType * parameterList, nodeType* node, nodeType * parameter);
 
     void freeNode(nodeType *p);
 
@@ -378,11 +380,13 @@ function_parameters: parameter
 
 parameter:  parameter ',' variable_Type VARIABLE  
             {printf("parameter: parameter, variable_Type VARIABLE\n");
-            $$=operation('p',3,$3,identifier($4),$1);
+            $$ = addToParameterList($1, $3, identifier($4));
+            //$$=operation('p',3,$3,identifier($4),$1);
             } 
             | variable_Type VARIABLE 
             {printf("parameter: variable_Type VARIABLE\n");
-            $$=operation('p',2,$1,identifier($2));
+            $$ = createParameterList($1, identifier($2));
+            //$$=operation('p',2,$1,identifier($2));
             } 
             ;
 
@@ -398,6 +402,7 @@ function_parameters_calls:  parameter_calls
 
 parameter_calls: parameter_calls ',' expressions 
                 {printf("parameter_calls: parameter_calls, exp\n");
+                
                 $$=operation('c',2,$1,$3);
                 } 
                 | expressions 
@@ -571,6 +576,26 @@ nodeType *identifier(char* i) {
     p->type = Identifier_Node;
     p->identifier.name = i;
     return p;
+}
+
+nodeType *createParameterList(nodeType * node, nodeType * identifier) {
+    nodeType *p;
+    if ((p = (nodeType *)malloc(sizeof(nodeType))) == NULL)
+        yyerror("out of memory");
+    p->type = ArgumentNode;
+    p->argumentType.arguments.push_back(node->defineType.type);
+    p->argumentType.argumentsNames.push_back(identifier->identifier.name);
+    return p;
+}
+
+nodeType *addToParameterList(nodeType * parameterList, nodeType* node, nodeType * parameter){
+    nodeType *p;
+    if ((p = (nodeType *)malloc(sizeof(nodeType))) == NULL)
+        yyerror("out of memory");
+    p->type = ArgumentNode;
+    parameterList->argumentType.arguments.push_back(node->defineType.type);
+    parameterList->argumentType.argumentsNames.push_back(parameter->identifier.name);
+    return parameterList;
 }
 
 nodeType *operation(int oper, int nops, ...) {
@@ -1282,25 +1307,37 @@ typeEnum execute(nodeType *p){
                     switch(p->oper.nops){
                         case 4:{
                             //update the function map in the symbol table
-                            st->updateFunctionMap(currentScope,p->oper.op[1]->identifier.name);
+                            st->updateFunctionMap(p->oper.op[1]->identifier.name, p->oper.op[2]);
                             execute(p->oper.op[0]);
                             // execute(p->oper.op[1]);
-                            execute(p->oper.op[2]); //parameters
+                            //execute(p->oper.op[2]); //parameters
                             execute(p->oper.op[3]);
                             break;
                         }
                         case 5:
                         {
                             //update the function map in the symbol table
-                            st->updateFunctionMap(currentScope,p->oper.op[1]->identifier.name);
+                            st->updateFunctionMap(p->oper.op[1]->identifier.name, p->oper.op[2]);
                             execute(p->oper.op[0]);
                             // execute(p->oper.op[1]);
-                            execute(p->oper.op[2]); //parameters
+                            //execute(p->oper.op[2]); //parameters
                             execute(p->oper.op[3]);
                             execute(p->oper.op[4]);
                             break;
                         }
                     }
+
+                    //insert parameters in the symbol table
+                    if(p->oper.op[2] != NULL){
+                        for(int i=0; i < p->oper.op[2]->argumentType.arguments.size(); i++){
+                            bool isInserted = st->insert(p->oper.op[2]->argumentType.argumentsNames[i],"parameter",p->oper.op[2]->argumentType.arguments[i],currentScope);
+                            printf("!!!!!!!!!!!!!!!!!trying to insert symbol: %s, isInserted: %d\n",p->oper.op[1]->identifier.name,isInserted);
+                            if(!isInserted){
+                                yyerror("parameter already exists in the current scope");
+                            }
+                        }
+                    }
+
                     //switching the scope back 
                     currentScope->parent=tempNode;
                     currentScope = st->switchBack(currentScope);
@@ -1405,20 +1442,25 @@ typeEnum checkCompatibility(typeEnum typeOP1, typeEnum typeOP2)
         return typeOP1;
     }
     
-    //int and float are compatible
+    //int and float are compatible => cast to float
     if(typeOP1 == IntType && typeOP2 == FloatType || typeOP1 == FloatType && typeOP2 == IntType)
     {
         return FloatType;
     }
 
-    //int and char are compatible
+    //int and char are compatible => cast to int
     if(typeOP1 == IntType && typeOP2 == CharType || typeOP1 == CharType && typeOP2 == IntType){
         return IntType;
     }
 
-    //float and char are compatible
+    //float and char are compatible => cast to float
     if(typeOP1 == FloatType && typeOP2 == CharType || typeOP1 == CharType && typeOP2 == FloatType){
         return FloatType;
+    }
+
+    //int and bool are compatible => cast to integer
+    if(typeOP1 == IntType && typeOP2 == BoolType || typeOP1 == BoolType && typeOP2 == IntType){
+        return IntType;
     }
 
     return Error;

@@ -1,11 +1,14 @@
 #pragma once
 #include <stdbool.h>
+#include<vector>
+using namespace std; 
 
 typedef enum {
     Constant_Node,
     Identifier_Node,
     Operator_Node,
-    Type_Node
+    Type_Node,
+    ArgumentNode
 } nodeEnum;
 
 typedef enum {
@@ -45,7 +48,10 @@ typedef struct {
 typedef struct {
     typeEnum type;
 } TypeNodeType;
-
+typedef struct {
+    vector<typeEnum> arguments;
+    vector<char*> argumentsNames;
+} ArgumentNodeType;
 
 typedef struct nodeTypeTag {
     nodeEnum type;
@@ -54,5 +60,6 @@ typedef struct nodeTypeTag {
         IdentifierNodeType identifier;
         OperatorNodeType oper;
         TypeNodeType defineType;
+        ArgumentNodeType argumentType;
     };
 } nodeType;
