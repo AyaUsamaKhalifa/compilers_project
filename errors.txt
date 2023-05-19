@@ -1,0 +1,4 @@
+error: enum variable value must be an integer
+error: enum variable value must be an integer
+error: enum variable value must be an integer
+error: enum variable value must be an integer

@@ -1,16 +1,29 @@
 id		kind			type
-B1		variable		boolean
-MyEnum		enum		enum
-x2		variable		integer
-b2		variable		boolean
-b		variable		boolean
-y		variable		integer
-s		variable		string
-c		variable		char
+MyEnum4		enum		enum
 f		variable		float
+c		variable		char
+s		variable		string
+y		variable		integer
 x		variable		integer
+MyEnum1		enum		enum
+b		variable		boolean
+MyEnum2		enum		enum
+b2		variable		boolean
+x2		variable		integer
+B1		variable		boolean
+ciccc		constant		integer
+MyEnum3		enum		enum
 ========================================================================
-monday		enum constant		integer
-tuesday		enum constant		integer
-sunday		enum constant		integer
+monday1		enum constant		integer
+sunday1		enum constant		integer
+========================================================================
+monday2		enum constant		integer
+tuesday2		enum constant		integer
+sunday2		enum constant		integer
+========================================================================
+========================================================================
+tuesday4		enum constant		integer
+monday4		enum constant		integer
+sunday4		enum constant		integer
+fridat4		enum constant		integer
 ========================================================================

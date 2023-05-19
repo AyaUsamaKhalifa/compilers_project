@@ -143,7 +143,7 @@ if_conditional_statement:   IF '(' expressions ')' '{'recursive_statement'}'  EL
 
 switch_conditional_statement:   SWITCH '('VARIABLE')' '{' case_statement '}' 
                                 {printf("switch_conditional_statement: switch(VARIABLE){case_statement}\n");
-                                $$=operation(SWITCH,2,$3,$6);
+                                $$=operation(SWITCH,2,identifier($3),$6);
                                 } 
                                 ;
 
@@ -658,24 +658,26 @@ typeEnum execute(nodeType *p){
         case Operator_Node:
             switch(p->oper.oper){
                 case IF: {
-                    //switch scope
-                    currentScope=st->switchScope(currentScope);
                     //call exec on operands
                     switch(p->oper.nops){
                         case 2:{
                             execute(p->oper.op[0]);
+                            currentScope=st->switchScope(currentScope);
                             execute(p->oper.op[1]);
+                            currentScope = st->switchBack(currentScope);
                             break;
                         }
                         case 3:{
                             execute(p->oper.op[0]);
+                            currentScope=st->switchScope(currentScope);
                             execute(p->oper.op[1]);
+                            currentScope = st->switchBack(currentScope);
+                            currentScope=st->switchScope(currentScope);
                             execute(p->oper.op[2]);
+                            currentScope = st->switchBack(currentScope);
                             break;
                         }
                     }
-                    //switching the scope back 
-                    currentScope = st->switchBack(currentScope);
                     break;
                 }
                 case FOR:
@@ -712,7 +714,12 @@ typeEnum execute(nodeType *p){
                 }
                 case SWITCH:
                 {
-                    execute(p->oper.op[0]);
+                    //execute(p->oper.op[0]);
+                    typeEnum varType = getIdentifierType(p->oper.op[0]->identifier.name);
+                    if(varType != CharType && varType != IntType){
+                        yyerror("This type of variable is not supported in switch statement");
+                        return Error;
+                    }
                     execute(p->oper.op[1]);
                     break;
                 }
@@ -1078,13 +1085,18 @@ typeEnum execute(nodeType *p){
                         case 2:
                         {
                             if(p->oper.op[0]->type==Identifier_Node){
+                                typeEnum enumvartype = execute(p->oper.op[1]);
+                                if(enumvartype != IntType){
+                                    yyerror("enum variable value must be an integer");
+                                    return Error;
+                                }
                                 //insert in the symbol table
                                 bool isInserted = st->insert(p->oper.op[0]->identifier.name,"enum constant",0,currentScope);
                                 printf("!!!!!!!!!!!!!!!!!trying to insert symbol: %s, isInserted: %d\n",p->oper.op[0]->identifier.name,isInserted);
                                 if(!isInserted){
                                     yyerror("enum variable already exists in the current scope");
                                 }
-                                execute(p->oper.op[1]);
+                                
                             }
                             else 
                             {
@@ -1101,13 +1113,17 @@ typeEnum execute(nodeType *p){
                         case 3:
                         {
                             execute(p->oper.op[0]); //enum variables
+                            typeEnum enumvartype3 = execute(p->oper.op[2]);
+                            if(enumvartype3 != IntType){
+                                yyerror("enum variable value must be an integer");
+                                return Error;
+                            }
                             //insert in the symbol table
                             bool isInserted = st->insert(p->oper.op[1]->identifier.name,"enum constant",0,currentScope);
                             printf("!!!!!!!!!!!!!!!!!trying to insert symbol: %s, isInserted: %d\n",p->oper.op[1]->identifier.name,isInserted);
                             if(!isInserted){
                                 yyerror("enum variable already exists in the current scope");
                             }
-                            execute(p->oper.op[2]);
                             break;
                         }
                     }

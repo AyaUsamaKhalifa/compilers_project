@@ -18,11 +18,35 @@ B1 = x >= y;
 B1 = x <= y;
 B1 = x > y;
 B1 = x < y;
-y = 554;
+y = -x;
 
-enum MyEnum
+const int ciccc = 5;
+
+enum MyEnum1
 {
-    monday,
-    tuesday,
-    sunday
+    sunday1= 10,
+    monday1 = 1 
+}
+
+enum MyEnum2
+{
+    monday2,
+    tuesday2,
+    sunday2
+}
+
+enum MyEnum3
+{
+    monday3 = 10.5,
+    tuesday3 = 'c',
+    sunday3 = "str",
+    friday3 = true
+}
+
+enum MyEnum4
+{
+    monday4 = 10,
+    tuesday4 = 2,
+    sunday4,
+    friday4
 }
