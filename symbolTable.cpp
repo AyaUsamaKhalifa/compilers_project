@@ -41,8 +41,9 @@ bool symbolTable::insert(string identifier, string kind, int type, Node *curr_no
             typeString="char";
             break;
         case 6: //enum
-            typeString="enum";
+            typeString="enum"; 
             break;
+
         case 7:
             typeString="const";
             break;
@@ -53,6 +54,11 @@ bool symbolTable::insert(string identifier, string kind, int type, Node *curr_no
     data[1] = typeString;
     curr_node->node_data[identifier] = data;
     return true;
+}
+
+void symbolTable::updateEnumMap(Node* curr_node, string identifier){
+    cout<<"enum added :"<<identifier<<endl;
+    enumMap[identifier] = curr_node;
 }
 
 bool symbolTable::lookup(string identifier, Node *curr_node)
@@ -83,6 +89,36 @@ string symbolTable::checkType(string identifier, Node *curr_node)
     }
     return checkType(identifier, curr_node->parent);
 }
+
+string symbolTable::checkKind(string identifier, Node *curr_node)
+{
+    if(curr_node == nullptr)
+    {
+        return "Error";
+    }
+    for (auto it = curr_node->node_data.begin(); it != curr_node->node_data.end(); ++it) {
+        if( it->first == identifier)
+        {
+            return it->second[0];
+        }
+    }
+    return checkKind(identifier, curr_node->parent);
+}
+
+
+bool symbolTable::checkEnum(string enumName, string identifier, Node *curr_node)
+{
+
+    Node* enumScope = enumMap[enumName];
+    for (auto it = enumScope->node_data.begin(); it != enumScope->node_data.end(); ++it) {
+        if( it->first == identifier)
+        {
+            return true;
+        }
+    }
+    return false;
+}
+
 Node * symbolTable::switchScope(Node* currentScope){
     Node* newNode = new Node();
     newNode->parent = currentScope;

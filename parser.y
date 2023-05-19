@@ -205,9 +205,9 @@ assignment: variable_Type VARIABLE '=' expressions
             {printf("assignment: VARIABLE = exp\n");
             $$=operation('=',2,identifier($1),$3);
             }  
-            | ENUM VARIABLE VARIABLE '=' expressions 
-            {printf("assignment: ENUM VARIABLE VARIABLE = exp\n");
-            $$=operation('=',4,defineType(EnumType),identifier($2),identifier($3),$5);
+            | ENUM VARIABLE VARIABLE '=' VARIABLE 
+            {printf("assignment: ENUM VARIABLE VARIABLE = VARIABLE\n");
+            $$=operation('=',4,defineType(EnumType),identifier($2),identifier($3),identifier($5));
             } 
             | CONST variable_Type VARIABLE '=' expressions
             {
@@ -737,6 +737,8 @@ typeEnum execute(nodeType *p){
                     }
                     //switch scope
                     currentScope=st->switchScope(currentScope);
+                    //update enum map
+                    st->updateEnumMap(currentScope,p->oper.op[0]->identifier.name);
                     execute(p->oper.op[0]);
                     execute(p->oper.op[1]);
                     //switching the scope back 
@@ -926,7 +928,13 @@ typeEnum execute(nodeType *p){
                 case '=':
                 {
                     switch(p->oper.nops){
-                        case 2:{   
+                        case 2:{ 
+                            //check if its a constant
+                            string kind = st->checkKind(p->oper.op[0]->identifier.name, currentScope);
+                            if(kind == "constant"){
+                                yyerror("assignment of read only variable");
+                                return Error;
+                            }
                             typeEnum varType = execute(p->oper.op[0]);
                             typeEnum exprType = execute(p->oper.op[1]);
                             typeEnum finalType = checkCompatibility(varType, exprType);
@@ -960,6 +968,15 @@ typeEnum execute(nodeType *p){
                         case 4: //enum => enum enum_name variable_name = expression OR const => const type var_name = expression
                         {
                             if(p->oper.op[0]->defineType.type==ConstType){
+                                //check for type mismatch
+                                typeEnum varType = execute(p->oper.op[1]);
+                                typeEnum exprType = execute(p->oper.op[3]);
+                                typeEnum finalType = checkCompatibility(varType, exprType);
+                                if(finalType==Error)
+                                {
+                                    yyerror("Type mismatch");
+                                    return Error;
+                                }
                                 //insert in symbol table
                                 bool isInserted = st->insert(p->oper.op[2]->identifier.name,"constant",p->oper.op[1]->defineType.type,currentScope);
                                 printf("!!!!!!!!!!!!!!!!!trying to insert symbol: %s, isInserted: %d\n",p->oper.op[2]->identifier.name,isInserted);
@@ -969,17 +986,26 @@ typeEnum execute(nodeType *p){
                             }
                             else if(p->oper.op[0]->defineType.type==EnumType)
                             {
+                                typeEnum varType = execute(p->oper.op[1]); //if the enum is not defined in the current scope it prints an error
+                                if(varType==Error)
+                                {
+                                    yyerror("Enum wasnt defined in the current scope");
+                                    return Error;
+                                }
+                                //check for type mismatch
+                                bool isDefined = st->checkEnum(p->oper.op[1]->identifier.name,p->oper.op[3]->identifier.name,currentScope);
+                                if(!isDefined) 
+                                {
+                                    yyerror("invalid enum operation");
+                                    return Error;
+                                }
                                 //insert in symbol table
-                                bool isInserted = st->insert(p->oper.op[2]->identifier.name,"variable",6,currentScope);
+                                bool isInserted = st->insert(p->oper.op[2]->identifier.name,"constant",p->oper.op[1]->defineType.type,currentScope);
                                 printf("!!!!!!!!!!!!!!!!!trying to insert symbol: %s, isInserted: %d\n",p->oper.op[2]->identifier.name,isInserted);
                                 if(!isInserted){
                                     yyerror("variable already exists in the current scope");
                                 }
                             }
-                            execute(p->oper.op[0]);
-                            execute(p->oper.op[1]);
-                            execute(p->oper.op[2]);
-                            execute(p->oper.op[3]);
                         }
                             break;
                     }
