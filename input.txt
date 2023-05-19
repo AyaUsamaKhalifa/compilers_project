@@ -9,7 +9,7 @@ bool b2 = false;
 int x2 = 5 * 1 + 9 /8 - x;
 int y = x % 2;
 bool B1 = x <= y;
-B1 = b && b2;  
+B1 = f && b2;  
 B1 =  B1 || b2;    
 B1 = !b2;
 B1 = x == y;
@@ -35,18 +35,15 @@ enum MyEnum2
     sunday2
 }
 
-enum MyEnum3
-{
-    monday3 = 10.5,
-    tuesday3 = 'c',
-    sunday3 = "str",
-    friday3 = true
-}
-
 enum MyEnum4
 {
     monday4 = 10,
     tuesday4 = 2,
     sunday4,
     friday4
+}
+
+switch(x){
+    case 10:
+        break
 }

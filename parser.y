@@ -728,7 +728,11 @@ typeEnum execute(nodeType *p){
                     //switch scopes
                     currentScope=st->switchScope(currentScope);
                     execute(p->oper.op[0]);
-                    execute(p->oper.op[1]);
+                    typeEnum caseConst = execute(p->oper.op[1]);
+                    if(caseConst != IntType && caseConst != CharType){
+                        yyerror("This type of case is not supported in switch statement");
+                        return Error;
+                    }
                     execute(p->oper.op[2]);
                     //switching the scope back 
                     currentScope = st->switchBack(currentScope);
@@ -756,7 +760,7 @@ typeEnum execute(nodeType *p){
                 {
                     typeEnum typeOP1 = execute(p->oper.op[0]);
                     typeEnum typeOP2 = execute(p->oper.op[1]);
-                    if(typeOP1 != BoolType || typeOP2 != BoolType){
+                    if((typeOP1 != BoolType && typeOP1 != IntType) || (typeOP2 != BoolType && typeOP2 != IntType)){
                         yyerror("This type of operands are not supported in this operation");
                         return Error;
                     }
@@ -767,7 +771,7 @@ typeEnum execute(nodeType *p){
                 {
                     typeEnum typeOP1 = execute(p->oper.op[0]);
                     typeEnum typeOP2 = execute(p->oper.op[1]);
-                    if(typeOP1 != BoolType || typeOP2 != BoolType){
+                    if((typeOP1 != BoolType && typeOP1 != IntType) || (typeOP2 != BoolType && typeOP2 != IntType)){
                         yyerror("This type of operands are not supported in this operation");
                         return Error;
                     }

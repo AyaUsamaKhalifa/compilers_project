@@ -1,4 +1,2 @@
-error: enum variable value must be an integer
-error: enum variable value must be an integer
-error: enum variable value must be an integer
-error: enum variable value must be an integer
+error: This type of operands are not supported in this operation
+error: Type mismatch in 2 operands
