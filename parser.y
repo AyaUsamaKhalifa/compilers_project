@@ -19,6 +19,7 @@
     int CaseLabels;
     int EndSwitchLabel;
     int EnumValue;
+    int TempVariables;
 
     nodeType *operation(int oper, int nops, ...);
     nodeType *identifier(char *name);
@@ -706,86 +707,138 @@ typeEnum execute(nodeType *p){
 
         case Operator_Node:
             switch(p->oper.oper){
-                case IF: //TODO:
+                case IF: 
                 {   
                     //call exec on operands
                     switch(p->oper.nops){
                         case 2:{
+                            int CurrentLabel = Labels;
                             execute(p->oper.op[0]);
+                            fprintf(OutputQuadraplesFile, "JZ L%d\n", Labels++);
                             currentScope=st->switchScope(currentScope);
                             execute(p->oper.op[1]);
                             currentScope = st->switchBack(currentScope);
+                            fprintf(OutputQuadraplesFile, "L%d:\n",CurrentLabel);
                             break;
                         }
                         case 3:{
+                            //exp
+                            int CurrentLabel = Labels;
                             execute(p->oper.op[0]);
+                            fprintf(OutputQuadraplesFile, "JZ L%d\n", Labels++); //x
                             currentScope=st->switchScope(currentScope);
+                            //statemnts
                             execute(p->oper.op[1]);
+                            int CurrentLabel2 = Labels;
+                            fprintf(OutputQuadraplesFile, "JZ L%d\n", Labels++); //y
                             currentScope = st->switchBack(currentScope);
                             currentScope=st->switchScope(currentScope);
+                            fprintf(OutputQuadraplesFile, "L%d:\n",CurrentLabel); //x
+                            // statements 2
                             execute(p->oper.op[2]);
+                            fprintf(OutputQuadraplesFile, "L%d:\n",CurrentLabel2); //y
                             currentScope = st->switchBack(currentScope);
                             break;
                         }
                     }
                     break;
                 }
-                case FOR:   //TODO:
+                case FOR: 
                 {
+                    int CurrentLabel = Labels;
                     //switch scope
                     currentScope=st->switchScope(currentScope);
+                    //Assignment 1
                     execute(p->oper.op[0]);
+                    fprintf(OutputQuadraplesFile, "L%d:\n",Labels++);   //Label in = labels
+                    //Expression
                     execute(p->oper.op[1]);
-                    execute(p->oper.op[2]);
+                    fprintf(OutputQuadraplesFile, "JZ L%d\n", Labels++);  // jmp label out
+                    //Statements
                     execute(p->oper.op[3]);
+                    //Assignment 2
+                    execute(p->oper.op[2]);
+                    fprintf(OutputQuadraplesFile, "JMP L%d\n", CurrentLabel);   //jmp label in
+                    fprintf(OutputQuadraplesFile, "L%d:\n",++CurrentLabel);   //label out = label +1 
                     //switching the scope back 
                     currentScope = st->switchBack(currentScope);
                     break;
                 }
-                case WHILE: //TODO:
+                case WHILE:
                 { 
+                    int CurrentLabel = Labels;
                     //switch scope
                     currentScope=st->switchScope(currentScope);
+                    fprintf(OutputQuadraplesFile, "L%d:\n",Labels++); //label in
+                    //exp
                     execute(p->oper.op[0]);
+                    int CurrentLabel2 = Labels;
+                    fprintf(OutputQuadraplesFile, "JZ L%d\n", Labels++); //jz label out
+                    //statment
                     execute(p->oper.op[1]);
+                    fprintf(OutputQuadraplesFile, "JMP L%d\n", CurrentLabel);   //jmp label in
+                    fprintf(OutputQuadraplesFile, "L%d:\n",CurrentLabel2); //label out
                     //switching the scope back 
                     currentScope = st->switchBack(currentScope);
                     break;
                 }
-                case DO:    //TODO:
+                case DO: 
                 {
                     //switch scope
+                    int CurrentLabel = Labels;
+                    fprintf(OutputQuadraplesFile, "L%d:\n",Labels++); 
                     currentScope=st->switchScope(currentScope);
+                    //Statements
                     execute(p->oper.op[0]);
+                    //Expression
                     execute(p->oper.op[1]);
+                    fprintf(OutputQuadraplesFile, "JZ L%d\n", Labels);
+                    fprintf(OutputQuadraplesFile, "JMP L%d\n", CurrentLabel);
+
+                    fprintf(OutputQuadraplesFile, "L%d:\n",Labels++); 
                     //switching the scope back 
                     currentScope = st->switchBack(currentScope);
                     break;
                 }
-                case SWITCH:    //TODO:
+                case SWITCH:    
                 {
+                    TempVariables ++;
+                    EndSwitchLabel++;
                     //execute(p->oper.op[0]);
                     typeEnum varType = getIdentifierType(p->oper.op[0]->identifier.name);
                     if(varType != CharType && varType != IntType){
                         yyerror("This type of variable is not supported in switch statement");
                         return Error;
                     }
+                    fprintf(OutputQuadraplesFile, "PUSH %s\n", p->oper.op[0]->identifier.name);
+                    fprintf(OutputQuadraplesFile, "POP Temp%d\n", TempVariables);
+                    int CurrentEndSwitch = EndSwitchLabel;
                     execute(p->oper.op[1]);
+                    fprintf(OutputQuadraplesFile, "E%d:\n",CurrentEndSwitch); 
                     break;
                 }
-                case CASE:  //TODO:
+                case CASE: 
                 {
                     //switch scopes
+                    int CurrentTempVar = TempVariables;
+                    int CurrentEndSwitch = EndSwitchLabel;
                     currentScope=st->switchScope(currentScope);
                     execute(p->oper.op[0]);
+                    int CurrentCaseLabel = CaseLabels;
+                    fprintf(OutputQuadraplesFile, "PUSH Temp%d\n", CurrentTempVar);
                     typeEnum caseConst = execute(p->oper.op[1]);
                     if(caseConst != IntType && caseConst != CharType){
                         yyerror("This type of case is not supported in switch statement");
                         return Error;
                     }
+                    fprintf(OutputQuadraplesFile, "COMP_E\n");
+                    fprintf(OutputQuadraplesFile, "JZ C%d\n", CaseLabels++);  
+                    //Statements
                     execute(p->oper.op[2]);
+                    fprintf(OutputQuadraplesFile, "JMP E%d\n", CurrentEndSwitch);  
                     //switching the scope back 
                     currentScope = st->switchBack(currentScope);
+                    fprintf(OutputQuadraplesFile, "C%d:\n",CurrentCaseLabel); 
                     break;
                 }
                 case ENUM:
@@ -1227,8 +1280,7 @@ typeEnum execute(nodeType *p){
                     currentScope=st->functionScope(currentScope);
                     fprintf(OutputQuadraplesFile, "%s: \n", p->oper.op[1]->identifier.name);
                     switch(p->oper.nops){
-                        case 4:
-                        {
+                        case 4:{
                             //update the function map in the symbol table
                             st->updateFunctionMap(currentScope,p->oper.op[1]->identifier.name);
                             execute(p->oper.op[0]);
@@ -1415,6 +1467,7 @@ int main(int argc, char **argv) {
     CaseLabels = 0;
     EndSwitchLabel = 0;
     EnumValue = -1;
+    TempVariables = 0;
     yyparse();
 
     fclose(fp);

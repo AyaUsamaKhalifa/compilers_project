@@ -78,7 +78,123 @@ int func3(int x, char z, string strss)
 
 int var3 = func3(10, 'c', "sadasdads");
 
+
+if(B1 == false)
+{
+    string newstr = "YAAAY";
+}
+else 
+{
+    if(y > 10)
+    {
+        string newstr1 = "YAAAY1";
+    } 
+    else
+    {
+        int hanet = 100;
+    }
+
+}
+
+for(int i = 0; i < 5; i = i + 1)
+{
+    int meeeee = 69;
+    if(B1 == false)
+    {
+        string newstr = "YAAAY";
+    }
+}
+
+if(y > 10)
+{
+    string newstr1 = "YAAAY1";
+} 
+else
+{
+    int hanet = 100;
+    for(int i = 0; i < 5; i = i + 1)
+    {
+        int meeeee = 69;
+    }
+}
+
+while(y == 0)
+{
+    int w = 1;
+    while(y == 0)
+    {
+        int qw = 1;
+    }
+}
+
+do
+{
+    int w = 1;
+}
+
+while(x <= y)
+
+do
+{
+    int w = 1;
+    while(y == 0)
+    {
+        int qzw = 1;
+    }
+}
+while(x <= y)
+
+
+
 switch(x){
     case 10:
+        int dsfasf = 5789;
+        break
+    case 20:
+        char xcd = 'a';
+        break
+}
+
+switch(y){
+    case 10:
+        int dsfasf = 5789;
+        break
+    case 20:
+        char xcd = 'a';
+        break
+    case 30:
+        char xcd = 'a';
+        break
+}
+
+switch(c){
+    case 'c':
+        int dsfasf = 5789;
+        switch(y)
+        {
+            case 1:
+                int ww = 5789;
+                break
+            case 2:
+                char ss = 'a';
+                break
+        }
+        break
+    case 'a':
+        char xcd = 'a';
+        break
+    case 'o':
+        char xcd = 'a';
+        switch(x){
+            case 10:
+                int dsfasf = 5789;
+                break
+            case 20:
+                char xcd = 'a';
+                break
+        }
+        break
+    case 'b':
+        char xcd = 'a';
         break
 }
