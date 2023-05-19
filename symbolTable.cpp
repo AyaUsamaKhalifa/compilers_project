@@ -56,6 +56,28 @@ bool symbolTable::insert(string identifier, string kind, int type, Node *curr_no
     return true;
 }
 
+bool symbolTable::insertEnumVar(string identifier, string kind, string type, Node *curr_node)
+{
+    //if the identifier already exists in current scope
+    bool exists = false;
+    for (auto it = curr_node->node_data.begin(); it != curr_node->node_data.end(); ++it) {
+        if( it->first == identifier)
+        {
+            exists = true;
+        }
+    }
+    if(exists){
+        return false;
+    }
+    // current node does not exist return false
+    vector<string> data(2);
+    data[0] = kind;
+    data[1] = type;
+    curr_node->node_data[identifier] = data;
+    return true;
+
+}
+
 void symbolTable::updateEnumMap(Node* curr_node, string identifier){
     cout<<"enum added :"<<identifier<<endl;
     enumMap[identifier] = curr_node;
@@ -108,7 +130,7 @@ string symbolTable::checkKind(string identifier, Node *curr_node)
 
 bool symbolTable::checkEnum(string enumName, string identifier, Node *curr_node)
 {
-
+    //enumName is the type of the lhs operand, the identifier is the name of the rhs operand
     Node* enumScope = enumMap[enumName];
     for (auto it = enumScope->node_data.begin(); it != enumScope->node_data.end(); ++it) {
         if( it->first == identifier)

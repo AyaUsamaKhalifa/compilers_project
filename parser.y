@@ -935,6 +935,24 @@ typeEnum execute(nodeType *p){
                                 yyerror("assignment of read only variable");
                                 return Error;
                             }
+                            //check if its an enum variable
+                            if(kind == "enum variable")
+                            {
+                                //if the rhs is not an identifier => error
+                                if(p->oper.op[1]->type!=Identifier_Node){
+                                    yyerror("Invalid enum operation");
+                                    return Error;
+                                }
+                                string enumName = st->checkType(p->oper.op[0]->identifier.name, currentScope); //get the enum type name
+                                bool isValid = st->checkEnum(enumName,p->oper.op[1]->identifier.name,currentScope);   //check if the value to be assigned to the enum is a variable of that enum type
+                                if(!isValid)
+                                {
+                                    yyerror("Invalid enum operation");
+                                    return Error;
+                                }
+                                return EnumType;
+                            }
+                            //check type mismatch
                             typeEnum varType = execute(p->oper.op[0]);
                             typeEnum exprType = execute(p->oper.op[1]);
                             typeEnum finalType = checkCompatibility(varType, exprType);
@@ -1000,7 +1018,7 @@ typeEnum execute(nodeType *p){
                                     return Error;
                                 }
                                 //insert in symbol table
-                                bool isInserted = st->insert(p->oper.op[2]->identifier.name,"constant",p->oper.op[1]->defineType.type,currentScope);
+                                bool isInserted = st->insertEnumVar(p->oper.op[2]->identifier.name,"enum variable",p->oper.op[1]->identifier.name,currentScope);
                                 printf("!!!!!!!!!!!!!!!!!trying to insert symbol: %s, isInserted: %d\n",p->oper.op[2]->identifier.name,isInserted);
                                 if(!isInserted){
                                     yyerror("variable already exists in the current scope");
