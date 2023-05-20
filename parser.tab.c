@@ -104,6 +104,8 @@
     typeEnum getIdentifierType(char* identifierName);
     nodeType *createParameterList(nodeType * node, nodeType * identifier);
     nodeType *addToParameterList(nodeType * parameterList, nodeType* node, nodeType * parameter);
+    nodeType *createParameterCallList(nodeType * node);
+    nodeType *addToParameterCallList(nodeType * parameterList, nodeType* node);
 
     void freeNode(nodeType *p);
 
@@ -113,7 +115,7 @@
     //printing may be removed
     // extern char* last_token;
 
-#line 117 "parser.tab.c"
+#line 119 "parser.tab.c"
 
 # ifndef YY_CAST
 #  ifdef __cplusplus
@@ -613,15 +615,15 @@ static const yytype_int8 yytranslate[] =
 /* YYRLINE[YYN] -- Source line where rule number YYN was defined.  */
 static const yytype_int16 yyrline[] =
 {
-       0,    83,    83,    87,    91,    96,    99,   104,   109,   118,
-     123,   129,   134,   143,   147,   153,   159,   164,   170,   175,
-     180,   189,   195,   202,   209,   214,   218,   222,   227,   234,
-     238,   244,   248,   254,   258,   262,   268,   272,   276,   280,
-     284,   290,   294,   298,   304,   308,   312,   316,   322,   326,
-     330,   336,   340,   344,   348,   355,   361,   365,   371,   376,
-     381,   386,   393,   398,   403,   408,   414,   418,   424,   430,
-     436,   440,   444,   448,   455,   459,   463,   467,   471,   477,
-     481,   485,   489,   493,   497
+       0,    85,    85,    89,    93,    98,   101,   106,   111,   120,
+     125,   131,   136,   145,   149,   155,   161,   166,   172,   177,
+     182,   191,   197,   204,   211,   216,   220,   224,   229,   236,
+     240,   246,   250,   256,   260,   264,   270,   274,   278,   282,
+     286,   292,   296,   300,   306,   310,   314,   318,   324,   328,
+     332,   338,   342,   346,   350,   357,   363,   367,   373,   378,
+     383,   388,   395,   400,   405,   410,   417,   421,   427,   433,
+     439,   443,   447,   451,   458,   462,   466,   470,   474,   480,
+     484,   488,   492,   496,   500
 };
 #endif
 
@@ -1364,672 +1366,673 @@ yyreduce:
   switch (yyn)
     {
   case 2: /* program: root  */
-#line 83 "parser.y"
-              {printf("end of program\n");}
-#line 1370 "parser.tab.c"
+#line 85 "parser.y"
+              {printf("end of program\n"); st->checkUnused();}
+#line 1372 "parser.tab.c"
     break;
 
   case 3: /* root: root statement  */
-#line 88 "parser.y"
+#line 90 "parser.y"
         {printf("root: root statement\n"); printf("-------------------------------------\n");
         execute((yyvsp[0].node));
         }
-#line 1378 "parser.tab.c"
+#line 1380 "parser.tab.c"
     break;
 
   case 4: /* root: root functional_statement  */
-#line 92 "parser.y"
+#line 94 "parser.y"
         {printf("root functional_statement\n"); printf("-------------------------------------\n");
         execute((yyvsp[0].node));
         }
-#line 1386 "parser.tab.c"
+#line 1388 "parser.tab.c"
     break;
 
   case 5: /* root: %empty  */
-#line 96 "parser.y"
+#line 98 "parser.y"
         {printf("root: \n");}
-#line 1392 "parser.tab.c"
+#line 1394 "parser.tab.c"
     break;
 
   case 6: /* statement: conditional_statement  */
-#line 100 "parser.y"
+#line 102 "parser.y"
             { printf("statement: conditional_statement\n");
             (yyval.node)=(yyvsp[0].node);
             }
-#line 1400 "parser.tab.c"
+#line 1402 "parser.tab.c"
     break;
 
   case 7: /* statement: loop_statement  */
-#line 105 "parser.y"
+#line 107 "parser.y"
             { printf("statement: loop_statement\n");
             (yyval.node)=(yyvsp[0].node);
             }
-#line 1408 "parser.tab.c"
+#line 1410 "parser.tab.c"
     break;
 
   case 8: /* statement: assignment ';'  */
-#line 110 "parser.y"
+#line 112 "parser.y"
             { printf("statement: assignment;\n");
             (yyval.node)=(yyvsp[-1].node);
             }
-#line 1416 "parser.tab.c"
+#line 1418 "parser.tab.c"
     break;
 
   case 9: /* recursive_statement: recursive_statement statement  */
-#line 119 "parser.y"
+#line 121 "parser.y"
                     {printf("recursive_statement: recursive_statement statement\n");
                     (yyval.node)=operation(';',2,(yyvsp[-1].node),(yyvsp[0].node));
                     }
-#line 1424 "parser.tab.c"
+#line 1426 "parser.tab.c"
     break;
 
   case 10: /* recursive_statement: %empty  */
-#line 123 "parser.y"
+#line 125 "parser.y"
                     {printf("recursive_statement: \n");
                     (yyval.node)=NULL;
                     }
-#line 1432 "parser.tab.c"
+#line 1434 "parser.tab.c"
     break;
 
   case 11: /* conditional_statement: switch_conditional_statement  */
-#line 130 "parser.y"
+#line 132 "parser.y"
                         {printf("conditional_statement: switch_conditional_statement\n");
                         (yyval.node)=(yyvsp[0].node);
                         }
-#line 1440 "parser.tab.c"
+#line 1442 "parser.tab.c"
     break;
 
   case 12: /* conditional_statement: if_conditional_statement  */
-#line 135 "parser.y"
+#line 137 "parser.y"
                         {printf("conditional_statement: if_conditional_statement\n");
                         (yyval.node)=(yyvsp[0].node);
                         }
-#line 1448 "parser.tab.c"
+#line 1450 "parser.tab.c"
     break;
 
   case 13: /* if_conditional_statement: IF '(' expressions ')' '{' recursive_statement '}' ELSE '{' recursive_statement '}'  */
-#line 144 "parser.y"
+#line 146 "parser.y"
                             {printf("if_conditional_statement: if(exp){recursive_statement} else{recursive_statement}\n");
                             (yyval.node)=operation(IF,3,(yyvsp[-8].node),(yyvsp[-5].node),(yyvsp[-1].node));
                             }
-#line 1456 "parser.tab.c"
+#line 1458 "parser.tab.c"
     break;
 
   case 14: /* if_conditional_statement: IF '(' expressions ')' '{' recursive_statement '}'  */
-#line 148 "parser.y"
+#line 150 "parser.y"
                             {printf("if_conditional_statement: if(exp){recursive_statement}\n");
                             (yyval.node)=operation(IF,2,(yyvsp[-4].node),(yyvsp[-1].node));
                             }
-#line 1464 "parser.tab.c"
+#line 1466 "parser.tab.c"
     break;
 
   case 15: /* switch_conditional_statement: SWITCH '(' VARIABLE ')' '{' case_statement '}'  */
-#line 154 "parser.y"
+#line 156 "parser.y"
                                 {printf("switch_conditional_statement: switch(VARIABLE){case_statement}\n");
                                 (yyval.node)=operation(SWITCH,2,identifier((yyvsp[-4].string_val)),(yyvsp[-1].node));
                                 }
-#line 1472 "parser.tab.c"
+#line 1474 "parser.tab.c"
     break;
 
   case 16: /* case_statement: case_statement CASE variable_value ':' recursive_statement BREAK  */
-#line 160 "parser.y"
+#line 162 "parser.y"
                 {printf("case_statement: case_statement case variable_value: recursive_statement break\n");
                 (yyval.node)=operation(CASE,3,(yyvsp[-5].node),(yyvsp[-3].node),(yyvsp[-1].node));
                 }
-#line 1480 "parser.tab.c"
+#line 1482 "parser.tab.c"
     break;
 
   case 17: /* case_statement: %empty  */
-#line 164 "parser.y"
+#line 166 "parser.y"
                 {printf("case_statement: \n");
                 (yyval.node)=NULL;
                 }
-#line 1488 "parser.tab.c"
+#line 1490 "parser.tab.c"
     break;
 
   case 18: /* loop_statement: for_loop_statement  */
-#line 171 "parser.y"
+#line 173 "parser.y"
                 {printf("loop_statement: for_loop_statement\n");
                 (yyval.node)=(yyvsp[0].node);
                 }
-#line 1496 "parser.tab.c"
+#line 1498 "parser.tab.c"
     break;
 
   case 19: /* loop_statement: while_loop_statement  */
-#line 176 "parser.y"
+#line 178 "parser.y"
                 {printf("loop_statement: while_loop_statement\n");
                 (yyval.node)=(yyvsp[0].node);
                 }
-#line 1504 "parser.tab.c"
+#line 1506 "parser.tab.c"
     break;
 
   case 20: /* loop_statement: do_while_loop_statement  */
-#line 181 "parser.y"
+#line 183 "parser.y"
                 {printf("loop_statement: do_while_loop_statement\n");
                 (yyval.node)=(yyvsp[0].node);
                 }
-#line 1512 "parser.tab.c"
+#line 1514 "parser.tab.c"
     break;
 
   case 21: /* for_loop_statement: FOR '(' assignment ';' expressions ';' assignment ')' '{' recursive_statement '}'  */
-#line 190 "parser.y"
+#line 192 "parser.y"
                     {printf("for_loop_statement: for(assignment; exp; assignment){recursive_statement}\n");
                     (yyval.node)=operation(FOR,4,(yyvsp[-8].node),(yyvsp[-6].node),(yyvsp[-4].node),(yyvsp[-1].node));
                     }
-#line 1520 "parser.tab.c"
+#line 1522 "parser.tab.c"
     break;
 
   case 22: /* while_loop_statement: WHILE '(' expressions ')' '{' recursive_statement '}'  */
-#line 196 "parser.y"
+#line 198 "parser.y"
                     {printf("while_loop_statement: while(exp){recursive_statement}\n");
                     (yyval.node)=operation(WHILE,2,(yyvsp[-4].node),(yyvsp[-1].node));
                     }
-#line 1528 "parser.tab.c"
+#line 1530 "parser.tab.c"
     break;
 
   case 23: /* do_while_loop_statement: DO '{' recursive_statement '}' WHILE '(' expressions ')'  */
-#line 203 "parser.y"
+#line 205 "parser.y"
                         {printf("do_while_loop_statement: do{recursive_statement} while{exp}\n");
                         (yyval.node)=operation(DO,2,(yyvsp[-5].node),(yyvsp[-1].node));
                         }
-#line 1536 "parser.tab.c"
+#line 1538 "parser.tab.c"
     break;
 
   case 24: /* assignment: variable_Type VARIABLE '=' expressions  */
-#line 210 "parser.y"
+#line 212 "parser.y"
             {
             printf("assignment: variable_Type VARIABLE = exp\n");
             (yyval.node)=operation('=',3,(yyvsp[-3].node),identifier((yyvsp[-2].string_val)),(yyvsp[0].node));
             }
-#line 1545 "parser.tab.c"
+#line 1547 "parser.tab.c"
     break;
 
   case 25: /* assignment: VARIABLE '=' expressions  */
-#line 215 "parser.y"
+#line 217 "parser.y"
             {printf("assignment: VARIABLE = exp\n");
             (yyval.node)=operation('=',2,identifier((yyvsp[-2].string_val)),(yyvsp[0].node));
             }
-#line 1553 "parser.tab.c"
+#line 1555 "parser.tab.c"
     break;
 
   case 26: /* assignment: ENUM VARIABLE VARIABLE '=' VARIABLE  */
-#line 219 "parser.y"
+#line 221 "parser.y"
             {printf("assignment: ENUM VARIABLE VARIABLE = VARIABLE\n");
             (yyval.node)=operation('=',4,defineType(EnumType),identifier((yyvsp[-3].string_val)),identifier((yyvsp[-2].string_val)),identifier((yyvsp[0].string_val)));
             }
-#line 1561 "parser.tab.c"
+#line 1563 "parser.tab.c"
     break;
 
   case 27: /* assignment: CONST variable_Type VARIABLE '=' expressions  */
-#line 223 "parser.y"
+#line 225 "parser.y"
             {
             printf("assignment: CONST variable_Type VARIABLE = exp\n");
             (yyval.node)=operation('=',4,defineType(ConstType),(yyvsp[-3].node),identifier((yyvsp[-2].string_val)),(yyvsp[0].node));
             }
-#line 1570 "parser.tab.c"
+#line 1572 "parser.tab.c"
     break;
 
   case 28: /* assignment: expressions  */
-#line 228 "parser.y"
+#line 230 "parser.y"
             {printf("assignment: exp\n");
             (yyval.node) = (yyvsp[0].node);
             }
-#line 1578 "parser.tab.c"
+#line 1580 "parser.tab.c"
     break;
 
   case 29: /* expressions: expressions OR first  */
-#line 235 "parser.y"
+#line 237 "parser.y"
             {printf("exp: exp || first \n");
             (yyval.node)=operation(OR,2,(yyvsp[-2].node),(yyvsp[0].node));
             }
-#line 1586 "parser.tab.c"
+#line 1588 "parser.tab.c"
     break;
 
   case 30: /* expressions: first  */
-#line 239 "parser.y"
+#line 241 "parser.y"
             {printf("exp: first \n");
             (yyval.node)=(yyvsp[0].node);
             }
-#line 1594 "parser.tab.c"
+#line 1596 "parser.tab.c"
     break;
 
   case 31: /* first: first AND second  */
-#line 245 "parser.y"
+#line 247 "parser.y"
         {printf("first: first && second\n");
         (yyval.node)=operation(AND,2,(yyvsp[-2].node),(yyvsp[0].node));
         }
-#line 1602 "parser.tab.c"
+#line 1604 "parser.tab.c"
     break;
 
   case 32: /* first: second  */
-#line 249 "parser.y"
+#line 251 "parser.y"
         {printf("first: second\n");
         (yyval.node)=(yyvsp[0].node);
         }
-#line 1610 "parser.tab.c"
+#line 1612 "parser.tab.c"
     break;
 
   case 33: /* second: second EE third  */
-#line 255 "parser.y"
+#line 257 "parser.y"
         {printf("second: second == third\n");
         (yyval.node)=operation(EE,2,(yyvsp[-2].node),(yyvsp[0].node));
         }
-#line 1618 "parser.tab.c"
+#line 1620 "parser.tab.c"
     break;
 
   case 34: /* second: second NE third  */
-#line 259 "parser.y"
+#line 261 "parser.y"
         {printf("second: second != third\n");
         (yyval.node)=operation(NE,2,(yyvsp[-2].node),(yyvsp[0].node));
         }
-#line 1626 "parser.tab.c"
+#line 1628 "parser.tab.c"
     break;
 
   case 35: /* second: third  */
-#line 263 "parser.y"
+#line 265 "parser.y"
         {printf("second: third\n");
         (yyval.node)=(yyvsp[0].node);
         }
-#line 1634 "parser.tab.c"
+#line 1636 "parser.tab.c"
     break;
 
   case 36: /* third: third '>' fourth  */
-#line 269 "parser.y"
+#line 271 "parser.y"
         {printf("third: third > fourth\n");
         (yyval.node)=operation('>',2,(yyvsp[-2].node),(yyvsp[0].node));
         }
-#line 1642 "parser.tab.c"
+#line 1644 "parser.tab.c"
     break;
 
   case 37: /* third: third '<' fourth  */
-#line 273 "parser.y"
+#line 275 "parser.y"
         {printf("third: third < fourth\n");
         (yyval.node)=operation('<',2,(yyvsp[-2].node),(yyvsp[0].node));
         }
-#line 1650 "parser.tab.c"
+#line 1652 "parser.tab.c"
     break;
 
   case 38: /* third: third GE fourth  */
-#line 277 "parser.y"
+#line 279 "parser.y"
         {printf("third: third >= fourth\n");
         (yyval.node)=operation(GE,2,(yyvsp[-2].node),(yyvsp[0].node));
         }
-#line 1658 "parser.tab.c"
+#line 1660 "parser.tab.c"
     break;
 
   case 39: /* third: third LE fourth  */
-#line 281 "parser.y"
+#line 283 "parser.y"
         {printf("third: third <= fourth\n");
         (yyval.node)=operation(LE,2,(yyvsp[-2].node),(yyvsp[0].node));
         }
-#line 1666 "parser.tab.c"
+#line 1668 "parser.tab.c"
     break;
 
   case 40: /* third: fourth  */
-#line 285 "parser.y"
+#line 287 "parser.y"
         {printf("third: fourth\n");
         (yyval.node)=(yyvsp[0].node);
         }
-#line 1674 "parser.tab.c"
+#line 1676 "parser.tab.c"
     break;
 
   case 41: /* fourth: fourth '+' fifth  */
-#line 291 "parser.y"
+#line 293 "parser.y"
         {printf("fourth: fourth + fifth\n");
         (yyval.node)=operation('+',2,(yyvsp[-2].node),(yyvsp[0].node));
         }
-#line 1682 "parser.tab.c"
+#line 1684 "parser.tab.c"
     break;
 
   case 42: /* fourth: fourth '-' fifth  */
-#line 295 "parser.y"
+#line 297 "parser.y"
         {printf("fourth: fourth - fifth\n");
         (yyval.node)=operation('-',2,(yyvsp[-2].node),(yyvsp[0].node));
         }
-#line 1690 "parser.tab.c"
+#line 1692 "parser.tab.c"
     break;
 
   case 43: /* fourth: fifth  */
-#line 299 "parser.y"
+#line 301 "parser.y"
         {printf("fourth: fifth\n");
         (yyval.node)=(yyvsp[0].node);
         }
-#line 1698 "parser.tab.c"
+#line 1700 "parser.tab.c"
     break;
 
   case 44: /* fifth: fifth '*' sixth  */
-#line 305 "parser.y"
+#line 307 "parser.y"
         {printf("fifth: fifth * sixth\n");
         (yyval.node)=operation('*',2,(yyvsp[-2].node),(yyvsp[0].node));
         }
-#line 1706 "parser.tab.c"
+#line 1708 "parser.tab.c"
     break;
 
   case 45: /* fifth: fifth '/' sixth  */
-#line 309 "parser.y"
+#line 311 "parser.y"
         {printf("fifth: fifth / sixth\n");
         (yyval.node)=operation('/',2,(yyvsp[-2].node),(yyvsp[0].node));
         }
-#line 1714 "parser.tab.c"
+#line 1716 "parser.tab.c"
     break;
 
   case 46: /* fifth: fifth '%' sixth  */
-#line 313 "parser.y"
+#line 315 "parser.y"
         {printf("fifth: fifth %% sixth\n");
         (yyval.node)=operation('%',2,(yyvsp[-2].node),(yyvsp[0].node));
         }
-#line 1722 "parser.tab.c"
+#line 1724 "parser.tab.c"
     break;
 
   case 47: /* fifth: sixth  */
-#line 317 "parser.y"
+#line 319 "parser.y"
         {printf("fifth: sixth\n");
         (yyval.node)=(yyvsp[0].node);
         }
-#line 1730 "parser.tab.c"
+#line 1732 "parser.tab.c"
     break;
 
   case 48: /* sixth: '-' sixth  */
-#line 323 "parser.y"
+#line 325 "parser.y"
         {printf("sixth: - sixth\n");
         (yyval.node)=operation('-',1,(yyvsp[0].node));
         }
-#line 1738 "parser.tab.c"
+#line 1740 "parser.tab.c"
     break;
 
   case 49: /* sixth: '!' sixth  */
-#line 327 "parser.y"
+#line 329 "parser.y"
         {printf("sixth: ! sixth\n");
         (yyval.node)=operation('!',1,(yyvsp[0].node));
         }
-#line 1746 "parser.tab.c"
+#line 1748 "parser.tab.c"
     break;
 
   case 50: /* sixth: seventh  */
-#line 331 "parser.y"
+#line 333 "parser.y"
         {printf("sixth: seventh\n");
         (yyval.node)=(yyvsp[0].node);
         }
-#line 1754 "parser.tab.c"
+#line 1756 "parser.tab.c"
     break;
 
   case 51: /* seventh: '(' expressions ')'  */
-#line 337 "parser.y"
+#line 339 "parser.y"
         {printf("seventh: (exp)\n");
         (yyval.node)=(yyvsp[-1].node);
         }
-#line 1762 "parser.tab.c"
+#line 1764 "parser.tab.c"
     break;
 
   case 52: /* seventh: variable_value  */
-#line 341 "parser.y"
+#line 343 "parser.y"
         {printf("seventh: variable_value\n");
         (yyval.node) = (yyvsp[0].node);
         }
-#line 1770 "parser.tab.c"
+#line 1772 "parser.tab.c"
     break;
 
   case 53: /* seventh: VARIABLE  */
-#line 345 "parser.y"
+#line 347 "parser.y"
         {printf("seventh: VARIABLE\n");
         (yyval.node) = identifier((yyvsp[0].string_val));
         }
-#line 1778 "parser.tab.c"
+#line 1780 "parser.tab.c"
     break;
 
   case 54: /* seventh: function_call  */
-#line 349 "parser.y"
+#line 351 "parser.y"
         {printf("seventh: function_call\n");
         (yyval.node)=(yyvsp[0].node);
         }
-#line 1786 "parser.tab.c"
+#line 1788 "parser.tab.c"
     break;
 
   case 55: /* function_call: VARIABLE '(' function_parameters_calls ')'  */
-#line 356 "parser.y"
+#line 358 "parser.y"
                 {printf("function_call: VARIABLE (function_parameters_calls)\n");
                 (yyval.node)=operation('f',2,identifier((yyvsp[-3].string_val)),(yyvsp[-1].node));
                 }
-#line 1794 "parser.tab.c"
+#line 1796 "parser.tab.c"
     break;
 
   case 56: /* functional_statement: function  */
-#line 362 "parser.y"
+#line 364 "parser.y"
                     {printf("functional_statement: function\n");
                     (yyval.node)=(yyvsp[0].node);
                     }
-#line 1802 "parser.tab.c"
+#line 1804 "parser.tab.c"
     break;
 
   case 57: /* functional_statement: enum_statement  */
-#line 366 "parser.y"
+#line 368 "parser.y"
                     {printf("functional_statement: enum_statement\n");
                     (yyval.node)=(yyvsp[0].node);
                     }
-#line 1810 "parser.tab.c"
+#line 1812 "parser.tab.c"
     break;
 
   case 58: /* function_parameters: parameter  */
-#line 372 "parser.y"
+#line 374 "parser.y"
                     {printf("function_parameters: parameter\n");
                     (yyval.node)=(yyvsp[0].node);
                     }
-#line 1818 "parser.tab.c"
+#line 1820 "parser.tab.c"
     break;
 
   case 59: /* function_parameters: %empty  */
-#line 376 "parser.y"
+#line 378 "parser.y"
                     {printf("function_parameters: \n");
                     (yyval.node)=NULL;
                     }
-#line 1826 "parser.tab.c"
+#line 1828 "parser.tab.c"
     break;
 
   case 60: /* parameter: parameter ',' variable_Type VARIABLE  */
-#line 382 "parser.y"
+#line 384 "parser.y"
             {printf("parameter: parameter, variable_Type VARIABLE\n");
             (yyval.node) = addToParameterList((yyvsp[-3].node), (yyvsp[-1].node), identifier((yyvsp[0].string_val)));
             //$$=operation('p',3,$3,identifier($4),$1);
             }
-#line 1835 "parser.tab.c"
+#line 1837 "parser.tab.c"
     break;
 
   case 61: /* parameter: variable_Type VARIABLE  */
-#line 387 "parser.y"
+#line 389 "parser.y"
             {printf("parameter: variable_Type VARIABLE\n");
             (yyval.node) = createParameterList((yyvsp[-1].node), identifier((yyvsp[0].string_val)));
             //$$=operation('p',2,$1,identifier($2));
             }
-#line 1844 "parser.tab.c"
+#line 1846 "parser.tab.c"
     break;
 
   case 62: /* function_parameters_calls: parameter_calls  */
-#line 394 "parser.y"
+#line 396 "parser.y"
                             {printf("function_parameters_calls: parameter_calls\n");
                             (yyval.node)=(yyvsp[0].node);
                             }
-#line 1852 "parser.tab.c"
+#line 1854 "parser.tab.c"
     break;
 
   case 63: /* function_parameters_calls: %empty  */
-#line 398 "parser.y"
+#line 400 "parser.y"
                             {printf("function_parameters_calls: \n");
                             (yyval.node)=NULL;
                             }
-#line 1860 "parser.tab.c"
+#line 1862 "parser.tab.c"
     break;
 
   case 64: /* parameter_calls: parameter_calls ',' expressions  */
-#line 404 "parser.y"
+#line 406 "parser.y"
                 {printf("parameter_calls: parameter_calls, exp\n");
-                
-                (yyval.node)=operation('c',2,(yyvsp[-2].node),(yyvsp[0].node));
+                (yyval.node)=addToParameterCallList((yyvsp[-2].node),(yyvsp[0].node));
+                //$$=operation('c',2,$1,$3);
                 }
-#line 1869 "parser.tab.c"
+#line 1871 "parser.tab.c"
     break;
 
   case 65: /* parameter_calls: expressions  */
-#line 409 "parser.y"
+#line 411 "parser.y"
                 {printf("parameter_calls: exp\n");
-                (yyval.node)=(yyvsp[0].node);
+                (yyval.node)=createParameterCallList((yyvsp[0].node));
+                //$$=$1;
                 }
-#line 1877 "parser.tab.c"
+#line 1880 "parser.tab.c"
     break;
 
   case 66: /* function: variable_Type VARIABLE '(' function_parameters ')' '{' recursive_statement RETURN return_types ';' '}'  */
-#line 415 "parser.y"
+#line 418 "parser.y"
         {printf("function: variable_Type  (function_parameters){recursive_statement RETURN return_types ;}\n");
         (yyval.node)=operation('d',5,(yyvsp[-10].node),identifier((yyvsp[-9].string_val)),(yyvsp[-7].node),(yyvsp[-4].node),(yyvsp[-2].node));
         }
-#line 1885 "parser.tab.c"
+#line 1888 "parser.tab.c"
     break;
 
   case 67: /* function: VOID VARIABLE '(' function_parameters ')' '{' recursive_statement '}'  */
-#line 419 "parser.y"
+#line 422 "parser.y"
         {printf("function: void VARIABLE (function_parameters) {recursive_statement}\n");
         (yyval.node)=operation('d',4,defineType(VoidType),identifier((yyvsp[-6].string_val)),(yyvsp[-4].node),(yyvsp[-1].node));
         }
-#line 1893 "parser.tab.c"
+#line 1896 "parser.tab.c"
     break;
 
   case 68: /* return_types: expressions  */
-#line 425 "parser.y"
+#line 428 "parser.y"
                 {printf("return_types: expressions\n");
                 (yyval.node)=(yyvsp[0].node);
                 }
-#line 1901 "parser.tab.c"
+#line 1904 "parser.tab.c"
     break;
 
   case 69: /* enum_statement: ENUM VARIABLE '{' enum_variables '}'  */
-#line 431 "parser.y"
+#line 434 "parser.y"
                 {printf("enum_statement: enum VARIABLE {enum_variables}\n");
                 (yyval.node)=operation(ENUM,2,identifier((yyvsp[-3].string_val)),(yyvsp[-1].node));
                 }
-#line 1909 "parser.tab.c"
+#line 1912 "parser.tab.c"
     break;
 
   case 70: /* enum_variables: enum_variables ',' VARIABLE '=' expressions  */
-#line 437 "parser.y"
+#line 440 "parser.y"
                 {printf("enum_variables: enum_variables, VARIABLE = exp\n");
                 (yyval.node)=operation(',',3,(yyvsp[-4].node),identifier((yyvsp[-2].string_val)),(yyvsp[0].node));
                 }
-#line 1917 "parser.tab.c"
+#line 1920 "parser.tab.c"
     break;
 
   case 71: /* enum_variables: enum_variables ',' VARIABLE  */
-#line 441 "parser.y"
+#line 444 "parser.y"
                 {printf("enum_variables: enum_variables, VARIABLE\n");
                 (yyval.node)=operation(',',2,(yyvsp[-2].node),identifier((yyvsp[0].string_val)));
                 }
-#line 1925 "parser.tab.c"
+#line 1928 "parser.tab.c"
     break;
 
   case 72: /* enum_variables: VARIABLE '=' expressions  */
-#line 445 "parser.y"
+#line 448 "parser.y"
                 {printf("enum_variables:VARIABLE = exp\n");
                 (yyval.node)=operation(',',2,identifier((yyvsp[-2].string_val)),(yyvsp[0].node));
                 }
-#line 1933 "parser.tab.c"
+#line 1936 "parser.tab.c"
     break;
 
   case 73: /* enum_variables: VARIABLE  */
-#line 449 "parser.y"
+#line 452 "parser.y"
                 {printf("enum_variables: VARIABLE\n");
                 (yyval.node)=operation(',',1,identifier((yyvsp[0].string_val)));
                 }
-#line 1941 "parser.tab.c"
+#line 1944 "parser.tab.c"
     break;
 
   case 74: /* variable_Type: INT_TYPE  */
-#line 456 "parser.y"
+#line 459 "parser.y"
                 {printf("variable_Type: int\n");
                 (yyval.node) = defineType(IntType);
                 }
-#line 1949 "parser.tab.c"
+#line 1952 "parser.tab.c"
     break;
 
   case 75: /* variable_Type: CHAR_TYPE  */
-#line 460 "parser.y"
+#line 463 "parser.y"
                 {printf("variable_Type: char\n");
                 (yyval.node) = defineType(CharType);
                 }
-#line 1957 "parser.tab.c"
+#line 1960 "parser.tab.c"
     break;
 
   case 76: /* variable_Type: BOOL_TYPE  */
-#line 464 "parser.y"
+#line 467 "parser.y"
                 {printf("variable_Type: bool\n");
                 (yyval.node) = defineType(BoolType);
                 }
-#line 1965 "parser.tab.c"
+#line 1968 "parser.tab.c"
     break;
 
   case 77: /* variable_Type: FLOAT_TYPE  */
-#line 468 "parser.y"
+#line 471 "parser.y"
                 {printf("variable_Type: float\n");
                 (yyval.node) = defineType(FloatType);
                 }
-#line 1973 "parser.tab.c"
+#line 1976 "parser.tab.c"
     break;
 
   case 78: /* variable_Type: STRING_TYPE  */
-#line 472 "parser.y"
+#line 475 "parser.y"
                 {printf("variable_Type: string\n");
                 (yyval.node) = defineType(StringType);
                 }
-#line 1981 "parser.tab.c"
+#line 1984 "parser.tab.c"
     break;
 
   case 79: /* variable_value: INTEGER  */
-#line 478 "parser.y"
+#line 481 "parser.y"
                 {printf("variable_value: int value \n");
                 (yyval.node) = constantInteger((yyvsp[0].integer_val));
                 }
-#line 1989 "parser.tab.c"
+#line 1992 "parser.tab.c"
     break;
 
   case 80: /* variable_value: FLOAT  */
-#line 482 "parser.y"
+#line 485 "parser.y"
                 {printf("variable_value: float value \n");
                 (yyval.node) = constantFloat((yyvsp[0].float_val));
                 }
-#line 1997 "parser.tab.c"
+#line 2000 "parser.tab.c"
     break;
 
   case 81: /* variable_value: BOOL_FALSE  */
-#line 486 "parser.y"
+#line 489 "parser.y"
                 {printf("variable_value: false \n");
                 (yyval.node) = constantBool((yyvsp[0].integer_val));
                 }
-#line 2005 "parser.tab.c"
+#line 2008 "parser.tab.c"
     break;
 
   case 82: /* variable_value: BOOL_TRUE  */
-#line 490 "parser.y"
+#line 493 "parser.y"
                 {printf("variable_value: true \n");
                 (yyval.node) = constantBool((yyvsp[0].integer_val));
                 }
-#line 2013 "parser.tab.c"
+#line 2016 "parser.tab.c"
     break;
 
   case 83: /* variable_value: CHAR  */
-#line 494 "parser.y"
+#line 497 "parser.y"
                 {printf("variable_value: char value \n");
                 (yyval.node) = constantChar((yyvsp[0].char_val));
                 }
-#line 2021 "parser.tab.c"
+#line 2024 "parser.tab.c"
     break;
 
   case 84: /* variable_value: STRING  */
-#line 498 "parser.y"
+#line 501 "parser.y"
                 {printf("variable_value: string value \n");
                 (yyval.node) = constantString((yyvsp[0].string_val));
                 }
-#line 2029 "parser.tab.c"
+#line 2032 "parser.tab.c"
     break;
 
 
-#line 2033 "parser.tab.c"
+#line 2036 "parser.tab.c"
 
       default: break;
     }
@@ -2222,7 +2225,7 @@ yyreturnlab:
   return yyresult;
 }
 
-#line 504 "parser.y"
+#line 507 "parser.y"
 
 
 #define SIZEOF_NODETYPE ((char*)&p->constant - (char*)p)
@@ -2320,6 +2323,23 @@ nodeType *addToParameterList(nodeType * parameterList, nodeType* node, nodeType 
     return parameterList;
 }
 
+nodeType *createParameterCallList(nodeType * node) {
+    nodeType *p;
+    if ((p = (nodeType *)malloc(sizeof(nodeType))) == NULL)
+        yyerror("out of memory");
+    p->type = ArgumentNode;
+    p->argumentType.argumentsNodes.push_back(node);
+    return p;
+}
+
+nodeType *addToParameterCallList(nodeType * parameterList, nodeType* node){
+    nodeType *p;
+    if ((p = (nodeType *)malloc(sizeof(nodeType))) == NULL)
+        yyerror("out of memory");
+    parameterList->argumentType.argumentsNodes.push_back(node);
+    return parameterList;
+}
+
 nodeType *operation(int oper, int nops, ...) {
     va_list ap;
     nodeType *p;
@@ -2402,21 +2422,25 @@ typeEnum execute(nodeType *p){
             if(typeIdentifier == "integer")
             {
                 fprintf(OutputQuadraplesFile, "PUSH %s\n", p->identifier.name);
+                st->variables[p->identifier.name] = true;
                 return IntType;
             }
             else if(typeIdentifier == "float")
             {
                 fprintf(OutputQuadraplesFile, "PUSH %s\n", p->identifier.name);
+                st->variables[p->identifier.name] = true;
                 return FloatType;
             }
             else if(typeIdentifier == "string")
             {
                 fprintf(OutputQuadraplesFile, "PUSH %s\n", p->identifier.name);
+                st->variables[p->identifier.name] = true;
                 return StringType;
             }
             else if(typeIdentifier == "boolean")
             {
                 fprintf(OutputQuadraplesFile, "PUSH %s\n", p->identifier.name);
+                st->variables[p->identifier.name] = true;
                 return BoolType;
             }
             else if(typeIdentifier == "void")
@@ -2426,6 +2450,7 @@ typeEnum execute(nodeType *p){
             else if(typeIdentifier == "char")
             {
                 fprintf(OutputQuadraplesFile, "PUSH %s\n", p->identifier.name);
+                st->variables[p->identifier.name] = true;
                 return CharType;
             }
             else if(typeIdentifier == "enum")
@@ -2551,7 +2576,7 @@ typeEnum execute(nodeType *p){
                 {
                     TempVariables ++;
                     EndSwitchLabel++;
-                    //execute(p->oper.op[0]);
+                    //execute(p->oper.op[0]);   //execute is not called on the variable inside the switch (doesn't go to the base case identifier node)
                     typeEnum varType = getIdentifierType(p->oper.op[0]->identifier.name);
                     if(varType != CharType && varType != IntType){
                         yyerror("This type of variable is not supported in switch statement");
@@ -3056,7 +3081,7 @@ typeEnum execute(nodeType *p){
                             //execute(p->oper.op[2]); //parameters
                             //insert parameters in symbol table
                             if(p->oper.op[2] != NULL){
-                                for(int i=0; i < p->oper.op[2]->argumentType.arguments.size(); i++){
+                                for(int i = p->oper.op[2]->argumentType.arguments.size() - 1; i > -1 ; i--){
                                     bool isInserted = st->insert(p->oper.op[2]->argumentType.argumentsNames[i],"parameter",p->oper.op[2]->argumentType.arguments[i],currentScope);
                                     printf("!!!!!!!!!!!!!!!!!trying to insert symbol: %s, isInserted: %d\n",p->oper.op[1]->identifier.name,isInserted);
                                     if(!isInserted){
@@ -3077,19 +3102,36 @@ typeEnum execute(nodeType *p){
                     fprintf(OutputQuadraplesFile, "END_FUNC\n");
                     break;
                 }                
-                case 'c': //parameters call => fun(x, y, z) parameters are x, y and z
-                {
-                    execute(p->oper.op[0]);
-                    execute(p->oper.op[1]);
-                    break;
-                }
                 case 'f': //function call 
                 {
                     // execute(p->oper.op[0]);
                     typeEnum funcType = getIdentifierType(p->oper.op[0]->identifier.name);
                     printf("function call\n");
-                    execute(p->oper.op[1]);
+                    if(p->oper.op[1] != NULL)
+                    {
+                        if(p->oper.op[1]->argumentType.argumentsNodes.size() != st->functionMap[p->oper.op[0]->identifier.name].size()){
+                            yyerror("number of passed arguments doesnt match the number of parameters");
+                            return Error;
+                        }
+                        for(int i=0; i < st->functionMap[p->oper.op[0]->identifier.name].size(); i++){
+                            //arguments[i] = execute(p->oper.op[1]->argumentType.argumentsNodes[i]);
+                            typeEnum parameterType = execute(p->oper.op[1]->argumentType.argumentsNodes[i]);
+                            if(parameterType != st->functionMap[p->oper.op[0]->identifier.name][i]){
+                                yyerror("type of passed argument doesnt match the type of the parameter");
+                                return Error;
+                            }
+                            //fprintf(OutputQuadraplesFile, "PUSH %s\n", p->oper.op[1]->argumentType.argumentsNodes[i]->identifier.name);
+                        }
+                    }
+                    else {
+                        if(st->functionMap[p->oper.op[0]->identifier.name].size() != 0){
+                            yyerror("number of passed arguments doesnt match the number of parameters");
+                            return Error;
+                        }
+                    }
+                    //execute(p->oper.op[1]);
                     fprintf(OutputQuadraplesFile, "CALL %s\n", p->oper.op[0]->identifier.name);
+                    return funcType;
                     break;
                 }
             }
@@ -3104,26 +3146,32 @@ typeEnum getIdentifierType(char* identifierName)
     string typeIdentifier = st->checkType(identifierName, currentScope);
     if(typeIdentifier == "integer")
     {
+        
         return IntType;
     }
     else if(typeIdentifier == "float")
     {
+        
         return FloatType;
     }
     else if(typeIdentifier == "string")
     {
+        
         return StringType;
     }
     else if(typeIdentifier == "boolean")
     {
+        
         return BoolType;
     }
     else if(typeIdentifier == "void")
     {
+        
         return VoidType;
     }
     else if(typeIdentifier == "char")
     {
+        
         return CharType;
     }
     else if(typeIdentifier == "enum")

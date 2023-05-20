@@ -51,6 +51,7 @@ typedef struct {
 typedef struct {
     vector<typeEnum> arguments;
     vector<char*> argumentsNames;
+    vector<nodeTypeTag*> argumentsNodes;
 } ArgumentNodeType;
 
 typedef struct nodeTypeTag {

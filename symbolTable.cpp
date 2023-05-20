@@ -43,7 +43,6 @@ bool symbolTable::insert(string identifier, string kind, int type, Node *curr_no
         case 6: //enum
             typeString="enum"; 
             break;
-
         case 7:
             typeString="const";
             break;
@@ -53,6 +52,11 @@ bool symbolTable::insert(string identifier, string kind, int type, Node *curr_no
     data[0] = kind;
     data[1] = typeString;
     curr_node->node_data[identifier] = data;
+    if(kind == "variable")
+    {
+        variables[identifier] = false;
+    }
+    
     return true;
 }
 
@@ -211,6 +215,15 @@ void symbolTable::print_recursive(Node* curr_node, ofstream& myfile){
     for(int i=0;i<curr_node->children.size();i++){
         print_recursive(curr_node->children[i],myfile);
     }
+}
+bool symbolTable::checkUnused(){
+    for (auto it = variables.begin(); it != variables.end(); ++it) {
+        if( it->second == false)
+        {
+            std::cout<<"warning: unused variable "<< it->first<<std::endl;
+        }
+    }
+    return true;
 }
 
 

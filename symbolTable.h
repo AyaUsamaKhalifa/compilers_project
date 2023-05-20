@@ -29,7 +29,9 @@ struct symbolTable{
     Node *switchScope(Node* currentScope);
     Node *functionScope(Node* currentScope);
     Node* switchBack(Node* currentScope);
+    bool checkUnused();
     unordered_map<string, Node*> enumMap;
     unordered_map<string,  vector<typeEnum>> functionMap;
+    unordered_map<string,  bool> variables;
 };
 

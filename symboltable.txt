@@ -1,10 +1,6 @@
 id		kind			type
-func2		function		integer
-func		function		integer
+y		variable		integer
+x		variable		integer
 ========================================================================
-hello		variable		integer
-========================================================================
-hello		variable		integer
-y		parameter		integer
-x		parameter		integer
+i		variable		integer
 ========================================================================

@@ -34,6 +34,8 @@
     typeEnum getIdentifierType(char* identifierName);
     nodeType *createParameterList(nodeType * node, nodeType * identifier);
     nodeType *addToParameterList(nodeType * parameterList, nodeType* node, nodeType * parameter);
+    nodeType *createParameterCallList(nodeType * node);
+    nodeType *addToParameterCallList(nodeType * parameterList, nodeType* node);
 
     void freeNode(nodeType *p);
 
@@ -80,7 +82,7 @@
 
 %%
 
-program: root {printf("end of program\n");}
+program: root {printf("end of program\n"); st->checkUnused();}
          ;
 
 
@@ -402,12 +404,13 @@ function_parameters_calls:  parameter_calls
 
 parameter_calls: parameter_calls ',' expressions 
                 {printf("parameter_calls: parameter_calls, exp\n");
-                
-                $$=operation('c',2,$1,$3);
+                $$=addToParameterCallList($1,$3);
+                //$$=operation('c',2,$1,$3);
                 } 
                 | expressions 
                 {printf("parameter_calls: exp\n");
-                $$=$1;
+                $$=createParameterCallList($1);
+                //$$=$1;
                 } 
                 ;
 
@@ -598,6 +601,23 @@ nodeType *addToParameterList(nodeType * parameterList, nodeType* node, nodeType 
     return parameterList;
 }
 
+nodeType *createParameterCallList(nodeType * node) {
+    nodeType *p;
+    if ((p = (nodeType *)malloc(sizeof(nodeType))) == NULL)
+        yyerror("out of memory");
+    p->type = ArgumentNode;
+    p->argumentType.argumentsNodes.push_back(node);
+    return p;
+}
+
+nodeType *addToParameterCallList(nodeType * parameterList, nodeType* node){
+    nodeType *p;
+    if ((p = (nodeType *)malloc(sizeof(nodeType))) == NULL)
+        yyerror("out of memory");
+    parameterList->argumentType.argumentsNodes.push_back(node);
+    return parameterList;
+}
+
 nodeType *operation(int oper, int nops, ...) {
     va_list ap;
     nodeType *p;
@@ -680,21 +700,25 @@ typeEnum execute(nodeType *p){
             if(typeIdentifier == "integer")
             {
                 fprintf(OutputQuadraplesFile, "PUSH %s\n", p->identifier.name);
+                st->variables[p->identifier.name] = true;
                 return IntType;
             }
             else if(typeIdentifier == "float")
             {
                 fprintf(OutputQuadraplesFile, "PUSH %s\n", p->identifier.name);
+                st->variables[p->identifier.name] = true;
                 return FloatType;
             }
             else if(typeIdentifier == "string")
             {
                 fprintf(OutputQuadraplesFile, "PUSH %s\n", p->identifier.name);
+                st->variables[p->identifier.name] = true;
                 return StringType;
             }
             else if(typeIdentifier == "boolean")
             {
                 fprintf(OutputQuadraplesFile, "PUSH %s\n", p->identifier.name);
+                st->variables[p->identifier.name] = true;
                 return BoolType;
             }
             else if(typeIdentifier == "void")
@@ -704,6 +728,7 @@ typeEnum execute(nodeType *p){
             else if(typeIdentifier == "char")
             {
                 fprintf(OutputQuadraplesFile, "PUSH %s\n", p->identifier.name);
+                st->variables[p->identifier.name] = true;
                 return CharType;
             }
             else if(typeIdentifier == "enum")
@@ -829,7 +854,7 @@ typeEnum execute(nodeType *p){
                 {
                     TempVariables ++;
                     EndSwitchLabel++;
-                    //execute(p->oper.op[0]);
+                    //execute(p->oper.op[0]);   //execute is not called on the variable inside the switch (doesn't go to the base case identifier node)
                     typeEnum varType = getIdentifierType(p->oper.op[0]->identifier.name);
                     if(varType != CharType && varType != IntType){
                         yyerror("This type of variable is not supported in switch statement");
@@ -1334,7 +1359,7 @@ typeEnum execute(nodeType *p){
                             //execute(p->oper.op[2]); //parameters
                             //insert parameters in symbol table
                             if(p->oper.op[2] != NULL){
-                                for(int i=0; i < p->oper.op[2]->argumentType.arguments.size(); i++){
+                                for(int i = p->oper.op[2]->argumentType.arguments.size() - 1; i > -1 ; i--){
                                     bool isInserted = st->insert(p->oper.op[2]->argumentType.argumentsNames[i],"parameter",p->oper.op[2]->argumentType.arguments[i],currentScope);
                                     printf("!!!!!!!!!!!!!!!!!trying to insert symbol: %s, isInserted: %d\n",p->oper.op[1]->identifier.name,isInserted);
                                     if(!isInserted){
@@ -1355,19 +1380,36 @@ typeEnum execute(nodeType *p){
                     fprintf(OutputQuadraplesFile, "END_FUNC\n");
                     break;
                 }                
-                case 'c': //parameters call => fun(x, y, z) parameters are x, y and z
-                {
-                    execute(p->oper.op[0]);
-                    execute(p->oper.op[1]);
-                    break;
-                }
                 case 'f': //function call 
                 {
                     // execute(p->oper.op[0]);
                     typeEnum funcType = getIdentifierType(p->oper.op[0]->identifier.name);
                     printf("function call\n");
-                    execute(p->oper.op[1]);
+                    if(p->oper.op[1] != NULL)
+                    {
+                        if(p->oper.op[1]->argumentType.argumentsNodes.size() != st->functionMap[p->oper.op[0]->identifier.name].size()){
+                            yyerror("number of passed arguments doesnt match the number of parameters");
+                            return Error;
+                        }
+                        for(int i=0; i < st->functionMap[p->oper.op[0]->identifier.name].size(); i++){
+                            //arguments[i] = execute(p->oper.op[1]->argumentType.argumentsNodes[i]);
+                            typeEnum parameterType = execute(p->oper.op[1]->argumentType.argumentsNodes[i]);
+                            if(parameterType != st->functionMap[p->oper.op[0]->identifier.name][i]){
+                                yyerror("type of passed argument doesnt match the type of the parameter");
+                                return Error;
+                            }
+                            //fprintf(OutputQuadraplesFile, "PUSH %s\n", p->oper.op[1]->argumentType.argumentsNodes[i]->identifier.name);
+                        }
+                    }
+                    else {
+                        if(st->functionMap[p->oper.op[0]->identifier.name].size() != 0){
+                            yyerror("number of passed arguments doesnt match the number of parameters");
+                            return Error;
+                        }
+                    }
+                    //execute(p->oper.op[1]);
                     fprintf(OutputQuadraplesFile, "CALL %s\n", p->oper.op[0]->identifier.name);
+                    return funcType;
                     break;
                 }
             }
@@ -1382,26 +1424,32 @@ typeEnum getIdentifierType(char* identifierName)
     string typeIdentifier = st->checkType(identifierName, currentScope);
     if(typeIdentifier == "integer")
     {
+        
         return IntType;
     }
     else if(typeIdentifier == "float")
     {
+        
         return FloatType;
     }
     else if(typeIdentifier == "string")
     {
+        
         return StringType;
     }
     else if(typeIdentifier == "boolean")
     {
+        
         return BoolType;
     }
     else if(typeIdentifier == "void")
     {
+        
         return VoidType;
     }
     else if(typeIdentifier == "char")
     {
+        
         return CharType;
     }
     else if(typeIdentifier == "enum")
