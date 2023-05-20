@@ -78,6 +78,7 @@ bool symbolTable::insertEnumVar(string identifier, string kind, string type, Nod
     data[0] = kind;
     data[1] = type;
     curr_node->node_data[identifier] = data;
+    variables[identifier] = false;
     return true;
 
 }

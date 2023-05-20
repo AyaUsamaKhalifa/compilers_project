@@ -2456,6 +2456,7 @@ typeEnum execute(nodeType *p){
             else if(typeIdentifier == "enum")
             {
                 EnumValue = -1;
+                
                 return EnumType;
             }
             else if(typeIdentifier == "const")
@@ -2465,6 +2466,13 @@ typeEnum execute(nodeType *p){
             }
             else
             {
+                for (auto it = st->enumMap.begin(); it != st->enumMap.end(); ++it) {
+                    if( it->first == typeIdentifier)
+                    {
+                        st->variables[p->identifier.name] = true;
+                        return IntType;
+                    }
+                }
                 yyerror("variable was not declared in this scope");
                 return Error;
             }
@@ -2491,6 +2499,17 @@ typeEnum execute(nodeType *p){
                             execute(p->oper.op[1]);
                             currentScope = st->switchBack(currentScope);
                             fprintf(OutputQuadraplesFile, "L%d:\n",CurrentLabel);
+                            if(p->oper.op[0]->type == Constant_Node)
+                            {
+                                if(p->oper.op[0]->constant.constType == IntType && p->oper.op[0]->constant.intVal == 0)
+                                {
+                                    printf("warning: condition is always false\n");
+                                }
+                                else if(p->oper.op[0]->constant.constType == BoolType && p->oper.op[0]->constant.boolVal == false)
+                                {
+                                    printf("warning: condition is always false\n");
+                                }
+                            }
                             break;
                         }
                         case 3:{
@@ -2510,6 +2529,17 @@ typeEnum execute(nodeType *p){
                             execute(p->oper.op[2]);
                             fprintf(OutputQuadraplesFile, "L%d:\n",CurrentLabel2); //y
                             currentScope = st->switchBack(currentScope);
+                            if(p->oper.op[0]->type == Constant_Node)
+                            {
+                                if(p->oper.op[0]->constant.constType == IntType && p->oper.op[0]->constant.intVal == 0)
+                                {
+                                    printf("warning: condition is always false\n");
+                                }
+                                else if(p->oper.op[0]->constant.constType == BoolType && p->oper.op[0]->constant.boolVal == false)
+                                {
+                                    printf("warning: condition is always false\n");
+                                }
+                            }
                             break;
                         }
                     }
@@ -2578,6 +2608,7 @@ typeEnum execute(nodeType *p){
                     EndSwitchLabel++;
                     //execute(p->oper.op[0]);   //execute is not called on the variable inside the switch (doesn't go to the base case identifier node)
                     typeEnum varType = getIdentifierType(p->oper.op[0]->identifier.name);
+                    st->variables[p->oper.op[0]->identifier.name] = true; //newly added to remove the warning
                     if(varType != CharType && varType != IntType){
                         yyerror("This type of variable is not supported in switch statement");
                         return Error;
@@ -2898,6 +2929,7 @@ typeEnum execute(nodeType *p){
                             typeEnum finalType = checkCompatibility(varType, exprType);
                             if(finalType==Error)
                             {
+                                printf("second operand type is %d\n",exprType);
                                 yyerror("Type mismatch in 3 operands");
                                 return Error;
                             }
@@ -2996,7 +3028,7 @@ typeEnum execute(nodeType *p){
                                 if(!isInserted){
                                     yyerror("enum variable already exists in the current scope");
                                 }
-                                execute(p->oper.op[1]); //TODO check
+                                //execute(p->oper.op[1]); //TODO check
                                 fprintf(OutputQuadraplesFile, "POP %s\n", p->oper.op[0]->identifier.name);
                             }
                             else 
@@ -3076,7 +3108,7 @@ typeEnum execute(nodeType *p){
                         {
                             //update the function map in the symbol table
                             st->updateFunctionMap(p->oper.op[1]->identifier.name, p->oper.op[2]);
-                            execute(p->oper.op[0]);
+                            typeEnum functionType = execute(p->oper.op[0]);
                             // execute(p->oper.op[1]);
                             //execute(p->oper.op[2]); //parameters
                             //insert parameters in symbol table
@@ -3091,7 +3123,12 @@ typeEnum execute(nodeType *p){
                                 }
                             }
                             execute(p->oper.op[3]);
-                            execute(p->oper.op[4]);
+                            typeEnum returnType = execute(p->oper.op[4]);
+                            typeEnum finalType = checkCompatibility(functionType, returnType);
+                            if(finalType == Error){
+                                yyerror("return type doesnt match the function type");
+                                return Error;
+                            }
                             break;
                         }
                     }

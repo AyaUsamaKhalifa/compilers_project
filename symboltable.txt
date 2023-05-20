@@ -1,6 +1,6 @@
 id		kind			type
+z		variable		integer
 y		variable		integer
-x		variable		integer
 ========================================================================
-i		variable		integer
+x		variable		integer
 ========================================================================
