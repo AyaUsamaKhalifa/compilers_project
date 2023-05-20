@@ -1,1 +1,6 @@
-
+int y = 0;
+int z = 0;
+if(false)
+{
+    int x = 0;
+}

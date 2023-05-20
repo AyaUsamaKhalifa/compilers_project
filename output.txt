@@ -2,9 +2,7 @@ PUSH 0
 POP y
 PUSH 0
 POP z
-PUSH z
-PUSH y
-COMP_G 
+PUSH false
 JZ L0
 PUSH 0
 POP x

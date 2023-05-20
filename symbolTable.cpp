@@ -218,12 +218,16 @@ void symbolTable::print_recursive(Node* curr_node, ofstream& myfile){
     }
 }
 bool symbolTable::checkUnused(){
+    ofstream myfile;
+    myfile.open("warning.txt",std::ios_base::app);
     for (auto it = variables.begin(); it != variables.end(); ++it) {
         if( it->second == false)
         {
             std::cout<<"warning: unused variable "<< it->first<<std::endl;
+            myfile<<"warning: unused variable "<< it->first<<"\n";
         }
     }
+    
     return true;
 }
 

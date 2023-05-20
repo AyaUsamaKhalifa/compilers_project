@@ -1,0 +1,4 @@
+warning: condition is always false
+warning: unused variable x
+warning: unused variable z
+warning: unused variable y
