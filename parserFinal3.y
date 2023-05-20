@@ -12,9 +12,7 @@
     extern int yylex(void);
     void yyerror(const char *str);
     void read_file(char *filename);
-    void yywarning(const char* str);
     FILE* errorsFile;
-    FILE* warningsFile;
     //Quadraples data:
     FILE* OutputQuadraplesFile;
     int Labels;
@@ -89,36 +87,29 @@ program: root {printf("end of program\n"); st->checkUnused();}
 
 
 root:   root statement 
-        {
-        //printf("root: root statement\n"); printf("-------------------------------------\n");
+        {printf("root: root statement\n"); printf("-------------------------------------\n");
         execute($2);
         } 
         | root functional_statement 
-        {
-        //printf("root functional_statement\n"); printf("-------------------------------------\n");
+        {printf("root functional_statement\n"); printf("-------------------------------------\n");
         execute($2);
         } 
         | 
-        {
-        //printf("root: \n");
-        }
+        {printf("root: \n");}
         ;
 
 statement:  conditional_statement 
-            { 
-            //printf("statement: conditional_statement\n");
+            { printf("statement: conditional_statement\n");
             $$=$1;
             } 
             |  
             loop_statement 
-            { 
-            //printf("statement: loop_statement\n");
+            { printf("statement: loop_statement\n");
             $$=$1;
             } 
             |  
             assignment ';' 
-            { 
-            //printf("statement: assignment;\n");
+            { printf("statement: assignment;\n");
             $$=$1;
             } 
             ;
@@ -127,27 +118,23 @@ statement:  conditional_statement
             // ;
             
 recursive_statement: recursive_statement statement 
-                    {
-                    //printf("recursive_statement: recursive_statement statement\n");
+                    {printf("recursive_statement: recursive_statement statement\n");
                     $$=operation(';',2,$1,$2);
                     } 
                     | 
-                    {
-                    //printf("recursive_statement: \n");
+                    {printf("recursive_statement: \n");
                     $$=NULL;
                     }
                     ;
             
 //---------conditional statement---------// 
 conditional_statement:  switch_conditional_statement 
-                        {
-                        //printf("conditional_statement: switch_conditional_statement\n");
+                        {printf("conditional_statement: switch_conditional_statement\n");
                         $$=$1;
                         } 
                         |
                         if_conditional_statement 
-                        {
-                        //printf("conditional_statement: if_conditional_statement\n");
+                        {printf("conditional_statement: if_conditional_statement\n");
                         $$=$1;
                         } 
                         ;
@@ -156,52 +143,44 @@ conditional_statement:  switch_conditional_statement
                         // ;
 
 if_conditional_statement:   IF '(' expressions ')' '{'recursive_statement'}'  ELSE '{'recursive_statement'}' 
-                            {
-                            //printf("if_conditional_statement: if(exp){recursive_statement} else{recursive_statement}\n");
+                            {printf("if_conditional_statement: if(exp){recursive_statement} else{recursive_statement}\n");
                             $$=operation(IF,3,$3,$6,$10);
                             } 
                             | IF '(' expressions ')' '{'recursive_statement'}' 
-                            {
-                            //printf("if_conditional_statement: if(exp){recursive_statement}\n");
+                            {printf("if_conditional_statement: if(exp){recursive_statement}\n");
                             $$=operation(IF,2,$3,$6);
                             }
                             ; 
 
 switch_conditional_statement:   SWITCH '('VARIABLE')' '{' case_statement '}' 
-                                {
-                                //printf("switch_conditional_statement: switch(VARIABLE){case_statement}\n");
+                                {printf("switch_conditional_statement: switch(VARIABLE){case_statement}\n");
                                 $$=operation(SWITCH,2,identifier($3),$6);
                                 } 
                                 ;
 
 case_statement: case_statement CASE variable_value ':' recursive_statement BREAK  
-                {
-                //printf("case_statement: case_statement case variable_value: recursive_statement break\n");
+                {printf("case_statement: case_statement case variable_value: recursive_statement break\n");
                 $$=operation(CASE,3,$1,$3,$5);
                 } 
                 |  
-                {
-                //printf("case_statement: \n");
+                {printf("case_statement: \n");
                 $$=NULL;
                 } 
                 ; //? hna lazem nzwd elvalues elly elmafrood treturn
 
 //---------loop statement---------// 
 loop_statement: for_loop_statement  
-                {
-                //printf("loop_statement: for_loop_statement\n");
+                {printf("loop_statement: for_loop_statement\n");
                 $$=$1;
                 } 
                 | 
                 while_loop_statement 
-                {
-                //printf("loop_statement: while_loop_statement\n");
+                {printf("loop_statement: while_loop_statement\n");
                 $$=$1;
                 } 
                 | 
                 do_while_loop_statement 
-                {
-                //printf("loop_statement: do_while_loop_statement\n");
+                {printf("loop_statement: do_while_loop_statement\n");
                 $$=$1;
                 } 
                 ;
@@ -210,23 +189,20 @@ loop_statement: for_loop_statement
                 // ;
 
 for_loop_statement: FOR '(' assignment ';' expressions ';' assignment')' '{' recursive_statement '}' 
-                    {
-                    //printf("for_loop_statement: for(assignment; exp; assignment){recursive_statement}\n");
+                    {printf("for_loop_statement: for(assignment; exp; assignment){recursive_statement}\n");
                     $$=operation(FOR,4,$3,$5,$7,$10);
                     } // hna lazem nzwd elvalues elly elmafrood treturn
                     ;
 
 while_loop_statement: WHILE '(' expressions ')' '{' recursive_statement '}'  
-                    {
-                    //printf("while_loop_statement: while(exp){recursive_statement}\n");
+                    {printf("while_loop_statement: while(exp){recursive_statement}\n");
                     $$=operation(WHILE,2,$3,$6);
                     } 
                     ;
 
 
 do_while_loop_statement: DO '{' recursive_statement '}' WHILE '(' expressions ')'  
-                        {
-                        //printf("do_while_loop_statement: do{recursive_statement} while{exp}\n");
+                        {printf("do_while_loop_statement: do{recursive_statement} while{exp}\n");
                         $$=operation(DO,2,$3,$7);
                         }
                         ;
@@ -234,354 +210,295 @@ do_while_loop_statement: DO '{' recursive_statement '}' WHILE '(' expressions ')
 //-------------assignments-------------//
 assignment: variable_Type VARIABLE '=' expressions  
             {
-            //printf("assignment: variable_Type VARIABLE = exp\n");
+            printf("assignment: variable_Type VARIABLE = exp\n");
             $$=operation('=',3,$1,identifier($2),$4);
             } 
             | VARIABLE '=' expressions  
-            {
-            //printf("assignment: VARIABLE = exp\n");
+            {printf("assignment: VARIABLE = exp\n");
             $$=operation('=',2,identifier($1),$3);
             }  
             | ENUM VARIABLE VARIABLE '=' VARIABLE 
-            {
-            //printf("assignment: ENUM VARIABLE VARIABLE = VARIABLE\n");
+            {printf("assignment: ENUM VARIABLE VARIABLE = VARIABLE\n");
             $$=operation('=',4,defineType(EnumType),identifier($2),identifier($3),identifier($5));
             } 
             | CONST variable_Type VARIABLE '=' expressions
             {
-            //printf("assignment: CONST variable_Type VARIABLE = exp\n");
+            printf("assignment: CONST variable_Type VARIABLE = exp\n");
             $$=operation('=',4,defineType(ConstType),$2,identifier($3),$5);
             }
             | expressions  
-            {
-            //printf("assignment: exp\n");
+            {printf("assignment: exp\n");
             $$ = $1;
             }
-            ; 
+            ;  //? hna lazem nzwd elvalues elly elmafrood treturn
 
 //------------Expressions-------------//
 expressions: expressions OR first 
-            {
-            //printf("exp: exp || first \n");
+            {printf("exp: exp || first \n");
             $$=operation(OR,2,$1,$3);
             } 
             | first  
-            {
-            //printf("exp: first \n");
+            {printf("exp: first \n");
             $$=$1;
             }
             ;
 
 first: first AND second 
-        {
-        //printf("first: first && second\n");
+        {printf("first: first && second\n");
         $$=operation(AND,2,$1,$3);
         } 
         | second 
-        {
-        //printf("first: second\n");
+        {printf("first: second\n");
         $$=$1;
         }
         ; 
 
 second: second EE third 
-        {
-        //printf("second: second == third\n");
+        {printf("second: second == third\n");
         $$=operation(EE,2,$1,$3);
         } 
         | second NE third  
-        {
-        //printf("second: second != third\n");
+        {printf("second: second != third\n");
         $$=operation(NE,2,$1,$3);
         } 
         | third  
-        {
-        //printf("second: third\n");
+        {printf("second: third\n");
         $$=$1;
         } 
         ;
 
 third:  third '>' fourth 
-        {
-        //printf("third: third > fourth\n");
+        {printf("third: third > fourth\n");
         $$=operation('>',2,$1,$3);
         } 
         | third '<' fourth 
-        {
-        //printf("third: third < fourth\n");
+        {printf("third: third < fourth\n");
         $$=operation('<',2,$1,$3);
         } 
         | third GE fourth 
-        {
-        //printf("third: third >= fourth\n");
+        {printf("third: third >= fourth\n");
         $$=operation(GE,2,$1,$3);
         } 
         | third LE fourth 
-        {
-        //printf("third: third <= fourth\n");
+        {printf("third: third <= fourth\n");
         $$=operation(LE,2,$1,$3);
         } 
         | fourth 
-        {
-        //printf("third: fourth\n");
+        {printf("third: fourth\n");
         $$=$1;
         }
         ;
 
 fourth: fourth '+' fifth 
-        {
-        //printf("fourth: fourth + fifth\n");
+        {printf("fourth: fourth + fifth\n");
         $$=operation('+',2,$1,$3);
         } 
         | fourth '-' fifth 
-        {
-        //printf("fourth: fourth - fifth\n");
+        {printf("fourth: fourth - fifth\n");
         $$=operation('-',2,$1,$3);
         } 
         | fifth 
-        {
-        //printf("fourth: fifth\n");
+        {printf("fourth: fifth\n");
         $$=$1;
         } 
         ;
 
 fifth:  fifth '*' sixth 
-        {
-        //printf("fifth: fifth * sixth\n");
+        {printf("fifth: fifth * sixth\n");
         $$=operation('*',2,$1,$3);
         } 
         | fifth '/' sixth 
-        {
-        //printf("fifth: fifth / sixth\n");
+        {printf("fifth: fifth / sixth\n");
         $$=operation('/',2,$1,$3);
         } 
         | fifth '%' sixth 
-        {
-        //printf("fifth: fifth %% sixth\n");
+        {printf("fifth: fifth %% sixth\n");
         $$=operation('%',2,$1,$3);
         } 
         | sixth 
-        {
-        //printf("fifth: sixth\n");
+        {printf("fifth: sixth\n");
         $$=$1;
         }
         ; 
 
 sixth:  '-' sixth  
-        {
-        //printf("sixth: - sixth\n");
+        {printf("sixth: - sixth\n");
         $$=operation('-',1,$2);
         } 
         | '!' sixth 
-        {
-        //printf("sixth: ! sixth\n");
+        {printf("sixth: ! sixth\n");
         $$=operation('!',1,$2);
         } 
         | seventh  
-        {
-        //printf("sixth: seventh\n");
+        {printf("sixth: seventh\n");
         $$=$1;
         } 
         ;
 
 seventh: '(' expressions ')' 
-        {
-        //printf("seventh: (exp)\n");
+        {printf("seventh: (exp)\n");
         $$=$2;
         } 
         | variable_value  
-        {
-        //printf("seventh: variable_value\n");
+        {printf("seventh: variable_value\n");
         $$ = $1;
         } 
         | VARIABLE 
-        {
-        //printf("seventh: VARIABLE\n");
+        {printf("seventh: VARIABLE\n");
         $$ = identifier($1);
         } 
         | function_call 
-        {
-        //printf("seventh: function_call\n");
+        {printf("seventh: function_call\n");
         $$=$1;
         }
         ; 
 
 //------------functions---------------//
 function_call:  VARIABLE '(' function_parameters_calls ')' 
-                {
-                //printf("function_call: VARIABLE (function_parameters_calls)\n");
+                {printf("function_call: VARIABLE (function_parameters_calls)\n");
                 $$=operation('f',2,identifier($1),$3);
                 }
                 ;
 
 functional_statement: function 
-                    {
-                    //printf("functional_statement: function\n");
+                    {printf("functional_statement: function\n");
                     $$=$1;
                     }
                     | enum_statement 
-                    {
-                    //printf("functional_statement: enum_statement\n");
+                    {printf("functional_statement: enum_statement\n");
                     $$=$1;
                     }
                     ;
 
 function_parameters: parameter 
-                    {
-                    //printf("function_parameters: parameter\n");
+                    {printf("function_parameters: parameter\n");
                     $$=$1;
                     } 
                     | 
-                    {
-                    //printf("function_parameters: \n");
+                    {printf("function_parameters: \n");
                     $$=NULL;
                     }
                     ;  //? semi colon not added yet?
 
 parameter:  parameter ',' variable_Type VARIABLE  
-            {
-            //printf("parameter: parameter, variable_Type VARIABLE\n");
+            {printf("parameter: parameter, variable_Type VARIABLE\n");
             $$ = addToParameterList($1, $3, identifier($4));
             //$$=operation('p',3,$3,identifier($4),$1);
             } 
             | variable_Type VARIABLE 
-            {
-            //printf("parameter: variable_Type VARIABLE\n");
+            {printf("parameter: variable_Type VARIABLE\n");
             $$ = createParameterList($1, identifier($2));
             //$$=operation('p',2,$1,identifier($2));
             } 
             ;
 
 function_parameters_calls:  parameter_calls 
-                            {
-                            //printf("function_parameters_calls: parameter_calls\n");
+                            {printf("function_parameters_calls: parameter_calls\n");
                             $$=$1;
                             } 
                             | 
-                            {
-                            //printf("function_parameters_calls: \n");
+                            {printf("function_parameters_calls: \n");
                             $$=NULL;
                             }
                             ; 
 
 parameter_calls: parameter_calls ',' expressions 
-                {
-                //printf("parameter_calls: parameter_calls, exp\n");
+                {printf("parameter_calls: parameter_calls, exp\n");
                 $$=addToParameterCallList($1,$3);
                 //$$=operation('c',2,$1,$3);
                 } 
                 | expressions 
-                {
-                //printf("parameter_calls: exp\n");
+                {printf("parameter_calls: exp\n");
                 $$=createParameterCallList($1);
                 //$$=$1;
                 } 
                 ;
 
 function: variable_Type VARIABLE '(' function_parameters ')' '{' recursive_statement RETURN return_types';' '}'  
-        {
-        //printf("function: variable_Type  (function_parameters){recursive_statement RETURN return_types ;}\n");
+        {printf("function: variable_Type  (function_parameters){recursive_statement RETURN return_types ;}\n");
         $$=operation('d',5,$1,identifier($2),$4,$7,$9);
         } 
         | VOID VARIABLE '(' function_parameters ')' '{' recursive_statement '}' 
-        {
-        //printf("function: void VARIABLE (function_parameters) {recursive_statement}\n");
+        {printf("function: void VARIABLE (function_parameters) {recursive_statement}\n");
         $$=operation('d',4,defineType(VoidType),identifier($2),$4,$7);
         } 
         ;
 
 return_types:   expressions  
-                {
-                //printf("return_types: expressions\n");
+                {printf("return_types: expressions\n");
                 $$=$1;
                 }
                 ;
 
 enum_statement: ENUM VARIABLE '{'enum_variables'}' 
-                {
-                //printf("enum_statement: enum VARIABLE {enum_variables}\n");
+                {printf("enum_statement: enum VARIABLE {enum_variables}\n");
                 $$=operation(ENUM,2,identifier($2),$4);
                 }
                 ; 
 
 enum_variables:  enum_variables ',' VARIABLE '=' expressions 
-                {
-                //printf("enum_variables: enum_variables, VARIABLE = exp\n");
+                {printf("enum_variables: enum_variables, VARIABLE = exp\n");
                 $$=operation(',',3,$1,identifier($3),$5);
                 } 
                 | enum_variables ',' VARIABLE 
-                {
-                //printf("enum_variables: enum_variables, VARIABLE\n");
+                {printf("enum_variables: enum_variables, VARIABLE\n");
                 $$=operation(',',2,$1,identifier($3));
                 } 
                 | VARIABLE '=' expressions 
-                {
-                //printf("enum_variables:VARIABLE = exp\n");
+                {printf("enum_variables:VARIABLE = exp\n");
                 $$=operation(',',2,identifier($1),$3);
                 } 
                 | VARIABLE 
-                {
-                //printf("enum_variables: VARIABLE\n");
+                {printf("enum_variables: VARIABLE\n");
                 $$=operation(',',1,identifier($1));
                 } 
                 ;
 
 //------------variables---------------//
 variable_Type:  INT_TYPE  
-                {
-                //printf("variable_Type: int\n");
+                {printf("variable_Type: int\n");
                 $$ = defineType(IntType);
                 } 
                 | CHAR_TYPE 
-                {
-                //printf("variable_Type: char\n");
+                {printf("variable_Type: char\n");
                 $$ = defineType(CharType);
                 } 
                 | BOOL_TYPE 
-                {
-                //printf("variable_Type: bool\n");
+                {printf("variable_Type: bool\n");
                 $$ = defineType(BoolType);
                 } 
                 | FLOAT_TYPE 
-                {
-                //printf("variable_Type: float\n");
+                {printf("variable_Type: float\n");
                 $$ = defineType(FloatType);
                 } 
                 | STRING_TYPE 
-                {
-                //printf("variable_Type: string\n");
+                {printf("variable_Type: string\n");
                 $$ = defineType(StringType);
                 }
                 ;  
 
 variable_value: INTEGER  
-                {
-                //printf("variable_value: int value \n");
+                {printf("variable_value: int value \n");
                 $$ = constantInteger($1);
                 } 
                 | FLOAT 
-                {
-                //printf("variable_value: float value \n");
+                {printf("variable_value: float value \n");
                 $$ = constantFloat($1);
                 } 
                 | BOOL_FALSE 
-                {
-                //printf("variable_value: false \n");
+                {printf("variable_value: false \n");
                 $$ = constantBool($1);
                 } 
                 | BOOL_TRUE 
-                {
-                //printf("variable_value: true \n");
+                {printf("variable_value: true \n");
                 $$ = constantBool($1);
                 } 
                 | CHAR 
-                {
-                //printf("variable_value: char value \n");
+                {printf("variable_value: char value \n");
                 $$ = constantChar($1);
                 } 
                 | STRING
-                {
-                //printf("variable_value: string value \n");
+                {printf("variable_value: string value \n");
                 $$ = constantString($1);
                 } 
                 ;//? hna lazem nzwd elvalues elly elmafrood treturn
@@ -598,7 +515,7 @@ nodeType *constantInteger(int value) {
     p->type = Constant_Node;
     p->constant.intVal = value;
     p->constant.constType = IntType;
-    //printf("constant integer: %d\n", value);
+    printf("constant integer: %d\n", value);
     return p;
 }
 
@@ -609,7 +526,7 @@ nodeType *constantFloat(float value) {
     p->type = Constant_Node;
     p->constant.floatVal = value;
     p->constant.constType = FloatType;
-    //printf("constant float: %f\n", value);
+    printf("constant float: %f\n", value);
     return p;
 }
 
@@ -620,7 +537,7 @@ nodeType *constantBool(bool value) {
     p->type = Constant_Node;
     p->constant.boolVal = value;
     p->constant.constType = BoolType;
-    //printf("constant boolean: %d\n", value);
+    printf("constant boolean: %d\n", value);
     return p;
 }
 
@@ -631,7 +548,7 @@ nodeType *constantChar(char value) {
     p->type = Constant_Node;
     p->constant.charVal = value;
     p->constant.constType = CharType;
-    //printf("constant char: %c\n", value);
+    printf("constant char: %c\n", value);
     return p;
 }
 
@@ -642,7 +559,7 @@ nodeType *constantString(char* value) {
     p->type = Constant_Node;
     p->constant.stringVal = value;
     p->constant.constType = StringType;
-    //printf("constant string: %s\n", value);
+    printf("constant string: %s\n", value);
     return p;
 }
 
@@ -767,6 +684,7 @@ typeEnum execute(nodeType *p){
             }
             else if(p->constant.constType == EnumType)
             {
+                //TODO:
                 // fprintf(OutputQuadraplesFile, "PUSH %s\n", p->identifier.name);
             }
 
@@ -775,6 +693,7 @@ typeEnum execute(nodeType *p){
             break;
         }
 
+         
         case Identifier_Node:   
         {
             string typeIdentifier = st->checkType(p->identifier.name, currentScope);
@@ -815,7 +734,6 @@ typeEnum execute(nodeType *p){
             else if(typeIdentifier == "enum")
             {
                 EnumValue = -1;
-                
                 return EnumType;
             }
             else if(typeIdentifier == "const")
@@ -825,13 +743,6 @@ typeEnum execute(nodeType *p){
             }
             else
             {
-                for (auto it = st->enumMap.begin(); it != st->enumMap.end(); ++it) {
-                    if( it->first == typeIdentifier)
-                    {
-                        st->variables[p->identifier.name] = true;
-                        return IntType;
-                    }
-                }
                 yyerror("variable was not declared in this scope");
                 return Error;
             }
@@ -858,17 +769,6 @@ typeEnum execute(nodeType *p){
                             execute(p->oper.op[1]);
                             currentScope = st->switchBack(currentScope);
                             fprintf(OutputQuadraplesFile, "L%d:\n",CurrentLabel);
-                            if(p->oper.op[0]->type == Constant_Node)
-                            {
-                                if(p->oper.op[0]->constant.constType == IntType && p->oper.op[0]->constant.intVal == 0)
-                                {
-                                    yywarning("warning: condition is always false");
-                                }
-                                else if(p->oper.op[0]->constant.constType == BoolType && p->oper.op[0]->constant.boolVal == false)
-                                {
-                                    yywarning("warning: condition is always false");
-                                }
-                            }
                             break;
                         }
                         case 3:{
@@ -888,17 +788,6 @@ typeEnum execute(nodeType *p){
                             execute(p->oper.op[2]);
                             fprintf(OutputQuadraplesFile, "L%d:\n",CurrentLabel2); //y
                             currentScope = st->switchBack(currentScope);
-                            if(p->oper.op[0]->type == Constant_Node)
-                            {
-                                if(p->oper.op[0]->constant.constType == IntType && p->oper.op[0]->constant.intVal == 0)
-                                {
-                                    yywarning("warning: condition is always false");
-                                }
-                                else if(p->oper.op[0]->constant.constType == BoolType && p->oper.op[0]->constant.boolVal == false)
-                                {
-                                    yywarning("warning: condition is always false");
-                                }
-                            }
                             break;
                         }
                     }
@@ -967,7 +856,6 @@ typeEnum execute(nodeType *p){
                     EndSwitchLabel++;
                     //execute(p->oper.op[0]);   //execute is not called on the variable inside the switch (doesn't go to the base case identifier node)
                     typeEnum varType = getIdentifierType(p->oper.op[0]->identifier.name);
-                    st->variables[p->oper.op[0]->identifier.name] = true; //newly added to remove the warning
                     if(varType != CharType && varType != IntType){
                         yyerror("This type of variable is not supported in switch statement");
                         return Error;
@@ -1007,7 +895,7 @@ typeEnum execute(nodeType *p){
                 {
                     //insert in symbol table
                     bool isInserted = st->insert(p->oper.op[0]->identifier.name,"enum",6,currentScope);
-                    //printf("!!!!!!!!!!!!!!!!!trying to insert symbol: %s, isInserted: %d\n",p->oper.op[0]->identifier.name,isInserted);
+                    printf("!!!!!!!!!!!!!!!!!trying to insert symbol: %s, isInserted: %d\n",p->oper.op[0]->identifier.name,isInserted);
                     if(!isInserted){
                         yyerror("variable already exists in the current scope");
                     }
@@ -1052,10 +940,12 @@ typeEnum execute(nodeType *p){
                     typeEnum typeOP1 = execute(p->oper.op[0]);
                     typeEnum typeOP2 = execute(p->oper.op[1]);
                     typeEnum finalType = checkCompatibility(typeOP1,typeOP2);
+                    
                     if(finalType == Error)
                     {
                         yyerror("types are not compatible");
                     }
+
                     if(finalType != typeOP1 || finalType != typeOP2)
                     {
                         if(finalType == IntType)
@@ -1225,7 +1115,7 @@ typeEnum execute(nodeType *p){
                     typeEnum typeOP1 = execute(p->oper.op[0]);
                     typeEnum typeOP2 = execute(p->oper.op[1]);
                     typeEnum finalType = checkCompatibility(typeOP1,typeOP2);
-                    // printf("first operand type: %d, second operand type: %d, result type: %d\n",typeOP1,typeOP2,finalType);
+                    printf("first operand type: %d, second operand type: %d, result type: %d\n",typeOP1,typeOP2,finalType);
                     if(finalType == Error)
                     {
                         yyerror("types are not compatible");
@@ -1276,7 +1166,7 @@ typeEnum execute(nodeType *p){
                     typeEnum typeOP1 = execute(p->oper.op[0]);
                     typeEnum typeOP2 = execute(p->oper.op[1]);
                     typeEnum finalType = checkCompatibility(typeOP1,typeOP2);
-                    // printf("first operand type: %d, second operand type: %d, result type: %d\n",typeOP1,typeOP2,finalType);
+                    printf("first operand type: %d, second operand type: %d, result type: %d\n",typeOP1,typeOP2,finalType);
                     if(finalType == Error)
                     {
                         yyerror("types are not compatible");
@@ -1345,7 +1235,7 @@ typeEnum execute(nodeType *p){
                     fprintf(OutputQuadraplesFile, "MOD \n");
                     if(typeOP1 == IntType && typeOP2 == IntType)
                     {
-                        // printf("here\n");
+                        printf("here\n");
                         return IntType;
                     }
                     else
@@ -1417,7 +1307,6 @@ typeEnum execute(nodeType *p){
                             typeEnum finalType = checkCompatibility(varType, exprType);
                             if(finalType==Error)
                             {
-                                printf("second operand type is %d\n",exprType);
                                 yyerror("Type mismatch in 3 operands");
                                 return Error;
                             }
@@ -1438,7 +1327,7 @@ typeEnum execute(nodeType *p){
                             }
                             //insert in symbol table
                             bool isInserted = st->insert(p->oper.op[1]->identifier.name,"variable",p->oper.op[0]->defineType.type,currentScope);
-                            //printf("!!!!!!!!!!!!!!!!!trying to insert symbol: %s, isInserted: %d\n",p->oper.op[1]->identifier.name,isInserted);
+                            printf("!!!!!!!!!!!!!!!!!trying to insert symbol: %s, isInserted: %d\n",p->oper.op[1]->identifier.name,isInserted);
                             if(!isInserted){
                                 yyerror("variable already exists in the current scope");
                             }
@@ -1476,7 +1365,7 @@ typeEnum execute(nodeType *p){
                                 }
                                 //insert in symbol table
                                 bool isInserted = st->insert(p->oper.op[2]->identifier.name,"constant",p->oper.op[1]->defineType.type,currentScope);
-                                //printf("!!!!!!!!!!!!!!!!!trying to insert symbol: %s, isInserted: %d\n",p->oper.op[2]->identifier.name,isInserted);
+                                printf("!!!!!!!!!!!!!!!!!trying to insert symbol: %s, isInserted: %d\n",p->oper.op[2]->identifier.name,isInserted);
                                 if(!isInserted){
                                     yyerror("variable already exists in the current scope");
                                 }
@@ -1500,7 +1389,7 @@ typeEnum execute(nodeType *p){
                                 fprintf(OutputQuadraplesFile, "PUSH %s\n", p->oper.op[3]->identifier.name);
                                 //insert in symbol table
                                 bool isInserted = st->insertEnumVar(p->oper.op[2]->identifier.name,"enum variable",p->oper.op[1]->identifier.name,currentScope);
-                                //printf("!!!!!!!!!!!!!!!!!trying to insert symbol: %s, isInserted: %d\n",p->oper.op[2]->identifier.name,isInserted);
+                                printf("!!!!!!!!!!!!!!!!!trying to insert symbol: %s, isInserted: %d\n",p->oper.op[2]->identifier.name,isInserted);
                                 if(!isInserted){
                                     yyerror("variable already exists in the current scope");
                                 }
@@ -1524,7 +1413,7 @@ typeEnum execute(nodeType *p){
                         {
                             //insert in the symbol table
                             bool isInserted = st->insert(p->oper.op[0]->identifier.name,"enum constant",0,currentScope);
-                            //printf("!!!!!!!!!!!!!!!!!trying to insert symbol: %s, isInserted: %d\n",p->oper.op[0]->identifier.name,isInserted);
+                            printf("!!!!!!!!!!!!!!!!!trying to insert symbol: %s, isInserted: %d\n",p->oper.op[0]->identifier.name,isInserted);
                             if(!isInserted){
                                 yyerror("enum variable already exists in the current scope");
                             }
@@ -1543,18 +1432,18 @@ typeEnum execute(nodeType *p){
                                 }
                                 //insert in the symbol table
                                 bool isInserted = st->insert(p->oper.op[0]->identifier.name,"enum constant",0,currentScope);
-                                //printf("!!!!!!!!!!!!!!!!!trying to insert symbol: %s, isInserted: %d\n",p->oper.op[0]->identifier.name,isInserted);
+                                printf("!!!!!!!!!!!!!!!!!trying to insert symbol: %s, isInserted: %d\n",p->oper.op[0]->identifier.name,isInserted);
                                 if(!isInserted){
                                     yyerror("enum variable already exists in the current scope");
                                 }
-                                //execute(p->oper.op[1]); //TODO check
+                                // execute(p->oper.op[1]); 
                                 fprintf(OutputQuadraplesFile, "POP %s\n", p->oper.op[0]->identifier.name);
                             }
                             else 
                             {
                                 //insert in the symbol table
                                 bool isInserted = st->insert(p->oper.op[1]->identifier.name,"enum constant",0,currentScope);
-                                //printf("!!!!!!!!!!!!!!!!!trying to insert symbol: %s, isInserted: %d\n",p->oper.op[1]->identifier.name,isInserted);
+                                printf("!!!!!!!!!!!!!!!!!trying to insert symbol: %s, isInserted: %d\n",p->oper.op[1]->identifier.name,isInserted);
                                 if(!isInserted){
                                     yyerror("enum variable already exists in the current scope");
                                 }
@@ -1575,11 +1464,11 @@ typeEnum execute(nodeType *p){
                             }
                             //insert in the symbol table
                             bool isInserted = st->insert(p->oper.op[1]->identifier.name,"enum constant",0,currentScope);
-                            //printf("!!!!!!!!!!!!!!!!!trying to insert symbol: %s, isInserted: %d\n",p->oper.op[1]->identifier.name,isInserted);
+                            printf("!!!!!!!!!!!!!!!!!trying to insert symbol: %s, isInserted: %d\n",p->oper.op[1]->identifier.name,isInserted);
                             if(!isInserted){
                                 yyerror("enum variable already exists in the current scope");
                             }
-                            execute(p->oper.op[2]); //TODO check
+                            // execute(p->oper.op[2]); 
                             fprintf(OutputQuadraplesFile, "POP %s\n", p->oper.op[1]->identifier.name);
                             break;
                         }
@@ -1590,7 +1479,7 @@ typeEnum execute(nodeType *p){
                 {
                     //insert in the symbol table
                     bool isInserted = st->insert(p->oper.op[1]->identifier.name,"function",p->oper.op[0]->defineType.type,currentScope);
-                    //printf("!!!!!!!!!!!!!!!!!trying to insert symbol: %s, isInserted: %d\n",p->oper.op[1]->identifier.name,isInserted);
+                    printf("!!!!!!!!!!!!!!!!!trying to insert symbol: %s, isInserted: %d\n",p->oper.op[1]->identifier.name,isInserted);
                     if(!isInserted){
                         yyerror("function already exists in the current scope");
                     }
@@ -1613,7 +1502,7 @@ typeEnum execute(nodeType *p){
                             if(p->oper.op[2] != NULL){
                                 for(int i=0; i < p->oper.op[2]->argumentType.arguments.size(); i++){
                                     bool isInserted = st->insert(p->oper.op[2]->argumentType.argumentsNames[i],"parameter",p->oper.op[2]->argumentType.arguments[i],currentScope);
-                                    //printf("!!!!!!!!!!!!!!!!!trying to insert symbol: %s, isInserted: %d\n",p->oper.op[1]->identifier.name,isInserted);
+                                    printf("!!!!!!!!!!!!!!!!!trying to insert symbol: %s, isInserted: %d\n",p->oper.op[1]->identifier.name,isInserted);
                                     if(!isInserted){
                                         yyerror("parameter already exists in the current scope");
                                     }
@@ -1627,14 +1516,14 @@ typeEnum execute(nodeType *p){
                         {
                             //update the function map in the symbol table
                             st->updateFunctionMap(p->oper.op[1]->identifier.name, p->oper.op[2]);
-                            typeEnum functionType = execute(p->oper.op[0]);
+                            execute(p->oper.op[0]);
                             // execute(p->oper.op[1]);
                             //execute(p->oper.op[2]); //parameters
                             //insert parameters in symbol table
                             if(p->oper.op[2] != NULL){
                                 for(int i = p->oper.op[2]->argumentType.arguments.size() - 1; i > -1 ; i--){
                                     bool isInserted = st->insert(p->oper.op[2]->argumentType.argumentsNames[i],"parameter",p->oper.op[2]->argumentType.arguments[i],currentScope);
-                                    //printf("!!!!!!!!!!!!!!!!!trying to insert symbol: %s, isInserted: %d\n",p->oper.op[1]->identifier.name,isInserted);
+                                    printf("!!!!!!!!!!!!!!!!!trying to insert symbol: %s, isInserted: %d\n",p->oper.op[1]->identifier.name,isInserted);
                                     if(!isInserted){
                                         yyerror("parameter already exists in the current scope");
                                     }
@@ -1642,12 +1531,7 @@ typeEnum execute(nodeType *p){
                                 }
                             }
                             execute(p->oper.op[3]);
-                            typeEnum returnType = execute(p->oper.op[4]);
-                            typeEnum finalType = checkCompatibility(functionType, returnType);
-                            if(finalType == Error){
-                                yyerror("return type doesnt match the function type");
-                                return Error;
-                            }
+                            execute(p->oper.op[4]);
                             break;
                         }
                     }
@@ -1662,7 +1546,7 @@ typeEnum execute(nodeType *p){
                 {
                     // execute(p->oper.op[0]);
                     typeEnum funcType = getIdentifierType(p->oper.op[0]->identifier.name);
-                    // printf("function call\n");
+                    printf("function call\n");
                     if(p->oper.op[1] != NULL)
                     {
                         if(p->oper.op[1]->argumentType.argumentsNodes.size() != st->functionMap[p->oper.op[0]->identifier.name].size()){
@@ -1781,13 +1665,6 @@ void yyerror(const char *str)
 {
     fprintf(stderr,"error: %s, Last token: %s \n",str, last_token);
     fprintf(errorsFile,"error: %s\n",str);
-}
-
-void yywarning(const char* str){
-    warningsFile = fopen("warning.txt","w");
-    fprintf(stderr,"%s\n",str);
-    fprintf(warningsFile,"%s\n",str);
-    fclose(warningsFile);
 }
 
 int yywrap()

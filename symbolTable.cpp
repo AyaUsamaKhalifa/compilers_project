@@ -84,12 +84,12 @@ bool symbolTable::insertEnumVar(string identifier, string kind, string type, Nod
 }
 
 void symbolTable::updateEnumMap(Node* curr_node, string identifier){
-    cout<<"enum added :"<<identifier<<endl;
+    // cout<<"enum added :"<<identifier<<endl;
     enumMap[identifier] = curr_node;
 }
 
 void symbolTable::updateFunctionMap(string identifier, nodeType* arguments){
-    cout<<"function added :"<<identifier<<endl;
+    // cout<<"function added :"<<identifier<<endl;
     if(arguments){
         functionMap[identifier] = arguments->argumentType.arguments;
     }
